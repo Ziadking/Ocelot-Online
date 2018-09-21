@@ -11,6 +11,12 @@ body {
   align-items: center; /*centers items on the cross-axis (y by default)*/
 }
 
+.container {
+  background-image: url("../images/watermark.png");
+  background-repeat:no-repeat;
+  background-position: center center;
+}
+
 @font-face {
   font-family: "unscii";
   src: url("../fonts/unscii-16.woff") format('woff');
