@@ -1,0 +1,8 @@
+#Project files
+/.idea
+
+# Build files
+target/
+
+# Proxy configuration
+cacerts
