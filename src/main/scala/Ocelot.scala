@@ -1,6 +1,5 @@
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 
@@ -17,11 +16,9 @@ object Ocelot {
 
     // define routes
     val route =
-      ignoreTrailingSlash {
-        get {
-          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<p>[ocelot.online]</p>"))
-        }
-      }
+      pathEndOrSingleSlash {
+        getFromFile("static/index.html")
+      } ~ getFromDirectory("static")
 
     // run
     val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
