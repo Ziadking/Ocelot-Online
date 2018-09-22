@@ -1,7 +1,10 @@
 package totoro.ocelot.online
 
+import java.io.File
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
@@ -18,6 +21,8 @@ object Ocelot {
     implicit val materializer: ActorMaterializer = ActorMaterializer()
     // needed for the future flatMap/onComplete in the end
     implicit val executionContext: ExecutionContextExecutor = system.dispatcher
+
+    Settings.load(new File("ocelot.conf"))
 
     // demo source
     val source = Source.tick(1.seconds, 1.seconds, TextMessage("meow"))
@@ -44,15 +49,20 @@ object Ocelot {
           handleWebSocketMessages(wsHandler)
         }
       } ~
+      path("config.js") {
+        get {
+          complete(s"var host = '${Settings.get.clientHost}'; var port = ${Settings.get.clientPort};")
+        }
+      } ~
       pathEndOrSingleSlash {
         getFromFile("static/index.html")
       } ~
       getFromDirectory("static")
 
     // run
-    val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
+    val bindingFuture = Http().bindAndHandle(route, Settings.get.serverHost, Settings.get.serverPort)
 
-    println(s"Server online at http://localhost:8080/\nPress Enter to stop...")
+    println(s"Server online at http://${Settings.get.serverHost}:${Settings.get.serverPort}/\nPress Enter to stop...")
     StdIn.readLine()
     bindingFuture
       .flatMap(_.unbind())
