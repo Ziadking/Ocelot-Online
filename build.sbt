@@ -2,7 +2,7 @@ name := "ocelot-online"
 
 version := "0.1.0"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.6"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http"   % "10.1.5",
