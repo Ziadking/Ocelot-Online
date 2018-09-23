@@ -54,16 +54,7 @@ body {
   cursor: pointer;
 }
 
-.terminal {
-  background: rgba(0, 0, 0, 0.8);
-  padding: 0.5em 1em;
+#terminal {
   border-radius: 3px;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8);
-}
-.terminal pre {
-  font-family: 'unscii', monospace;
-  font-size: 12pt;
-  color: #fff;
-  margin: 0;
-  padding: 0;
 }
