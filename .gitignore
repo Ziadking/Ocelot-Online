@@ -7,3 +7,8 @@ target/
 
 # Proxy configuration
 cacerts
+
+# Temp files
+/*.log
+/*.so
+/*.dll

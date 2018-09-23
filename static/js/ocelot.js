@@ -37,5 +37,5 @@ function set(x, y, value) {
 var socket = new WebSocket("ws://" + host + ":" + port + "/stream");
 
 socket.onmessage = function (event) {
-  set(Math.floor(Math.random() * (width - event.data.length)), Math.floor(Math.random() * height), event.data);
+  console.log(event);
 }
