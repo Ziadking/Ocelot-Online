@@ -76,5 +76,7 @@ object Ocelot {
     bindingFuture
       .flatMap(_.unbind())
       .onComplete(_ => system.terminate())
+
+    workspace.turnOff()
   }
 }

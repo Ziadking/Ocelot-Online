@@ -33,9 +33,39 @@ function set(x, y, value) {
   context.fillText(value, px, py + 13);
 }
 
+function numberToColour(number) {
+  const r = (number & 0xff0000) >> 16;
+  const g = (number & 0x00ff00) >> 8;
+  const b = (number & 0x0000ff);
+  return [r, g, b];
+}
+
 // connect to the server
 var socket = new WebSocket("ws://" + host + ":" + port + "/stream");
 
 socket.onmessage = function (event) {
-  console.log(event);
+  var message = event.data;
+  var parts = message.split(" ");
+  switch (parts[0]) {
+    case 'beep':
+      console.log("Beep: " + parts[1] + ", " + parts[2]);
+      break;
+    case 'beep-pattern':
+      console.log("Beep: " + parts[1]);
+      break;
+    case 'crash':
+      console.log("Crash: " + parts[1]);
+      break;
+    case 'set':
+      set(parseInt(parts[1]), parseInt(parts[2]), message.substring(parts[0].length + parts[1].length + parts[2].length + parts[3].length + 4))
+      break;
+    case 'foreground':
+      var color = numberToColour(parseInt(parts[1]))
+      setForeground(color[0], color[1], color[2])
+      break;
+    case 'background':
+      var color = numberToColour(parseInt(parts[1]))
+      setBackground(color[0], color[1], color[2])
+      break;
+  }
 }
