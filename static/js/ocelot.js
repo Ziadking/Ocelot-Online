@@ -77,6 +77,7 @@ socket.onmessage = function (event) {
       break;
     case 'crash':
       console.log("Crash: " + parts[1]);
+      alert("Crash: " + parts[1] + "!");
       break;
     case 'set':
       set(parseInt(parts[1]), parseInt(parts[2]), parts[4])
