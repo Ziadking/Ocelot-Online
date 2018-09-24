@@ -101,16 +101,59 @@ socket.onmessage = function (event) {
 }
 
 // subscribe to user feedback
+var codes = {
+  Enter: 0x1C,
+  ArrowLeft: 0xCB,
+  ArrowUp: 0xC8,
+  ArrowRight: 0xCD,
+  ArrowDown: 0xD0,
+  Home: 0xC7,
+  End: 0xCF,
+  PageUp: 0xC9,
+  PageDown: 0xD1,
+  Insert: 0xD2,
+  Delete: 0xD3,
+  Backspace: 0x0E,
+  CapsLock: 0x3A,
+  Control: 0x1D,
+  Alt: 0x38,
+  Shift: 0x2A,
+  NumLock: 0x45,
+  ScrollLock: 0x46,
+  Tab: 0x0F,
+  F1: 0x3B,
+  F2: 0x3C,
+  F3: 0x3D,
+  F4: 0x3E,
+  F5: 0x3F,
+  F6: 0x40,
+  F7: 0x41,
+  F8: 0x42,
+  F9: 0x43,
+  F10: 0x44,
+  F11: 0x57,
+  F12: 0x58,
+  F13: 0x64,
+  F14: 0x65,
+  F15: 0x66,
+  F16: 0x67,
+  F17: 0x68,
+  F18: 0x69,
+  F19: 0x71
+}
+
 document.onkeydown = function (e) {
     e = e || window.event;
-    var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : e.which || e.keyCode;
-    socket.send("keydown " + charCode + " " + e.keyCode);
+    var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
+    var keyCode = codes[e.key] || e.keyCode;
+    socket.send("keydown " + charCode + " " + keyCode);
     return false;
 };
 
 document.onkeyup = function (e) {
     e = e || window.event;
-    var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : e.which || e.keyCode;
-    socket.send("keyup " + charCode + " " + e.keyCode);
+    var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
+    var keyCode = codes[e.key] || e.keyCode;
+    socket.send("keyup " + charCode + " " + keyCode);
     return false;
 };
