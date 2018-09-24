@@ -40,12 +40,34 @@ function numberToColour(number) {
   return [r, g, b];
 }
 
+function copy(x, y, width, height, xt, yt) {
+  var px = margin * 1.5 + x * 8;
+  var py = margin + y * 16;
+  var tpx = margin * 1.5 + (x + xt) * 8;
+  var tpy = margin + (y + yt) * 16;
+  var fragment = context.getImageData(px, py, width * 8, height * 16);
+  context.putImageData(fragment, tpx, tpy);
+}
+
+function fill(x, y, width, height, value) {
+  var px = margin * 1.5 + x * 8;
+  var py = margin + y * 16;
+  context.clearRect(px, py, width * 8, height * 16);
+  context.fillStyle = backColor;
+  context.fillRect(px, py, width * 8, height * 16);
+  context.fillStyle = foreColor;
+  var line = value.charAt(0).repeat(width);
+  for (var i = 0; i < height; i++) {
+    context.fillText(line, px, py + 13 + i * 16);
+  }
+}
+
 // connect to the server
 var socket = new WebSocket("ws://" + host + ":" + port + "/stream");
 
 socket.onmessage = function (event) {
   var message = event.data;
-  var parts = message.split(" ");
+  var parts = message.split("\n");
   switch (parts[0]) {
     case 'beep':
       console.log("Beep: " + parts[1] + ", " + parts[2]);
@@ -57,7 +79,7 @@ socket.onmessage = function (event) {
       console.log("Crash: " + parts[1]);
       break;
     case 'set':
-      set(parseInt(parts[1]), parseInt(parts[2]), message.substring(parts[0].length + parts[1].length + parts[2].length + parts[3].length + 4))
+      set(parseInt(parts[1]), parseInt(parts[2]), parts[4])
       break;
     case 'foreground':
       var color = numberToColour(parseInt(parts[1]))
@@ -66,6 +88,13 @@ socket.onmessage = function (event) {
     case 'background':
       var color = numberToColour(parseInt(parts[1]))
       setBackground(color[0], color[1], color[2])
+      break;
+    case 'copy':
+      copy(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]),
+           parseInt(parts[5]), parseInt(parts[6]));
+      break;
+    case 'fill':
+      fill(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]), parts[5]);
       break;
   }
 }

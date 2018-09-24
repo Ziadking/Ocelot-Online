@@ -40,22 +40,29 @@ class Workspace {
 
   def subscribe(producer: SourceQueueWithComplete[TextMessage]): Unit = {
     EventBus.listenTo(classOf[BeepEvent], { case event: BeepEvent =>
-      producer offer TextMessage(s"beep ${event.frequency} ${event.duration}")
+      producer offer TextMessage(s"beep\n${event.frequency} ${event.duration}")
     })
     EventBus.listenTo(classOf[BeepPatternEvent], { case event: BeepPatternEvent =>
-      producer offer TextMessage(s"beep-pattern ${event.pattern}")
+      producer offer TextMessage(s"beep-pattern\n${event.pattern}")
     })
     EventBus.listenTo(classOf[MachineCrashEvent], { case event: MachineCrashEvent =>
-      producer offer TextMessage(s"crash ${event.message}")
+      producer offer TextMessage(s"crash\n${event.message}")
     })
     EventBus.listenTo(classOf[TextBufferSetEvent], { case event: TextBufferSetEvent =>
-      producer offer TextMessage(s"set ${event.x} ${event.y} ${event.vertical} ${event.value}")
+      producer offer TextMessage(s"set\n${event.x}\n${event.y}\n${event.vertical}\n${event.value}")
     })
     EventBus.listenTo(classOf[TextBufferSetForegroundColorEvent], { case event: TextBufferSetForegroundColorEvent =>
-      producer offer TextMessage(s"foreground ${event.color}")
+      producer offer TextMessage(s"foreground\n${event.color}")
     })
     EventBus.listenTo(classOf[TextBufferSetBackgroundColorEvent], { case event: TextBufferSetBackgroundColorEvent =>
-      producer offer TextMessage(s"background ${event.color}")
+      producer offer TextMessage(s"background\n${event.color}")
+    })
+    EventBus.listenTo(classOf[TextBufferCopyEvent], { case event: TextBufferCopyEvent =>
+      producer offer TextMessage(s"copy\n${event.column}\n${event.row}\n${event.width}\n${event.height}\n" +
+        s"${event.horizontalTranslation}\n${event.verticalTranslation}")
+    })
+    EventBus.listenTo(classOf[TextBufferFillEvent], { case event: TextBufferFillEvent =>
+      producer offer TextMessage(s"fill\n${event.column}\n${event.row}\n${event.width}\n${event.height}\n${event.value}")
     })
   }
 
