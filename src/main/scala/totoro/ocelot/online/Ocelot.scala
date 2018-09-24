@@ -50,6 +50,7 @@ object Ocelot {
             parts.head match {
               case "keydown" => workspace.keyDown(parts(1).toInt.toChar, parts(2).toInt)
               case "keyup" => workspace.keyUp(parts(1).toInt.toChar, parts(2).toInt)
+              case "state" => workspace.sendState()
             }
           }
           Nil

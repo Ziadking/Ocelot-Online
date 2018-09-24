@@ -99,6 +99,23 @@ socket.onmessage = function (event) {
     case 'fill':
       fill(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]), parts[5]);
       break;
+    case 'state':
+      var fore = numberToColour(parseInt(parts[1]))
+      var back = numberToColour(parseInt(parts[2]))
+      for (var i = 3; i < parts.length; i += 5) {
+        if (i + 4 >= parts.length) break;
+        var x = parseInt(parts[i])
+        var y = parseInt(parts[i + 1])
+        var f = numberToColour(parseInt(parts[i + 2]))
+        var b = numberToColour(parseInt(parts[i + 3]))
+        var value = parts[i + 4]
+        setForeground(f[0], f[1], f[2])
+        setBackground(b[0], b[1], b[2])
+        set(x, y, value)
+      }
+      setForeground(fore[0], fore[1], fore[2])
+      setBackground(back[0], back[1], back[2])
+      break;
   }
 }
 
@@ -200,3 +217,8 @@ document.onkeyup = function (e) {
     socket.send("keyup " + charCode + " " + keyCode);
     return false;
 };
+
+// ask for the current terminal state
+socket.onopen = function() {
+  socket.send("state")
+}

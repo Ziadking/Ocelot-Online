@@ -7,13 +7,14 @@ import totoro.ocelot.brain.event._
 import totoro.ocelot.brain.loot.Loot
 import totoro.ocelot.brain.network.Network
 import totoro.ocelot.brain.user.User
-import totoro.ocelot.brain.util.Tier
+import totoro.ocelot.brain.util.{PackedColor, Tier}
 import totoro.ocelot.brain.{Ocelot => Brain}
 
 class Workspace {
   private val defaultUser: User = User("noname")
   private var computer: Case = _
   private var screen: Screen = _
+  private var producer: SourceQueueWithComplete[TextMessage] = _
 
   def init(): Unit = {
     Brain.initialize()
@@ -48,6 +49,8 @@ class Workspace {
   }
 
   def subscribe(producer: SourceQueueWithComplete[TextMessage]): Unit = {
+    this.producer = producer
+    // register some listeners
     EventBus.listenTo(classOf[BeepEvent], { case event: BeepEvent =>
       producer offer TextMessage(s"beep\n${event.frequency}\n${event.duration}")
     })
@@ -99,5 +102,60 @@ class Workspace {
   def turnOff(): Unit = {
     computer.turnOff()
     println("Computer turned off.")
+  }
+
+  private def getColor(value: PackedColor.Color): Int = {
+    screen.data.format.inflate(screen.data.format.deflate(value))
+  }
+
+  def sendState(): Unit = {
+    val state = new StringBuilder("state\n")
+
+    // write current colors
+    state ++= getColor(screen.data.foreground).toString + "\n"
+    state ++= getColor(screen.data.background).toString + "\n"
+
+    // write the matrix, optimized as a bunch of `set` operations
+    var lastColor: Short = -1
+    var lastX: Int = -1
+    var lastY: Int = -1
+    val value: StringBuilder = new StringBuilder
+
+    def set(): Unit = {
+      if (value.nonEmpty) {
+        state ++= lastX.toString + "\n"
+        state ++= lastY.toString + "\n"
+        val fore = PackedColor.unpackForeground(lastColor, screen.data.format)
+        val back = PackedColor.unpackBackground(lastColor, screen.data.format)
+        state ++= fore.toString + "\n"
+        state ++= back.toString + "\n"
+        state ++= value.result() + "\n"
+        value.clear()
+      }
+    }
+
+    for (y <- 0 until screen.data.height) {
+      for (x <- 0 until screen.data.width) {
+        val currentColor = screen.data.color(y)(x)
+        val currentChar = screen.data.buffer(y)(x)
+        if (currentColor != lastColor) {
+          if (lastColor >= 0) {
+            set()
+          }
+          lastColor = currentColor
+          lastX = x
+          lastY = y
+        }
+        value += currentChar
+      }
+      set()
+      lastX = 0
+      lastY += 1
+    }
+    // write the last one set
+    set()
+
+    // send
+    producer offer TextMessage(state.result())
   }
 }
