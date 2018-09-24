@@ -2,15 +2,18 @@ package totoro.ocelot.online
 
 import akka.http.scaladsl.model.ws.TextMessage
 import akka.stream.scaladsl.SourceQueueWithComplete
-import totoro.ocelot.brain.entity.{CPU, Cable, Case, GraphicsCard, Memory, Screen}
+import totoro.ocelot.brain.entity.{CPU, Cable, Case, GraphicsCard, Keyboard, Memory, Screen}
 import totoro.ocelot.brain.event._
 import totoro.ocelot.brain.loot.Loot
 import totoro.ocelot.brain.network.Network
+import totoro.ocelot.brain.user.User
 import totoro.ocelot.brain.util.Tier
 import totoro.ocelot.brain.{Ocelot => Brain}
 
 class Workspace {
+  private val defaultUser: User = User("noname")
   private var computer: Case = _
+  private var screen: Screen = _
 
   def init(): Unit = {
     Brain.initialize()
@@ -34,13 +37,16 @@ class Workspace {
     computer.add(Loot.OpenOsBIOS.create())
     computer.add(Loot.OpenOsFloppy.create())
 
-    val screen = new Screen(Tier.Two)
+    screen = new Screen(Tier.Two)
     cable.node.connect(screen.node)
+
+    val keyboard = new Keyboard()
+    screen.node.connect(keyboard.node)
   }
 
   def subscribe(producer: SourceQueueWithComplete[TextMessage]): Unit = {
     EventBus.listenTo(classOf[BeepEvent], { case event: BeepEvent =>
-      producer offer TextMessage(s"beep\n${event.frequency} ${event.duration}")
+      producer offer TextMessage(s"beep\n${event.frequency}\n${event.duration}")
     })
     EventBus.listenTo(classOf[BeepPatternEvent], { case event: BeepPatternEvent =>
       producer offer TextMessage(s"beep-pattern\n${event.pattern}")
@@ -77,6 +83,14 @@ class Workspace {
 
   def update(): Unit = {
     computer.update()
+  }
+
+  def keyDown(character: Char, code: Int): Unit = {
+    screen.keyDown(character, code, defaultUser)
+  }
+
+  def keyUp(character: Char, code: Int): Unit = {
+    screen.keyUp(character, code, defaultUser)
   }
 
   def turnOff(): Unit = {

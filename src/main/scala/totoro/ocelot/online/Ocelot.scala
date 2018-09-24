@@ -11,6 +11,7 @@ import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
+import scala.util.Success
 
 object Ocelot {
   def main(args: Array[String]): Unit = {
@@ -44,7 +45,14 @@ object Ocelot {
     def wsHandler: Flow[Message, Message, Any] =
       Flow[Message].mapConcat {
         case tm: TextMessage =>
-          TextMessage(tm.textStream ++ Source.single(" to you too!")) :: Nil
+          tm.textStream.runFold("")(_ + _).onComplete { case Success(message) =>
+            val parts = message.split(" ")
+            parts.head match {
+              case "keydown" => workspace.keyDown(parts(1).toInt.toChar, parts(2).toInt)
+              case "keyup" => workspace.keyUp(parts(1).toInt.toChar, parts(2).toInt)
+            }
+          }
+          Nil
         case bm: BinaryMessage =>
           // ignore binary messages but drain content to avoid the stream being clogged
           bm.dataStream.runWith(Sink.ignore)

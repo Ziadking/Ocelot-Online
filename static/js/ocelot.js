@@ -99,3 +99,18 @@ socket.onmessage = function (event) {
       break;
   }
 }
+
+// subscribe to user feedback
+document.onkeydown = function (e) {
+    e = e || window.event;
+    var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : e.which || e.keyCode;
+    socket.send("keydown " + charCode + " " + e.keyCode);
+    return false;
+};
+
+document.onkeyup = function (e) {
+    e = e || window.event;
+    var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : e.which || e.keyCode;
+    socket.send("keyup " + charCode + " " + e.keyCode);
+    return false;
+};
