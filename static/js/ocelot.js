@@ -1,7 +1,9 @@
 // init environment
 var width = 80;
 var height = 25;
+
 var margin = 10;
+var fontOffset = 12;
 
 var foreColor = "rgba(255, 255, 255, 1.0)";
 var backColor = "rgba(0, 0, 0, 0.8)";
@@ -30,7 +32,7 @@ function set(x, y, value) {
   context.fillStyle = backColor;
   context.fillRect(px, py, 8 * value.length, 16);
   context.fillStyle = foreColor;
-  context.fillText(value, px, py + 13);
+  context.fillText(value, px, py + fontOffset);
 }
 
 function numberToColour(number) {
@@ -58,7 +60,7 @@ function fill(x, y, width, height, value) {
   context.fillStyle = foreColor;
   var line = value.charAt(0).repeat(width);
   for (var i = 0; i < height; i++) {
-    context.fillText(line, px, py + 13 + i * 16);
+    context.fillText(line, px, py + fontOffset + i * 16);
   }
 }
 
