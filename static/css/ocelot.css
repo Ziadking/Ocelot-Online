@@ -46,7 +46,7 @@ body {
   height: 77px;
   padding: 0 100px 0 100px;
 }
-.profile-panel {
+.tools-panel {
   display: inline-block;
 }
 .button {
@@ -57,4 +57,14 @@ body {
 #terminal {
   border-radius: 3px;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8);
+}
+
+#warning {
+  animation-duration: 500s;
+  animation-name: flash;
+}
+@keyframes flash {
+    0% { color: #333; }
+    30%   { color: red; }
+    100%   { color: #333; }
 }

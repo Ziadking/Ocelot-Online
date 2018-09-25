@@ -34,12 +34,18 @@ object Ocelot {
     workspace.subscribe(mat)
 
     workspace.turnOn()
-    new Thread(() => {
-      while (workspace.isRunning) {
-        workspace.update()
-        Thread.sleep(50)
-      }
-    }).start()
+
+    def run(): Unit = {
+      new Thread(() => {
+        while (workspace.isRunning) {
+          workspace.update()
+          Thread.sleep(50)
+        }
+        println("Main thread closed...")
+      }).start()
+      println("Created new main thread.")
+    }
+    run()
 
     // create websockets handler
     def wsHandler: Flow[Message, Message, Any] =
@@ -52,6 +58,14 @@ object Ocelot {
                 case "keydown" => workspace.keyDown(parts(1).toInt.toChar, parts(2).toInt)
                 case "keyup" => workspace.keyUp(parts(1).toInt.toChar, parts(2).toInt)
                 case "state" => workspace.sendState()
+                case "turnon" =>
+                  if (!workspace.isRunning) {
+                    workspace.turnOn()
+                    run()
+                    mat offer TextMessage("turnon-success")
+                  } else {
+                    mat offer TextMessage("turnon-failure")
+                  }
               }
             case _ =>
           }

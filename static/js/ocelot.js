@@ -73,6 +73,9 @@ function fill(x, y, width, height, value) {
   }
 }
 
+// init some other ui elements
+var turnOnButton = document.getElementById('turn_on_button');
+
 // connect to the server
 if (host.endsWith("/")) host = host.substring(0, host.length - 1);
 var socket = new WebSocket(host + "/stream");
@@ -125,6 +128,12 @@ socket.onmessage = function (event) {
       }
       setForeground(fore[0], fore[1], fore[2])
       setBackground(back[0], back[1], back[2])
+      break;
+    case 'turnon-failure':
+      turnOnButton.classList.add('warning');
+      setTimeout(function(){
+        turnOnButton.classList.remove('warning');
+      }, 500);
       break;
   }
 }
@@ -213,20 +222,25 @@ var codes = {
 }
 
 document.onkeydown = function (e) {
-    e = e || window.event;
-    var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
-    var keyCode = codes[e.keyCode] || e.keyCode;
-    socket.send("keydown " + charCode + " " + keyCode);
-    return false;
+  e = e || window.event;
+  var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
+  var keyCode = codes[e.keyCode] || e.keyCode;
+  socket.send("keydown " + charCode + " " + keyCode);
+  return false;
 };
 
 document.onkeyup = function (e) {
-    e = e || window.event;
-    var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
-    var keyCode = codes[e.keyCode] || e.keyCode;
-    socket.send("keyup " + charCode + " " + keyCode);
-    return false;
+  e = e || window.event;
+  var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
+  var keyCode = codes[e.keyCode] || e.keyCode;
+  socket.send("keyup " + charCode + " " + keyCode);
+  return false;
 };
+
+// additional callbacks
+function turnOn() {
+  socket.send("turnon");
+}
 
 // ask for the current terminal state
 socket.onopen = function() {
