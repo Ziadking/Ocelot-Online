@@ -8,7 +8,6 @@ class Settings(val config: Config) {
   val serverHost: String = config.getString("server.host")
   val serverPort: Int = config.getInt("server.port")
   val clientHost: String = config.getString("client.host")
-  val clientPort: Int = config.getInt("client.port")
 }
 
 object Settings {

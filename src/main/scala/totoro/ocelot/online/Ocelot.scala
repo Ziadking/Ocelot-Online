@@ -45,13 +45,15 @@ object Ocelot {
     def wsHandler: Flow[Message, Message, Any] =
       Flow[Message].mapConcat {
         case tm: TextMessage =>
-          tm.textStream.runFold("")(_ + _).onComplete { case Success(message) =>
-            val parts = message.split(" ")
-            parts.head match {
-              case "keydown" => workspace.keyDown(parts(1).toInt.toChar, parts(2).toInt)
-              case "keyup" => workspace.keyUp(parts(1).toInt.toChar, parts(2).toInt)
-              case "state" => workspace.sendState()
-            }
+          tm.textStream.runFold("")(_ + _).onComplete {
+            case Success(message) =>
+              val parts = message.split(" ")
+              parts.head match {
+                case "keydown" => workspace.keyDown(parts(1).toInt.toChar, parts(2).toInt)
+                case "keyup" => workspace.keyUp(parts(1).toInt.toChar, parts(2).toInt)
+                case "state" => workspace.sendState()
+              }
+            case _ =>
           }
           Nil
         case bm: BinaryMessage =>
@@ -69,7 +71,7 @@ object Ocelot {
       } ~
       path("config.js") {
         get {
-          complete(s"var host = '${Settings.get.clientHost}'; var port = ${Settings.get.clientPort};")
+          complete(s"var host = '${Settings.get.clientHost}';")
         }
       } ~
       pathEndOrSingleSlash {

@@ -8,6 +8,15 @@ var fontOffset = 13;
 var foreColor = "rgba(255, 255, 255, 1.0)";
 var backColor = "rgba(0, 0, 0, 0.8)";
 
+if (!String.prototype.endsWith) {
+  String.prototype.endsWith = function(search, this_len) {
+    if (this_len === undefined || this_len > this.length) {
+      this_len = this.length;
+    }
+    return this.substring(this_len - search.length, this_len) === search;
+  };
+}
+
 // init terminal
 var terminal = document.getElementById('terminal');
 var context = terminal.getContext('2d');
@@ -65,7 +74,8 @@ function fill(x, y, width, height, value) {
 }
 
 // connect to the server
-var socket = new WebSocket("ws://" + host + ":" + port + "/stream");
+if (host.endsWith("/")) host = host.substring(0, host.length - 1);
+var socket = new WebSocket(host + "/stream");
 
 socket.onmessage = function (event) {
   var message = event.data;
