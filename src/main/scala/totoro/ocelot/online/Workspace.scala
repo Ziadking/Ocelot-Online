@@ -16,6 +16,7 @@ class Workspace {
   private val defaultUser: User = User("noname")
   private var computer: Case = _
   private var screen: Screen = _
+  private var keyboard: Keyboard = _
   private var producer: SourceQueueWithComplete[TextMessage] = _
 
   def init(): Unit = {
@@ -54,7 +55,7 @@ class Workspace {
     screen = new Screen(Tier.Two)
     cable.node.connect(screen.node)
 
-    val keyboard = new Keyboard()
+    keyboard = new Keyboard()
     screen.node.connect(keyboard.node)
   }
 
@@ -110,6 +111,10 @@ class Workspace {
 
   def keyUp(character: Char, code: Int): Unit = {
     screen.keyUp(character, code, defaultUser)
+  }
+
+  def releasePressedKeys(): Unit = {
+    keyboard.releasePressedKeys(defaultUser)
   }
 
   def clipboard(value: String): Unit = {

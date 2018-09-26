@@ -59,6 +59,7 @@ object Ocelot {
               parts.head match {
                 case "keydown" => workspace.keyDown(parts(1).toInt.toChar, parts(2).toInt)
                 case "keyup" => workspace.keyUp(parts(1).toInt.toChar, parts(2).toInt)
+                case "keyup-all" => workspace.releasePressedKeys()
                 case "clipboard" => workspace.clipboard(parts(1))
                 case "mousedown" => workspace.mouseDown(parts(1).toInt, parts(2).toInt, parts(3).toInt)
                 case "mouseup" => workspace.mouseUp(parts(1).toInt, parts(2).toInt, parts(3).toInt)

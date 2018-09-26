@@ -254,6 +254,7 @@ var codes = {
 var keyControl = 17;
 var keyV = 86
 var isControlPressed = false;
+var isKeyBoardDirty = false;
 // do not prevent standart browser behavior for these buttons
 var whitelisted = [keyControl, keyV];
 
@@ -263,12 +264,12 @@ document.onpaste = function(e) {
 
 document.onkeydown = function(e) {
   e = e || window.event;
-  console.log(e);
   if (e.keyCode == keyControl) isControlPressed = true;
   if (!(e.keyCode == keyV && isControlPressed)) {
     var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
     var keyCode = codes[e.keyCode] || e.keyCode;
     socket.send("keydown " + charCode + " " + keyCode);
+    isKeyBoardDirty = true;
   }
   return whitelisted.includes(e.keyCode);
 };
@@ -281,6 +282,14 @@ document.onkeyup = function(e) {
   socket.send("keyup " + charCode + " " + keyCode);
   return whitelisted.includes(e.keyCode);
 };
+
+document.onblur = function(e) {
+  if (isKeyBoardDirty) {
+    socket.send("keyup-all");
+    isControlPressed = false;
+    isKeyBoardDirty = false;
+  }
+}
 
 // additional callbacks
 function turnOn() {
