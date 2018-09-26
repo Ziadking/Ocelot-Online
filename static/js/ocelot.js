@@ -38,7 +38,6 @@ function fancyAlpha(r, g, b) {
 }
 
 // init terminal
-var container = document.getElementById('container');
 var terminal = document.getElementById('terminal');
 var context = terminal.getContext('2d');
 context.font = '16px unscii';
@@ -160,13 +159,10 @@ socket.onmessage = function (event) {
       height = parseInt(parts[2]);
       terminal.width = width * 8;
       terminal.height = height * 16;
-      // center it
-      var leftMargin = (container.clientWidth - width * 8 - 30) / 2;
-      var topMargin = (container.clientHeight - height * 16 - 24) / 2.2;
-      terminal.style.marginLeft = leftMargin + "px";
-      terminal.style.marginTop = topMargin + "px";
       // for some reason. after canvas size change font settings drop to default
       context.font = '16px unscii';
+      // update the state
+      askForState();
       break;
   }
 }
@@ -277,8 +273,11 @@ function turnOn() {
 function turnOff() {
   socket.send("turnoff");
 }
+function askForState() {
+  socket.send("state")
+}
 
 // ask for the current terminal state
 socket.onopen = function() {
-  socket.send("state")
+  askForState();
 }

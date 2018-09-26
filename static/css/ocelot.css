@@ -1,6 +1,7 @@
 body {
   background-image: url("../images/skulls.png");
   background-repeat: repeat;
+  margin: 0;
 
   overflow: hidden;
   position: absolute;
@@ -15,8 +16,14 @@ body {
   background-image: url("../images/watermark.png");
   background-repeat:no-repeat;
   background-position: center center;
-  width: 670px;
+
   height: 470px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 @font-face {
@@ -24,15 +31,16 @@ body {
   src: url("../fonts/unscii-16.woff") format('woff');
 }
 
-.titlebar {
+#titlebar {
   font-family: "unscii", monospace;
   font-size: 14pt;
   color: #333;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  padding-bottom: 20px;
+  width: 100%;
 }
-.titlebar a {
+#titlebar a {
   color: #333;
   text-decoration: none;
 }
