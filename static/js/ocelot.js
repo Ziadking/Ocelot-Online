@@ -2,11 +2,15 @@
 var width = 80;
 var height = 25;
 
+var charWidth = 8;
+var charHeight = 16;
+
 var fontOffset = 13;
 
 var foreColor = "rgba(255, 255, 255, 1.0)";
 var backColor = "rgba(0, 0, 0, 0.8)";
 
+// util methods
 if (!String.prototype.endsWith) {
   String.prototype.endsWith = function(search, this_len) {
     if (this_len === undefined || this_len > this.length) {
@@ -16,7 +20,6 @@ if (!String.prototype.endsWith) {
   };
 }
 
-// util methods
 function numberToColour(number) {
   const r = (number & 0xff0000) >> 16;
   const g = (number & 0x00ff00) >> 8;
@@ -42,6 +45,8 @@ var terminal = document.getElementById('terminal');
 var context = terminal.getContext('2d');
 context.font = '16px unscii';
 
+var bounds = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
+
 context.fillStyle = backColor;
 context.fillRect(0, 0, terminal.width, terminal.height);
 
@@ -55,43 +60,60 @@ function setBackground(r, g, b) {
 }
 
 function set(x, y, value) {
-  var px = x * 8;
-  var py = y * 16;
-  context.clearRect(px, py, 8 * value.length, 16 + 1);
+  var px = x * charWidth;
+  var py = y * charHeight;
+  context.clearRect(px, py, charWidth * value.length, charHeight + 1);
   context.fillStyle = backColor;
-  context.fillRect(px, py, 8 * value.length, 16 + 1);
+  context.fillRect(px, py, charWidth * value.length, charHeight + 1);
   context.fillStyle = foreColor;
   context.fillText(value, px, py + fontOffset);
 }
 
 function copy(x, y, width, height, xt, yt) {
-  var px = x * 8;
-  var py = y * 16;
-  var tpx = (x + xt) * 8;
-  var tpy = (y + yt) * 16;
-  var fragment = context.getImageData(px, py, width * 8, height * 16 + 1);
+  var px = x * charWidth;
+  var py = y * charHeight;
+  var tpx = (x + xt) * charWidth;
+  var tpy = (y + yt) * charHeight;
+  var fragment = context.getImageData(px, py, width * charWidth, height * charHeight + 1);
   context.putImageData(fragment, tpx, tpy);
 }
 
 function fill(x, y, width, height, value) {
-  var px = x * 8;
-  var py = y * 16;
-  context.clearRect(px, py, width * 8, height * 16 + 1);
+  var px = x * charWidth;
+  var py = y * charHeight;
+  context.clearRect(px, py, width * charWidth, height * charHeight + 1);
   context.fillStyle = backColor;
-  context.fillRect(px, py, width * 8, height * 16 + 1);
+  context.fillRect(px, py, width * charWidth, height * charHeight + 1);
   context.fillStyle = foreColor;
   var line = value.charAt(0).repeat(width);
   for (var i = 0; i < height; i++) {
-    context.fillText(line, px, py + fontOffset + i * 16);
+    context.fillText(line, px, py + fontOffset + i * charHeight);
   }
 }
 
-function resize() {
+function setResolution(w, h) {
+  width = w; height = h;
   // resize canvas
-  terminal.width = width * 8;
-  terminal.height = height * 16;
-  // for some reason. after canvas size change font settings drop to default
-  context.font = '16px unscii';
+  if (w != terminal.width || h != terminal.height) {
+    terminal.width = width * charWidth;
+    terminal.height = height * charHeight;
+    // for some reason, after canvas changes it's size font settings drop to default
+    context.font = '16px unscii';
+  }
+  calculateBounds();
+}
+
+var style = getComputedStyle(terminal, null);
+var verticalBorder = parseInt(style.getPropertyValue("border-top-width"));
+var horizontalBorder = parseInt(style.getPropertyValue("border-left-width"));
+function calculateBounds() {
+  var rect = terminal.getBoundingClientRect();
+  bounds.left = rect.left + horizontalBorder;
+  bounds.right = rect.right - horizontalBorder;
+  bounds.width = rect.width - horizontalBorder * 2;
+  bounds.top = rect.top + verticalBorder;
+  bounds.bottom = rect.bottom - verticalBorder;
+  bounds.height = rect.height - verticalBorder * 2;
 }
 
 // init some other ui elements
@@ -117,15 +139,15 @@ socket.onmessage = function (event) {
       alert("Crash: " + parts[1] + "!");
       break;
     case 'set':
-      set(parseInt(parts[1]), parseInt(parts[2]), parts[4])
+      set(parseInt(parts[1]), parseInt(parts[2]), parts[4]);
       break;
     case 'foreground':
-      var color = numberToColour(parseInt(parts[1]))
-      setForeground(color[0], color[1], color[2])
+      var color = numberToColour(parseInt(parts[1]));
+      setForeground(color[0], color[1], color[2]);
       break;
     case 'background':
-      var color = numberToColour(parseInt(parts[1]))
-      setBackground(color[0], color[1], color[2])
+      var color = numberToColour(parseInt(parts[1]));
+      setBackground(color[0], color[1], color[2]);
       break;
     case 'copy':
       copy(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]),
@@ -135,27 +157,26 @@ socket.onmessage = function (event) {
       fill(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]), parts[5]);
       break;
     case 'state':
-      var w = parseInt(parts[1])
-      var h = parseInt(parts[2])
-      if (w != width || h != height) {
-        width = w; height = h;
-        resize();
-      }
-      var fore = numberToColour(parseInt(parts[3]))
-      var back = numberToColour(parseInt(parts[4]))
+      // update resolution if necessary 
+      setResolution(parseInt(parts[1]), parseInt(parts[2]));
+      // read current colors
+      var fore = numberToColour(parseInt(parts[3]));
+      var back = numberToColour(parseInt(parts[4]));
+      // read and apply all changes
       for (var i = 5; i < parts.length; i += 5) {
         if (i + 4 >= parts.length) break;
-        var x = parseInt(parts[i])
-        var y = parseInt(parts[i + 1])
-        var f = numberToColour(parseInt(parts[i + 2]))
-        var b = numberToColour(parseInt(parts[i + 3]))
-        var value = parts[i + 4]
-        setForeground(f[0], f[1], f[2])
-        setBackground(b[0], b[1], b[2])
-        set(x, y, value)
+        var x = parseInt(parts[i]);
+        var y = parseInt(parts[i + 1]);
+        var f = numberToColour(parseInt(parts[i + 2]));
+        var b = numberToColour(parseInt(parts[i + 3]));
+        var value = parts[i + 4];
+        setForeground(f[0], f[1], f[2]);
+        setBackground(b[0], b[1], b[2]);
+        set(x, y, value);
       }
-      setForeground(fore[0], fore[1], fore[2])
-      setBackground(back[0], back[1], back[2])
+      // set colors to current
+      setForeground(fore[0], fore[1], fore[2]);
+      setBackground(back[0], back[1], back[2]);
       break;
     case 'turnon-failure':
       turnOnButton.classList.remove('warning');
@@ -168,10 +189,6 @@ socket.onmessage = function (event) {
       turnOffButton.classList.add('warning');
       break;
     case "resolution":
-      // resize canvas
-      width = parseInt(parts[1]);
-      height = parseInt(parts[2]);
-      resize();
       // update the state
       askForState();
       break;
@@ -179,6 +196,42 @@ socket.onmessage = function (event) {
 }
 
 // subscribe to user feedback
+function relativeX(e) {
+  return Math.floor(Math.min(terminal.width - 1, Math.max(0, e.clientX - bounds.left)) / charWidth);
+}
+function relativeY(e) {
+  return Math.floor(Math.min(terminal.height - 1, Math.max(0, e.clientY - bounds.top)) / charHeight);
+}
+
+var mousePressed = false
+terminal.onmousedown = function(e) {
+  mousePressed = true
+  socket.send("mousedown " + relativeX(e) + " " + relativeY(e) + " " + e.buttons);
+  return false;
+}
+
+terminal.onmouseup = function(e) {
+  mousePressed = false
+  socket.send("mouseup " + relativeX(e) + " " + relativeY(e) + " " + e.buttons);
+  return false;
+}
+
+terminal.onmousemove = function(e) {
+  if (mousePressed) {
+    socket.send("mousedrag " + relativeX(e) + " " + relativeY(e) + " " + e.buttons);
+    return false;
+  }
+}
+
+terminal.onwheel = function(e) {
+  socket.send("mousewheel " + relativeX(e) + " " + relativeY(e) + " " + e.deltaY / 3);
+  return false;
+}
+
+terminal.oncontextmenu = function(e) {
+  return false;
+}
+
 var codes = {
   49: 0x02,
   50: 0x03,
@@ -291,4 +344,9 @@ function askForState() {
 // ask for the current terminal state
 socket.onopen = function() {
   askForState();
+}
+
+// run additional DOM-dependents intialization code
+window.onload = function() {
+  calculateBounds();
 }

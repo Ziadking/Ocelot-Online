@@ -102,6 +102,22 @@ class Workspace {
     screen.keyUp(character, code, defaultUser)
   }
 
+  def mouseDown(x: Int, y: Int, button: Int): Unit = {
+    screen.mouseDown(x, y, button, defaultUser)
+  }
+
+  def mouseUp(x: Int, y: Int, button: Int): Unit = {
+    screen.mouseUp(x, y, button, defaultUser)
+  }
+
+  def mouseDrag(x: Int, y: Int, button: Int): Unit = {
+    screen.mouseDrag(x, y, button, defaultUser)
+  }
+
+  def mouseScroll(x: Int, y: Int, delta: Int): Unit = {
+    screen.mouseScroll(x, y, delta, defaultUser)
+  }
+
   def turnOff(): Unit = {
     computer.turnOff()
     println("Computer turned off.")
