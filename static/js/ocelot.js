@@ -17,6 +17,27 @@ if (!String.prototype.endsWith) {
   };
 }
 
+// util methods
+function numberToColour(number) {
+  const r = (number & 0xff0000) >> 16;
+  const g = (number & 0x00ff00) >> 8;
+  const b = (number & 0x0000ff);
+  return [r, g, b];
+}
+
+function lightness(r, g, b) {
+  var max = Math.max(r, g, b);
+  var min = Math.min(r, g, b);
+  return (max + min) / 2;
+}
+
+var fancyAlphaThreshold = 80;
+function fancyAlpha(r, g, b) {
+  var l = lightness(r, g, b);
+  if (l > fancyAlphaThreshold) return 1.0;
+  else return 0.8 + (l / fancyAlphaThreshold) * 0.2;
+}
+
 // init terminal
 var terminal = document.getElementById('terminal');
 var context = terminal.getContext('2d');
@@ -26,12 +47,12 @@ context.fillStyle = backColor;
 context.fillRect(0, 0, terminal.width, terminal.height);
 
 function setForeground(r, g, b) {
-  foreColor = "rgba(" + r + ", " + g + ", " + b + ", 1.0)";
+  foreColor = "rgba(" + r + ", " + g + ", " + b + ", " + fancyAlpha(r, g, b) + ")";
   context.fillStyle = foreColor;
 }
 
 function setBackground(r, g, b) {
-  backColor = "rgba(" + r + ", " + g + ", " + b + ", 0.8)";
+  backColor = "rgba(" + r + ", " + g + ", " + b + ", " + fancyAlpha(r, g, b) + ")";
 }
 
 function set(x, y, value) {
@@ -42,13 +63,6 @@ function set(x, y, value) {
   context.fillRect(px, py, 8 * value.length, 16 + 1);
   context.fillStyle = foreColor;
   context.fillText(value, px, py + fontOffset);
-}
-
-function numberToColour(number) {
-  const r = (number & 0xff0000) >> 16;
-  const g = (number & 0x00ff00) >> 8;
-  const b = (number & 0x0000ff);
-  return [r, g, b];
 }
 
 function copy(x, y, width, height, xt, yt) {
