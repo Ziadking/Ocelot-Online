@@ -251,7 +251,11 @@ var codes = {
   120: 0x43, 121: 0x44, 122: 0x57, 123: 0x58
 }
 
-document.onkeydown = function (e) {
+document.onpaste = function(e) {
+  socket.send("clipboard " + e.clipboardData.getData('text'));
+}
+
+document.onkeydown = function(e) {
   e = e || window.event;
   var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
   var keyCode = codes[e.keyCode] || e.keyCode;
@@ -259,7 +263,7 @@ document.onkeydown = function (e) {
   return false;
 };
 
-document.onkeyup = function (e) {
+document.onkeyup = function(e) {
   e = e || window.event;
   var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
   var keyCode = codes[e.keyCode] || e.keyCode;

@@ -112,6 +112,10 @@ class Workspace {
     screen.keyUp(character, code, defaultUser)
   }
 
+  def clipboard(value: String): Unit = {
+    screen.clipboard(value, defaultUser)
+  }
+
   def mouseDown(x: Int, y: Int, button: Int): Unit = {
     screen.mouseDown(x, y, button, defaultUser)
   }
