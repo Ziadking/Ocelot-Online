@@ -5,7 +5,7 @@ var height = 25;
 var charWidth = 8;
 var charHeight = 16;
 
-var fontOffset = 13;
+var font = '16px unscii';
 
 var foreColor = "rgba(255, 255, 255, 1.0)";
 var backColor = "rgba(0, 0, 0, 0.8)";
@@ -43,7 +43,9 @@ function fancyAlpha(r, g, b) {
 // init terminal
 var terminal = document.getElementById('terminal');
 var context = terminal.getContext('2d');
-context.font = '16px unscii';
+context.font = font;
+context.textBaseline = 'top';
+context.globalCompositeOperation = 'destination-over';
 
 var bounds = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
 
@@ -63,10 +65,10 @@ function set(x, y, value) {
   var px = x * charWidth;
   var py = y * charHeight;
   context.clearRect(px, py, charWidth * value.length, charHeight);
+  context.fillStyle = foreColor;
+  context.fillText(value, px, py);
   context.fillStyle = backColor;
   context.fillRect(px, py, charWidth * value.length, charHeight);
-  context.fillStyle = foreColor;
-  context.fillText(value, px, py + fontOffset);
 }
 
 function copy(x, y, width, height, xt, yt) {
@@ -82,13 +84,13 @@ function fill(x, y, width, height, value) {
   var px = x * charWidth;
   var py = y * charHeight;
   context.clearRect(px, py, width * charWidth, height * charHeight);
-  context.fillStyle = backColor;
-  context.fillRect(px, py, width * charWidth, height * charHeight);
   context.fillStyle = foreColor;
   var line = value.charAt(0).repeat(width);
   for (var i = 0; i < height; i++) {
-    context.fillText(line, px, py + fontOffset + i * charHeight);
+    context.fillText(line, px, py + i * charHeight);
   }
+  context.fillStyle = backColor;
+  context.fillRect(px, py, width * charWidth, height * charHeight);
 }
 
 function setResolution(w, h) {
@@ -98,7 +100,9 @@ function setResolution(w, h) {
     terminal.width = width * charWidth;
     terminal.height = height * charHeight;
     // for some reason, after canvas changes it's size font settings drop to default
-    context.font = '16px unscii';
+    context.font = font;
+    context.textBaseline = 'top';
+    context.globalCompositeOperation = 'destination-over';
   }
   calculateBounds();
 }
