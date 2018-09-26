@@ -2,7 +2,9 @@ package totoro.ocelot.online
 
 import akka.http.scaladsl.model.ws.TextMessage
 import akka.stream.scaladsl.SourceQueueWithComplete
-import totoro.ocelot.brain.entity.{CPU, Cable, Case, GraphicsCard, HardDiskDrive, InternetCard, Keyboard, Memory, Screen}
+import totoro.ocelot.brain.entity.{
+  CPU, Cable, Case, GraphicsCard, HardDiskDrive, InternetCard, Keyboard, Memory, Redstone, Screen
+}
 import totoro.ocelot.brain.event._
 import totoro.ocelot.brain.loot.Loot
 import totoro.ocelot.brain.network.Network
@@ -42,6 +44,9 @@ class Workspace {
 
     val internet = new InternetCard()
     computer.add(internet)
+
+    val redstone = new Redstone.Tier1()
+    computer.add(redstone)
 
     computer.add(Loot.OpenOsBIOS.create())
     computer.add(Loot.OpenOsFloppy.create())

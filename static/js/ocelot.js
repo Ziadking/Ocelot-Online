@@ -350,5 +350,5 @@ socket.onopen = function() {
 window.onload = function() {
   calculateBounds();
   // set version label
-  document.getElementById('footer').innerHTML = version;
+  document.getElementById('version').innerHTML = version;
 }

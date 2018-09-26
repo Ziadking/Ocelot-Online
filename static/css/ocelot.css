@@ -75,11 +75,17 @@ body {
 
 #footer {
   font-family: "unscii", monospace;
-  font-size: 12pt;
+  font-size: 14pt;
   color: #333;
   padding-top: 20px;
   width: 100%;
   text-align: end;
+  display: flex;
+  justify-content: space-between;
+}
+#footer a {
+  color: #333;
+  text-decoration: none;
 }
 
 .warning {
