@@ -2,7 +2,6 @@
 var width = 80;
 var height = 25;
 
-var margin = 10;
 var fontOffset = 13;
 
 var foreColor = "rgba(255, 255, 255, 1.0)";
@@ -56,8 +55,8 @@ function setBackground(r, g, b) {
 }
 
 function set(x, y, value) {
-  var px = margin * 1.5 + x * 8;
-  var py = margin + y * 16;
+  var px = x * 8;
+  var py = y * 16;
   context.clearRect(px, py, 8 * value.length, 16 + 1);
   context.fillStyle = backColor;
   context.fillRect(px, py, 8 * value.length, 16 + 1);
@@ -66,17 +65,17 @@ function set(x, y, value) {
 }
 
 function copy(x, y, width, height, xt, yt) {
-  var px = margin * 1.5 + x * 8;
-  var py = margin + y * 16;
-  var tpx = margin * 1.5 + (x + xt) * 8;
-  var tpy = margin + (y + yt) * 16;
+  var px = x * 8;
+  var py = y * 16;
+  var tpx = (x + xt) * 8;
+  var tpy = (y + yt) * 16;
   var fragment = context.getImageData(px, py, width * 8, height * 16 + 1);
   context.putImageData(fragment, tpx, tpy);
 }
 
 function fill(x, y, width, height, value) {
-  var px = margin * 1.5 + x * 8;
-  var py = margin + y * 16;
+  var px = x * 8;
+  var py = y * 16;
   context.clearRect(px, py, width * 8, height * 16 + 1);
   context.fillStyle = backColor;
   context.fillRect(px, py, width * 8, height * 16 + 1);
