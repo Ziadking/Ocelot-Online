@@ -32,8 +32,10 @@ class Workspace {
     val gpu = new GraphicsCard(Tier.Three)
     computer.add(gpu)
 
-    val memory = new Memory(Tier.Six)
-    computer.add(memory)
+    val memory1 = new Memory(Tier.Six)
+    computer.add(memory1)
+    val memory2 = new Memory(Tier.Six)
+    computer.add(memory2)
 
     val internet = new InternetCard()
     computer.add(internet)
