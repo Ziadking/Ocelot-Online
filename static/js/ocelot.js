@@ -75,6 +75,7 @@ function fill(x, y, width, height, value) {
 
 // init some other ui elements
 var turnOnButton = document.getElementById('turn_on_button');
+var turnOnButton = document.getElementById('turn_off_button');
 
 // connect to the server
 if (host.endsWith("/")) host = host.substring(0, host.length - 1);
@@ -133,6 +134,12 @@ socket.onmessage = function (event) {
       turnOnButton.classList.add('warning');
       setTimeout(function(){
         turnOnButton.classList.remove('warning');
+      }, 500);
+      break;
+    case 'turnoff-failure':
+      turnOffButton.classList.add('warning');
+      setTimeout(function(){
+        turnOffButton.classList.remove('warning');
       }, 500);
       break;
   }
@@ -240,6 +247,9 @@ document.onkeyup = function (e) {
 // additional callbacks
 function turnOn() {
   socket.send("turnon");
+}
+function turnOff() {
+  socket.send("turnoff");
 }
 
 // ask for the current terminal state

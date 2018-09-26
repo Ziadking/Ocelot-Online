@@ -66,6 +66,13 @@ object Ocelot {
                   } else {
                     mat offer TextMessage("turnon-failure")
                   }
+                case "turnoff" =>
+                  if (workspace.isRunning) {
+                    workspace.turnOff()
+                    mat offer TextMessage("turnoff-success")
+                  } else {
+                    mat offer TextMessage("turnoff-failure")
+                  }
               }
             case _ =>
           }
