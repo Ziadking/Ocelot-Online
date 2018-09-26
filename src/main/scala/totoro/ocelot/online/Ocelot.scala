@@ -14,6 +14,8 @@ import scala.io.StdIn
 import scala.util.Success
 
 object Ocelot {
+  private val Version = "0.2.0"
+
   def main(args: Array[String]): Unit = {
     // init
     implicit val system: ActorSystem = ActorSystem("ocelot-system")
@@ -97,7 +99,7 @@ object Ocelot {
       } ~
       path("config.js") {
         get {
-          complete(s"var host = '${Settings.get.clientHost}';")
+          complete(s"var version = '$Version'; var host = '${Settings.get.clientHost}';")
         }
       } ~
       pathEndOrSingleSlash {

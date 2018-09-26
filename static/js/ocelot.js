@@ -349,4 +349,6 @@ socket.onopen = function() {
 // run additional DOM-dependents intialization code
 window.onload = function() {
   calculateBounds();
+  // set version label
+  document.getElementById('footer').innerHTML = version;
 }
