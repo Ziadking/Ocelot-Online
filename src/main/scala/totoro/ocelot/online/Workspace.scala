@@ -48,7 +48,7 @@ class Workspace {
     val redstone = new Redstone.Tier1()
     computer.add(redstone)
 
-    computer.add(Loot.OpenOsBIOS.create())
+    computer.add(Loot.AdvLoader.create())
     computer.add(Loot.OpenOsFloppy.create())
 
     screen = new Screen(Tier.Two)
