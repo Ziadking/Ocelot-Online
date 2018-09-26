@@ -59,12 +59,19 @@ body {
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8);
 }
 
-#warning {
-  animation-duration: 500s;
-  animation-name: flash;
+.warning {
+  animation: flash 1s linear;
 }
 @keyframes flash {
-    0% { color: #333; }
-    30%   { color: red; }
-    100%   { color: #333; }
+  10% { color: red; }
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }

@@ -75,7 +75,7 @@ function fill(x, y, width, height, value) {
 
 // init some other ui elements
 var turnOnButton = document.getElementById('turn_on_button');
-var turnOnButton = document.getElementById('turn_off_button');
+var turnOffButton = document.getElementById('turn_off_button');
 
 // connect to the server
 if (host.endsWith("/")) host = host.substring(0, host.length - 1);
@@ -131,16 +131,14 @@ socket.onmessage = function (event) {
       setBackground(back[0], back[1], back[2])
       break;
     case 'turnon-failure':
+      turnOnButton.classList.remove('warning');
+      void turnOnButton.offsetWidth; // black magic - triggering element reflow
       turnOnButton.classList.add('warning');
-      setTimeout(function(){
-        turnOnButton.classList.remove('warning');
-      }, 500);
       break;
     case 'turnoff-failure':
+      turnOffButton.classList.remove('warning');
+      void turnOffButton.offsetWidth; // black magic - triggering element reflow
       turnOffButton.classList.add('warning');
-      setTimeout(function(){
-        turnOffButton.classList.remove('warning');
-      }, 500);
       break;
   }
 }
