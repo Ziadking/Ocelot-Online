@@ -38,6 +38,7 @@ function fancyAlpha(r, g, b) {
 }
 
 // init terminal
+var container = document.getElementById('container');
 var terminal = document.getElementById('terminal');
 var context = terminal.getContext('2d');
 context.font = '16px unscii';
@@ -152,6 +153,20 @@ socket.onmessage = function (event) {
       turnOffButton.classList.remove('warning');
       void turnOffButton.offsetWidth; // black magic - triggering element reflow
       turnOffButton.classList.add('warning');
+      break;
+    case "resolution":
+      // resize canvas
+      width = parseInt(parts[1]);
+      height = parseInt(parts[2]);
+      terminal.width = width * 8;
+      terminal.height = height * 16;
+      // center it
+      var leftMargin = (container.clientWidth - width * 8 - 30) / 2;
+      var topMargin = (container.clientHeight - height * 16 - 24) / 2.2;
+      terminal.style.marginLeft = leftMargin + "px";
+      terminal.style.marginTop = topMargin + "px";
+      // for some reason. after canvas size change font settings drop to default
+      context.font = '16px unscii';
       break;
   }
 }

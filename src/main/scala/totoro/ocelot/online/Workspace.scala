@@ -76,6 +76,9 @@ class Workspace {
     EventBus.listenTo(classOf[TextBufferFillEvent], { case event: TextBufferFillEvent =>
       producer offer TextMessage(s"fill\n${event.column}\n${event.row}\n${event.width}\n${event.height}\n${event.value}")
     })
+    EventBus.listenTo(classOf[TextBufferSetResolutionEvent], { case event: TextBufferSetResolutionEvent =>
+      producer offer TextMessage(s"resolution\n${event.width}\n${event.height}")
+    })
   }
 
   def turnOn(): Unit = {
