@@ -251,24 +251,35 @@ var codes = {
   120: 0x43, 121: 0x44, 122: 0x57, 123: 0x58
 }
 
+var keyControl = 17;
+var keyV = 86
+var isControlPressed = false;
+// do not prevent standart browser behavior for these buttons
+var whitelisted = [keyControl, keyV];
+
 document.onpaste = function(e) {
   socket.send("clipboard " + e.clipboardData.getData('text'));
 }
 
 document.onkeydown = function(e) {
   e = e || window.event;
-  var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
-  var keyCode = codes[e.keyCode] || e.keyCode;
-  socket.send("keydown " + charCode + " " + keyCode);
-  return false;
+  console.log(e);
+  if (e.keyCode == keyControl) isControlPressed = true;
+  if (!(e.keyCode == keyV && isControlPressed)) {
+    var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
+    var keyCode = codes[e.keyCode] || e.keyCode;
+    socket.send("keydown " + charCode + " " + keyCode);
+  }
+  return whitelisted.includes(e.keyCode);
 };
 
 document.onkeyup = function(e) {
   e = e || window.event;
+  if (e.keyCode == keyControl) isControlPressed = false;
   var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
   var keyCode = codes[e.keyCode] || e.keyCode;
   socket.send("keyup " + charCode + " " + keyCode);
-  return false;
+  return whitelisted.includes(e.keyCode);
 };
 
 // additional callbacks
