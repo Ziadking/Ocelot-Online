@@ -86,6 +86,14 @@ function fill(x, y, width, height, value) {
   }
 }
 
+function resize() {
+  // resize canvas
+  terminal.width = width * 8;
+  terminal.height = height * 16;
+  // for some reason. after canvas size change font settings drop to default
+  context.font = '16px unscii';
+}
+
 // init some other ui elements
 var turnOnButton = document.getElementById('turn_on_button');
 var turnOffButton = document.getElementById('turn_off_button');
@@ -127,9 +135,15 @@ socket.onmessage = function (event) {
       fill(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]), parts[5]);
       break;
     case 'state':
-      var fore = numberToColour(parseInt(parts[1]))
-      var back = numberToColour(parseInt(parts[2]))
-      for (var i = 3; i < parts.length; i += 5) {
+      var w = parseInt(parts[1])
+      var h = parseInt(parts[2])
+      if (w != width || h != height) {
+        width = w; height = h;
+        resize();
+      }
+      var fore = numberToColour(parseInt(parts[3]))
+      var back = numberToColour(parseInt(parts[4]))
+      for (var i = 5; i < parts.length; i += 5) {
         if (i + 4 >= parts.length) break;
         var x = parseInt(parts[i])
         var y = parseInt(parts[i + 1])
@@ -157,10 +171,7 @@ socket.onmessage = function (event) {
       // resize canvas
       width = parseInt(parts[1]);
       height = parseInt(parts[2]);
-      terminal.width = width * 8;
-      terminal.height = height * 16;
-      // for some reason. after canvas size change font settings drop to default
-      context.font = '16px unscii';
+      resize();
       // update the state
       askForState();
       break;

@@ -114,6 +114,10 @@ class Workspace {
   def sendState(): Unit = {
     val state = new StringBuilder("state\n")
 
+    // write current resolution
+    state ++= screen.data.width + "\n"
+    state ++= screen.data.height + "\n"
+
     // write current colors
     state ++= getColor(screen.data.foreground).toString + "\n"
     state ++= getColor(screen.data.background).toString + "\n"
