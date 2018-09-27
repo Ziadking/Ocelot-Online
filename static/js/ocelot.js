@@ -85,11 +85,13 @@ function fillBackground(x, y, width, height, r, g, b, a) {
   var imageData = context.getImageData(x, y, width, height);
   var data = imageData.data;
   for (var i = 0; i < data.length; i += 4) {
-    if (data[i + 3] < 160) {
+    if (data[i + 3] < 153) {
       data[i] = r;
       data[i + 1] = g;
       data[i + 2] = b;
       data[i + 3] = a;
+    } else {
+      data[i + 3] = fancyAlpha(data[i], data[i + 1], data[i + 2]) * 255;
     }
   }
   context.putImageData(imageData, x, y);
