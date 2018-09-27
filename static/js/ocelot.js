@@ -13,7 +13,9 @@ var translateX = -0.125
 var translateY = 0.5
 
 var foreColor = "rgba(255, 255, 255, 1.0)";
+var foreR = 255, foreG = 255, foreB = 255, foreA = 255;
 var backColor = "rgba(0, 0, 0, 0.8)";
+var backR = 0, backG = 0, backB = 0, backA = 255 * 0.8;
 
 // util methods
 if (!String.prototype.endsWith) {
@@ -68,22 +70,39 @@ context.fillStyle = backColor;
 context.fillRect(0, 0, pixelWidth, pixelHeight);
 
 function setForeground(r, g, b) {
-  foreColor = "rgba(" + r + ", " + g + ", " + b + ", " + fancyAlpha(r, g, b) + ")";
-  context.fillStyle = foreColor;
+  var alpha = fancyAlpha(r, g, b);
+  foreColor = "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+  foreR = r; foreG = g; foreB = b; foreA = alpha * 255;
 }
 
 function setBackground(r, g, b) {
-  backColor = "rgba(" + r + ", " + g + ", " + b + ", " + fancyAlpha(r, g, b) + ")";
+  var alpha = fancyAlpha(r, g, b);
+  backColor = "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+  backR = r; backG = g; backB = b; backA = alpha * 255;
+}
+
+function fillBackground(x, y, width, height, r, g, b, a) {
+  var imageData = context.getImageData(x, y, width, height);
+  var data = imageData.data;
+  for (var i = 0; i < data.length; i += 4) {
+    if (data[i + 3] < 160) {
+      data[i] = r;
+      data[i + 1] = g;
+      data[i + 2] = b;
+      data[i + 3] = a;
+    }
+  }
+  context.putImageData(imageData, x, y);
 }
 
 function set(x, y, value) {
   var px = x * charWidth;
   var py = y * charHeight;
-  context.clearRect(px, py, charWidth * value.length, charHeight);
+  var width = charWidth * value.length;
+  context.clearRect(px, py, width, charHeight);
   context.fillStyle = foreColor;
   context.fillText(value, px + translateX, py + translateY);
-  context.fillStyle = backColor;
-  context.fillRect(px, py, charWidth * value.length, charHeight);
+  fillBackground(px, py, width, charHeight, backR, backG, backB, backA);
 }
 
 function copy(x, y, width, height, xt, yt) {
@@ -98,14 +117,15 @@ function copy(x, y, width, height, xt, yt) {
 function fill(x, y, width, height, value) {
   var px = x * charWidth;
   var py = y * charHeight;
-  context.clearRect(px, py, width * charWidth, height * charHeight);
+  var pw = width * charWidth;
+  var ph = height * charHeight;
+  context.clearRect(px, py, pw, ph);
   context.fillStyle = foreColor;
   var line = value.charAt(0).repeat(width);
   for (var i = 0; i < height; i++) {
     context.fillText(line, px + translateX, py + i * charHeight + translateY);
   }
-  context.fillStyle = backColor;
-  context.fillRect(px, py, width * charWidth, height * charHeight);
+  fillBackground(px, py, pw, ph, backR, backG, backB, backA);
 }
 
 function setResolution(w, h) {
