@@ -1,3 +1,10 @@
+## 0.2.2
+* Experimental rendering changes
+* Experimental support for clipboard pasting with `Ctrl + V`
+* Experimental support for mobile phones
+* Added character codes for `Enter`, `Tab`, `Backspace` and `Ctrl + C`
+* Fix: release all pressed keys when the page loses focus
+
 ## 0.2.1
 * Added changelog
 * Changed default Lua BIOS to advancedLoader (thanks Luca_S)

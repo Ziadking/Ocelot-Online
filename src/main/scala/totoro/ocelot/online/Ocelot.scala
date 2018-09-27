@@ -14,7 +14,8 @@ import scala.io.StdIn
 import scala.util.Success
 
 object Ocelot {
-  private val Version = "0.2.1"
+  // do not forget to change version in build.sbt
+  private val Version = "0.2.2"
 
   def main(args: Array[String]): Unit = {
     // init
