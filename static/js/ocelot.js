@@ -42,6 +42,7 @@ function fancyAlpha(r, g, b) {
 
 // init terminal
 var terminal = document.getElementById('terminal');
+terminal.contentEditable = true;
 var context = terminal.getContext('2d');
 context.font = font;
 context.textBaseline = 'top';
@@ -211,19 +212,16 @@ var mousePressed = false
 terminal.onmousedown = function(e) {
   mousePressed = true
   socket.send("mousedown " + relativeX(e) + " " + relativeY(e) + " " + e.buttons);
-  return false;
 }
 
 terminal.onmouseup = function(e) {
   mousePressed = false
   socket.send("mouseup " + relativeX(e) + " " + relativeY(e) + " " + e.buttons);
-  return false;
 }
 
 terminal.onmousemove = function(e) {
   if (mousePressed) {
     socket.send("mousedrag " + relativeX(e) + " " + relativeY(e) + " " + e.buttons);
-    return false;
   }
 }
 
