@@ -6,6 +6,8 @@ var charWidth = 8;
 var charHeight = 16;
 
 var font = '16px unscii';
+var translateX = -0.125
+var translateY = 0.5
 
 var foreColor = "rgba(255, 255, 255, 1.0)";
 var backColor = "rgba(0, 0, 0, 0.8)";
@@ -72,7 +74,7 @@ function set(x, y, value) {
   var py = y * charHeight;
   context.clearRect(px, py, charWidth * value.length, charHeight);
   context.fillStyle = foreColor;
-  context.fillText(value, px, py);
+  context.fillText(value, px + translateX, py + translateY);
   context.fillStyle = backColor;
   context.fillRect(px, py, charWidth * value.length, charHeight);
 }
@@ -93,7 +95,7 @@ function fill(x, y, width, height, value) {
   context.fillStyle = foreColor;
   var line = value.charAt(0).repeat(width);
   for (var i = 0; i < height; i++) {
-    context.fillText(line, px, py + i * charHeight);
+    context.fillText(line, px + translateX, py + i * charHeight + translateY);
   }
   context.fillStyle = backColor;
   context.fillRect(px, py, width * charWidth, height * charHeight);
