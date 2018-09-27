@@ -254,21 +254,40 @@ var codes = {
 }
 
 var keyControl = 17;
-var keyV = 86
+var keyC = 67;
+var keyV = 86;
+var keyEnter = 13;
+var keyTab = 9;
+var keyBackspace = 8;
 var isControlPressed = false;
 var isKeyBoardDirty = false;
 // do not prevent standart browser behavior for these buttons
 var whitelisted = [keyControl, keyV];
+// these keys do have their own character code that is equal to their key code
+var special = [keyTab, keyBackspace, keyEnter];
 
 document.onpaste = function(e) {
   socket.send("clipboard " + e.clipboardData.getData('text'));
+}
+
+function getCharCode(e) {
+  if (special.includes(e.keyCode)) {
+    return e.keyCode;
+  } else if (isControlPressed && e.keyCode == keyC) {
+    // send EOT code here for Ctrl + C sequence
+    return 0x04
+  } else if (e.key.length == 1) {
+    return e.key.charCodeAt(0)
+  } else {
+    return 0;
+  }
 }
 
 document.onkeydown = function(e) {
   e = e || window.event;
   if (e.keyCode == keyControl) isControlPressed = true;
   if (!(e.keyCode == keyV && isControlPressed)) {
-    var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
+    var charCode = getCharCode(e);
     var keyCode = codes[e.keyCode] || e.keyCode;
     socket.send("keydown " + charCode + " " + keyCode);
     isKeyBoardDirty = true;
@@ -279,7 +298,7 @@ document.onkeydown = function(e) {
 document.onkeyup = function(e) {
   e = e || window.event;
   if (e.keyCode == keyControl) isControlPressed = false;
-  var charCode = e.key.length == 1 ? e.key.charCodeAt(0) : 0;
+  var charCode = getCharCode(e);
   var keyCode = codes[e.keyCode] || e.keyCode;
   socket.send("keyup " + charCode + " " + keyCode);
   return whitelisted.includes(e.keyCode);
