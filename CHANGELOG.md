@@ -1,3 +1,10 @@
+## 0.3.0
+* Finished pixel perfect rendering
+* Added redstone card Tier 2
+* Renamed OpenOS floppy
+* Added `hpm` to default OpenOS image
+* Fixed copy-pasting
+
 ## 0.2.2
 * Experimental rendering changes
 * Experimental support for clipboard pasting with `Ctrl + V`

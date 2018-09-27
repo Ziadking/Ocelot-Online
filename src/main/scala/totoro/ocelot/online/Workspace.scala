@@ -46,7 +46,7 @@ class Workspace {
     val internet = new InternetCard()
     computer.add(internet)
 
-    val redstone = new Redstone.Tier1()
+    val redstone = new Redstone.Tier2()
     computer.add(redstone)
 
     computer.add(Loot.AdvLoader.create())

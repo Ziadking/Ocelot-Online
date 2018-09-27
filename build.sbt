@@ -1,7 +1,7 @@
 name := "ocelot-online"
 
 // do not forget to change version in Ocelot.scala
-version := "0.2.2"
+version := "0.3.0"
 
 scalaVersion := "2.12.6"
 
