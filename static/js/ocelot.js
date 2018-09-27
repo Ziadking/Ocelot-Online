@@ -40,9 +40,14 @@ function fancyAlpha(r, g, b) {
   else return 0.8 + (l / fancyAlphaThreshold) * 0.2;
 }
 
+function isMobile() {
+  return typeof window.orientation !== 'undefined';
+}
+
 // init terminal
 var terminal = document.getElementById('terminal');
-terminal.contentEditable = true;
+if (isMobile()) terminal.contentEditable = true;
+
 var context = terminal.getContext('2d');
 context.font = font;
 context.textBaseline = 'top';
