@@ -11,7 +11,7 @@ import akka.stream.{ActorMaterializer, OverflowStrategy}
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
-import scala.util.Success
+import scala.util.{Failure, Success}
 
 object Ocelot {
   // do not forget to change version in build.sbt
@@ -51,8 +51,25 @@ object Ocelot {
     run()
 
     // create websockets handler
-    def wsHandler: Flow[Message, Message, Any] =
-      Flow[Message].mapConcat {
+    var online = 0
+
+    def watchDisconnectsFlow[T]: Flow[T, T, Any] = Flow[T]
+      .watchTermination()((_, f) => {
+        online += 1
+        mat offer TextMessage(s"online\n$online")
+        f.onComplete { result =>
+          online -= 1
+          mat offer TextMessage(s"online\n$online")
+          result match {
+            case Failure(cause) =>
+              println(s"[ERROR] WS stream failed with $cause!")
+            case _ => // ignore normal termination
+          }
+        }
+      })
+
+    def wsHandler: Flow[Message, Message, Any] = Flow[Message]
+      .mapConcat {
         case tm: TextMessage =>
           tm.textStream.runFold("")(_ + _).onComplete {
             case Success(message) =>
@@ -82,6 +99,8 @@ object Ocelot {
                   } else {
                     mat offer TextMessage("turnoff-failure")
                   }
+                case "online" =>
+                  mat offer TextMessage(s"online\n$online")
                 case _ => // pass
               }
             case _ =>
@@ -91,7 +110,9 @@ object Ocelot {
           // ignore binary messages but drain content to avoid the stream being clogged
           bm.dataStream.runWith(Sink.ignore)
           Nil
-      }.merge(source)
+      }
+      .merge(source)
+      .via(watchDisconnectsFlow)
 
     // define routes
     val route =

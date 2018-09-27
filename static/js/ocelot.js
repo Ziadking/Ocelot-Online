@@ -160,6 +160,7 @@ function calculateBounds() {
 // init some other ui elements
 var turnOnButton = document.getElementById('turn_on_button');
 var turnOffButton = document.getElementById('turn_off_button');
+var onlineCounter = document.getElementById('online');
 
 // connect to the server
 if (host.endsWith("/")) host = host.substring(0, host.length - 1);
@@ -233,6 +234,8 @@ socket.onmessage = function (event) {
       // update the state
       askForState();
       break;
+    case "online":
+      onlineCounter.innerHTML = parts[1];
   }
 }
 
@@ -356,12 +359,13 @@ function turnOff() {
   socket.send("turnoff");
 }
 function askForState() {
-  socket.send("state")
+  socket.send("state");
 }
 
 // ask for the current terminal state
 socket.onopen = function() {
   askForState();
+  socket.send("online");
 }
 
 // run additional DOM-dependents intialization code
