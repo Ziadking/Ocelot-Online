@@ -5,6 +5,9 @@ var height = 25;
 var charWidth = 8;
 var charHeight = 16;
 
+var pixelWidth = width * charWidth;
+var pixelHeight = height * charHeight;
+
 var font = '16px unscii';
 var translateX = -0.125
 var translateY = 0.5
@@ -51,14 +54,18 @@ var terminal = document.getElementById('terminal');
 if (isMobile()) terminal.contentEditable = true;
 
 var context = terminal.getContext('2d');
-context.font = font;
-context.textBaseline = 'top';
-context.globalCompositeOperation = 'destination-over';
+
+function setupContext() {
+  context.font = font;
+  context.textBaseline = 'top';
+  context.globalCompositeOperation = 'destination-over';
+}
+setupContext();
 
 var bounds = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
 
 context.fillStyle = backColor;
-context.fillRect(0, 0, terminal.width, terminal.height);
+context.fillRect(0, 0, pixelWidth, pixelHeight);
 
 function setForeground(r, g, b) {
   foreColor = "rgba(" + r + ", " + g + ", " + b + ", " + fancyAlpha(r, g, b) + ")";
@@ -104,13 +111,13 @@ function fill(x, y, width, height, value) {
 function setResolution(w, h) {
   width = w; height = h;
   // resize canvas
-  if (w != terminal.width || h != terminal.height) {
-    terminal.width = width * charWidth;
-    terminal.height = height * charHeight;
+  if (w != pixelWidth || h != pixelHeight) {
+    pixelWidth = width * charWidth;
+    pixelHeight = height * charHeight;
+    terminal.width = pixelWidth;
+    terminal.height = pixelHeight;
     // for some reason, after canvas changes it's size font settings drop to default
-    context.font = font;
-    context.textBaseline = 'top';
-    context.globalCompositeOperation = 'destination-over';
+    setupContext();
   }
   calculateBounds();
 }
@@ -209,10 +216,10 @@ socket.onmessage = function (event) {
 
 // subscribe to user feedback
 function relativeX(e) {
-  return Math.floor(Math.min(terminal.width - 1, Math.max(0, e.clientX - bounds.left)) / charWidth);
+  return Math.floor(Math.min(pixelWidth - 1, Math.max(0, e.clientX - bounds.left)) / charWidth);
 }
 function relativeY(e) {
-  return Math.floor(Math.min(terminal.height - 1, Math.max(0, e.clientY - bounds.top)) / charHeight);
+  return Math.floor(Math.min(pixelHeight - 1, Math.max(0, e.clientY - bounds.top)) / charHeight);
 }
 
 var mousePressed = false
