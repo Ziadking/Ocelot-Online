@@ -1,3 +1,7 @@
+## 0.3.1
+* Added active WS connections counter (people online)
+* Fixed some rendering glitches in Firefox / Linux
+
 ## 0.3.0
 * Finished pixel perfect rendering
 * Added redstone card Tier 2
