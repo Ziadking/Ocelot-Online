@@ -265,7 +265,7 @@ terminal.onmousemove = function(e) {
 }
 
 terminal.onwheel = function(e) {
-  socket.send("mousewheel " + relativeX(e) + " " + relativeY(e) + " " + e.deltaY / 3);
+  socket.send("mousewheel " + relativeX(e) + " " + relativeY(e) + " " + (-e.deltaY / 3));
   return false;
 }
 
