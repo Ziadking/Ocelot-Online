@@ -1,4 +1,5 @@
-// init environment
+// environment
+// --------------------------------------------------------------------------------- //
 var width = 80;
 var height = 25;
 
@@ -11,7 +12,25 @@ var pixelHeight = height * charHeight;
 var foreR = 255, foreG = 255, foreB = 255, foreA = 255;
 var backR = 0, backG = 0, backB = 0, backA = 255 * 0.8;
 
-// load font data
+var bounds = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
+
+// ui elements
+// --------------------------------------------------------------------------------- //
+var container = document.getElementById('container');
+
+var terminal = document.getElementById('terminal');
+var context = terminal.getContext('2d');
+var contextData;
+var data;
+
+var watermark = document.getElementById('watermark');
+
+var turnOnButton = document.getElementById('turn_on_button');
+var turnOffButton = document.getElementById('turn_off_button');
+var onlineCounter = document.getElementById('online');
+
+// font data
+// --------------------------------------------------------------------------------- //
 var type = {
   'jBinary.all': 'File',
  Char: {
@@ -23,18 +42,22 @@ var type = {
 }
 
 var font = {};
-jBinary.load('fonts/unscii-16.bin', type, function(error, data) {
-  if (error == null) {
-    var array = data.readAll();
-    array.forEach(function (char) {
-      font[char.code] = char.matrix;
-    })
-  } else {
-    console.error(error);
-  }
-})
+
+function loadFont() {
+  jBinary.load('fonts/unscii-16.bin', type, function(error, data) {
+    if (error == null) {
+      var array = data.readAll();
+      array.forEach(function (char) {
+        font[char.code] = char.matrix;
+      })
+    } else {
+      console.error(error);
+    }
+  })
+}
 
 // util methods
+// --------------------------------------------------------------------------------- //
 if (!String.prototype.endsWith) {
   String.prototype.endsWith = function(search, this_len) {
     if (this_len === undefined || this_len > this.length) {
@@ -72,26 +95,19 @@ function isMobile() {
   return typeof window.orientation !== 'undefined';
 }
 
-// init terminal
-var terminal = document.getElementById('terminal');
-if (isMobile()) terminal.contentEditable = true;
-
-var context = terminal.getContext('2d');
-
-var bounds = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
-
-context.fillStyle = "rgba(0, 0, 0, 0.8)";
-context.fillRect(0, 0, pixelWidth, pixelHeight);
-
-var contextData = context.getImageData(0, 0, pixelWidth, pixelHeight);
-var data = contextData.data;
-
+// rendering
+// --------------------------------------------------------------------------------- //
 function setForeground(r, g, b) {
   foreR = r; foreG = g; foreB = b; foreA = fancyAlpha(r, g, b) * 255;
 }
 
 function setBackground(r, g, b) {
   backR = r; backG = g; backB = b; backA = fancyAlpha(r, g, b) * 255;
+}
+
+function updateContextData() {
+  contextData = context.getImageData(0, 0, pixelWidth, pixelHeight);
+  data = contextData.data;
 }
 
 function fillChar(char, px, py) {
@@ -143,9 +159,7 @@ function copy(x, y, width, height, xt, yt) {
   var tpy = (y + yt) * charHeight;
   var fragment = context.getImageData(px, py, width * charWidth, height * charHeight);
   context.putImageData(fragment, tpx, tpy);
-  // update global data object
-  contextData = context.getImageData(0, 0, pixelWidth, pixelHeight);
-  data = contextData.data;
+  updateContextData();
 }
 
 function fill(x, y, width, height, value) {
@@ -173,6 +187,7 @@ function setResolution(w, h) {
 var style = getComputedStyle(terminal, null);
 var verticalBorder = parseInt(style.getPropertyValue("border-top-width"));
 var horizontalBorder = parseInt(style.getPropertyValue("border-left-width"));
+
 function calculateBounds() {
   var rect = terminal.getBoundingClientRect();
   bounds.left = rect.left + horizontalBorder;
@@ -182,94 +197,96 @@ function calculateBounds() {
   bounds.bottom = rect.bottom - verticalBorder;
   bounds.height = rect.height - verticalBorder * 2;
 }
-calculateBounds();
 
-// init some other ui elements
-var turnOnButton = document.getElementById('turn_on_button');
-var turnOffButton = document.getElementById('turn_off_button');
-var onlineCounter = document.getElementById('online');
+// network
+// --------------------------------------------------------------------------------- //
+var socket;
 
-// connect to the server
-if (host.endsWith("/")) host = host.substring(0, host.length - 1);
-var socket = new WebSocket(host + "/stream");
-
-socket.onmessage = function (event) {
-  var message = event.data;
-  var parts = message.split("\n");
-  switch (parts[0]) {
-    case 'beep':
-      console.log("Beep: " + parts[1] + ", " + parts[2]);
-      break;
-    case 'beep-pattern':
-      console.log("Beep: " + parts[1]);
-      break;
-    case 'crash':
-      console.log("Crash: " + parts[1]);
-      alert("Crash: " + parts[1] + "!");
-      break;
-    case 'set':
-      set(parseInt(parts[1]), parseInt(parts[2]), parts[4]);
-      break;
-    case 'foreground':
-      var color = numberToColour(parseInt(parts[1]));
-      setForeground(color[0], color[1], color[2]);
-      break;
-    case 'background':
-      var color = numberToColour(parseInt(parts[1]));
-      setBackground(color[0], color[1], color[2]);
-      break;
-    case 'copy':
-      copy(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]),
-           parseInt(parts[5]), parseInt(parts[6]));
-      break;
-    case 'fill':
-      fill(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]), parts[5]);
-      break;
-    case 'state':
-      // update resolution if necessary 
-      setResolution(parseInt(parts[1]), parseInt(parts[2]));
-      // read current colors
-      var fore = numberToColour(parseInt(parts[3]));
-      var back = numberToColour(parseInt(parts[4]));
-      // read and apply all changes
-      for (var i = 5; i < parts.length; i += 5) {
-        if (i + 4 >= parts.length) break;
-        var x = parseInt(parts[i]);
-        var y = parseInt(parts[i + 1]);
-        var f = numberToColour(parseInt(parts[i + 2]));
-        var b = numberToColour(parseInt(parts[i + 3]));
-        var value = parts[i + 4];
-        setForeground(f[0], f[1], f[2]);
-        setBackground(b[0], b[1], b[2]);
-        set(x, y, value);
-      }
-      // set colors to current
-      setForeground(fore[0], fore[1], fore[2]);
-      setBackground(back[0], back[1], back[2]);
-      break;
-    case 'turnon-failure':
-      turnOnButton.classList.remove('warning');
-      void turnOnButton.offsetWidth; // black magic - triggering element reflow
-      turnOnButton.classList.add('warning');
-      break;
-    case 'turnoff-failure':
-      turnOffButton.classList.remove('warning');
-      void turnOffButton.offsetWidth; // black magic - triggering element reflow
-      turnOffButton.classList.add('warning');
-      break;
-    case "resolution":
-      // update the state
-      askForState();
-      break;
-    case "online":
-      onlineCounter.innerHTML = parts[1];
+function subscribeOnSocketEvents() {
+  socket.onmessage = function (event) {
+    var message = event.data;
+    var parts = message.split("\n");
+    switch (parts[0]) {
+      case 'beep':
+        console.log("Beep: " + parts[1] + ", " + parts[2]);
+        break;
+      case 'beep-pattern':
+        console.log("Beep: " + parts[1]);
+        break;
+      case 'crash':
+        console.log("Crash: " + parts[1]);
+        alert("Crash: " + parts[1] + "!");
+        break;
+      case 'set':
+        set(parseInt(parts[1]), parseInt(parts[2]), parts[4]);
+        break;
+      case 'foreground':
+        var color = numberToColour(parseInt(parts[1]));
+        setForeground(color[0], color[1], color[2]);
+        break;
+      case 'background':
+        var color = numberToColour(parseInt(parts[1]));
+        setBackground(color[0], color[1], color[2]);
+        break;
+      case 'copy':
+        copy(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]),
+             parseInt(parts[5]), parseInt(parts[6]));
+        break;
+      case 'fill':
+        fill(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]), parts[5]);
+        break;
+      case 'state':
+        // update resolution if necessary
+        setResolution(parseInt(parts[1]), parseInt(parts[2]));
+        // read current colors
+        var fore = numberToColour(parseInt(parts[3]));
+        var back = numberToColour(parseInt(parts[4]));
+        // read and apply all changes
+        for (var i = 5; i < parts.length; i += 5) {
+          if (i + 4 >= parts.length) break;
+          var x = parseInt(parts[i]);
+          var y = parseInt(parts[i + 1]);
+          var f = numberToColour(parseInt(parts[i + 2]));
+          var b = numberToColour(parseInt(parts[i + 3]));
+          var value = parts[i + 4];
+          setForeground(f[0], f[1], f[2]);
+          setBackground(b[0], b[1], b[2]);
+          set(x, y, value);
+        }
+        // set colors to current
+        setForeground(fore[0], fore[1], fore[2]);
+        setBackground(back[0], back[1], back[2]);
+        break;
+      case 'turnon-failure':
+        turnOnButton.classList.remove('warning');
+        void turnOnButton.offsetWidth; // black magic - triggering element reflow
+        turnOnButton.classList.add('warning');
+        break;
+      case 'turnoff-failure':
+        turnOffButton.classList.remove('warning');
+        void turnOffButton.offsetWidth; // black magic - triggering element reflow
+        turnOffButton.classList.add('warning');
+        break;
+      case "resolution":
+        // update the state
+        askForState();
+        break;
+      case "online":
+        onlineCounter.innerHTML = parts[1];
+    }
+  }
+  socket.onopen = function() {
+    askForState();
+    socket.send("online");
   }
 }
 
 // subscribe to user feedback
+// --------------------------------------------------------------------------------- //
 function relativeX(e) {
   return Math.floor(Math.min(pixelWidth - 1, Math.max(0, e.clientX - bounds.left)) / charWidth);
 }
+
 function relativeY(e) {
   return Math.floor(Math.min(pixelHeight - 1, Math.max(0, e.clientY - bounds.top)) / charHeight);
 }
@@ -378,7 +395,6 @@ document.onblur = function(e) {
   }
 }
 
-// additional callbacks
 function turnOn() {
   socket.send("turnon");
 }
@@ -389,15 +405,24 @@ function askForState() {
   socket.send("state");
 }
 
-// ask for the current terminal state
-socket.onopen = function() {
-  askForState();
-  socket.send("online");
-}
-
-// run additional DOM-dependents intialization code
+// init
+// --------------------------------------------------------------------------------- //
 window.onload = function() {
+  // graphics
   calculateBounds();
-  // set version label
+  if (isMobile()) terminal.contentEditable = true;
+  context.fillStyle = "rgba(0, 0, 0, 0.8)";
+  context.fillRect(0, 0, pixelWidth, pixelHeight);
+  updateContextData();
+  // fonts
+  loadFont();
+  // network
+  if (host.endsWith("/")) host = host.substring(0, host.length - 1);
+  socket = new WebSocket(host + "/stream");
+  subscribeOnSocketEvents();
+  // other
   document.getElementById('version').innerHTML = version;
+  // show terminal, turn off loading animation
+  terminal.style.visibility = 'visible';
+  watermark.classList.remove('spinning');
 }
