@@ -148,11 +148,11 @@ function flush() {
   context.putImageData(contextData, 0, 0);
 }
 
-function set(x, y, value, vertical = false) {
+function set(x, y, value, vertical = false, doFlush = true) {
   var px = x * charWidth;
   var py = y * charHeight;
   fillText(value, px, py, vertical);
-  flush();
+  if (doFlush) flush();
 }
 
 function copy(x, y, width, height, xt, yt) {
@@ -217,7 +217,7 @@ function subscribeOnSocketEvents() {
         console.log("Beep: " + parts[1]);
         break;
       case 'crash':
-        console.log("Crash: " + parts[1]);
+        console.error("Crash: " + parts[1]);
         alert("Crash: " + parts[1] + "!");
         break;
       case 'set':
@@ -254,11 +254,12 @@ function subscribeOnSocketEvents() {
           var value = parts[i + 4];
           setForeground(f[0], f[1], f[2]);
           setBackground(b[0], b[1], b[2]);
-          set(x, y, value);
+          set(x, y, value, false, false);
         }
         // set colors to current
         setForeground(fore[0], fore[1], fore[2]);
         setBackground(back[0], back[1], back[2]);
+        flush();
         break;
       case 'turnon-failure':
         turnOnButton.classList.remove('warning');
