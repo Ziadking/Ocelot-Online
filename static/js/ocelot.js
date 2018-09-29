@@ -135,9 +135,12 @@ function fillChar(char, px, py) {
   }
 }
 
-function fillText(text, px, py) {
+function fillText(text, px, py, vertical = false) {
   for (var i = 0; i < text.length; i++) {
-    fillChar(text.charCodeAt(i), px + i * charWidth, py);
+    if (vertical)
+      fillChar(text.charCodeAt(i), px, py + i * charHeight);
+    else
+      fillChar(text.charCodeAt(i), px + i * charWidth, py);
   }
 }
 
@@ -145,10 +148,10 @@ function flush() {
   context.putImageData(contextData, 0, 0);
 }
 
-function set(x, y, value) {
+function set(x, y, value, vertical = false) {
   var px = x * charWidth;
   var py = y * charHeight;
-  fillText(value, px, py);
+  fillText(value, px, py, vertical);
   flush();
 }
 
@@ -218,7 +221,7 @@ function subscribeOnSocketEvents() {
         alert("Crash: " + parts[1] + "!");
         break;
       case 'set':
-        set(parseInt(parts[1]), parseInt(parts[2]), parts[4]);
+        set(parseInt(parts[1]), parseInt(parts[2]), parts[4], parts[3] == "true");
         break;
       case 'foreground':
         var color = numberToColour(parseInt(parts[1]));
@@ -408,6 +411,8 @@ function askForState() {
 // init
 // --------------------------------------------------------------------------------- //
 window.onload = function() {
+  // dom
+  document.getElementById('version').innerHTML = version;
   // graphics
   calculateBounds();
   if (isMobile()) terminal.contentEditable = true;
@@ -420,8 +425,6 @@ window.onload = function() {
   if (host.endsWith("/")) host = host.substring(0, host.length - 1);
   socket = new WebSocket(host + "/stream");
   subscribeOnSocketEvents();
-  // other
-  document.getElementById('version').innerHTML = version;
   // show terminal, turn off loading animation
   terminal.style.visibility = 'visible';
   watermark.classList.remove('spinning');
