@@ -1,3 +1,8 @@
+## 0.3.2
+* Refactored font rendering (again)
+* Fixed: inverted scroll event
+* Fixed: vertical gpu.set()
+
 ## 0.3.1
 * Added active WS connections counter (people online)
 * Fixed some rendering glitches in Firefox / Linux
