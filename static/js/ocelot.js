@@ -8,14 +8,31 @@ var charHeight = 16;
 var pixelWidth = width * charWidth;
 var pixelHeight = height * charHeight;
 
-var font = '16px unscii';
-var translateX = -0.125
-var translateY = 0.5
-
-var foreColor = "rgba(255, 255, 255, 1.0)";
 var foreR = 255, foreG = 255, foreB = 255, foreA = 255;
-var backColor = "rgba(0, 0, 0, 0.8)";
 var backR = 0, backG = 0, backB = 0, backA = 255 * 0.8;
+
+// load font data
+var type = {
+  'jBinary.all': 'File',
+ Char: {
+   code: 'uint16',
+   width: 'byte',
+   matrix: ['array', 'byte', 'width']
+ },
+ File: ['array', 'Char']
+}
+
+var font = {};
+jBinary.load('fonts/unscii-16.bin', type, function(error, data) {
+  if (error == null) {
+    var array = data.readAll();
+    array.forEach(function (char) {
+      font[char.code] = char.matrix;
+    })
+  } else {
+    console.error(error);
+  }
+})
 
 // util methods
 if (!String.prototype.endsWith) {
@@ -25,6 +42,10 @@ if (!String.prototype.endsWith) {
     }
     return this.substring(this_len - search.length, this_len) === search;
   };
+}
+
+function bit(byte, n) {
+  return (byte >> n) & 1 != 0;
 }
 
 function numberToColour(number) {
@@ -57,54 +78,62 @@ if (isMobile()) terminal.contentEditable = true;
 
 var context = terminal.getContext('2d');
 
-function setupContext() {
-  context.font = font;
-  context.textBaseline = 'top';
-  context.globalCompositeOperation = 'destination-over';
-}
-setupContext();
-
 var bounds = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
 
-context.fillStyle = backColor;
+context.fillStyle = "rgba(0, 0, 0, 0.8)";
 context.fillRect(0, 0, pixelWidth, pixelHeight);
 
+var contextData = context.getImageData(0, 0, pixelWidth, pixelHeight);
+var data = contextData.data;
+
 function setForeground(r, g, b) {
-  var alpha = fancyAlpha(r, g, b);
-  foreColor = "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
-  foreR = r; foreG = g; foreB = b; foreA = alpha * 255;
+  foreR = r; foreG = g; foreB = b; foreA = fancyAlpha(r, g, b) * 255;
 }
 
 function setBackground(r, g, b) {
-  var alpha = fancyAlpha(r, g, b);
-  backColor = "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
-  backR = r; backG = g; backB = b; backA = alpha * 255;
+  backR = r; backG = g; backB = b; backA = fancyAlpha(r, g, b) * 255;
 }
 
-function fillBackground(x, y, width, height, r, g, b, a) {
-  var imageData = context.getImageData(x, y, width, height);
-  var data = imageData.data;
-  for (var i = 0; i < data.length; i += 4) {
-    if (data[i + 3] < 153) {
-      data[i] = r;
-      data[i + 1] = g;
-      data[i + 2] = b;
-      data[i + 3] = a;
-    } else {
-      data[i + 3] = fancyAlpha(data[i], data[i + 1], data[i + 2]) * 255;
+function fillChar(char, px, py) {
+  var matrix = char != 32 && char != 0 ? font[char] : undefined;
+  for (var y = 0; y < charHeight; y++) {
+    for (var x = 0; x < charWidth; x++) {
+      var index = ((y + py) * pixelWidth + x + px) * 4;
+      var filled = false;
+      if (matrix) {
+        var matrixIndex = (y * charWidth + x)
+        filled = bit(matrix[Math.floor(matrixIndex / 8)], 7 - matrixIndex % 8);
+      }
+      if (filled) {
+        data[index] = foreR;
+        data[index + 1] = foreG;
+        data[index + 2] = foreB;
+        data[index + 3] = foreA;
+      } else {
+        data[index] = backR;
+        data[index + 1] = backG;
+        data[index + 2] = backB;
+        data[index + 3] = backA;
+      }
     }
   }
-  context.putImageData(imageData, x, y);
+}
+
+function fillText(text, px, py) {
+  for (var i = 0; i < text.length; i++) {
+    fillChar(text.charCodeAt(i), px + i * charWidth, py);
+  }
+}
+
+function flush() {
+  context.putImageData(contextData, 0, 0);
 }
 
 function set(x, y, value) {
   var px = x * charWidth;
   var py = y * charHeight;
-  var width = charWidth * value.length;
-  context.clearRect(px, py, width, charHeight);
-  context.fillStyle = foreColor;
-  context.fillText(value, px + translateX, py + translateY);
-  fillBackground(px, py, width, charHeight, backR, backG, backB, backA);
+  fillText(value, px, py);
+  flush();
 }
 
 function copy(x, y, width, height, xt, yt) {
@@ -114,34 +143,31 @@ function copy(x, y, width, height, xt, yt) {
   var tpy = (y + yt) * charHeight;
   var fragment = context.getImageData(px, py, width * charWidth, height * charHeight);
   context.putImageData(fragment, tpx, tpy);
+  // update global data object
+  contextData = context.getImageData(0, 0, pixelWidth, pixelHeight);
+  data = contextData.data;
 }
 
 function fill(x, y, width, height, value) {
-  var px = x * charWidth;
-  var py = y * charHeight;
-  var pw = width * charWidth;
-  var ph = height * charHeight;
-  context.clearRect(px, py, pw, ph);
-  context.fillStyle = foreColor;
-  var line = value.charAt(0).repeat(width);
-  for (var i = 0; i < height; i++) {
-    context.fillText(line, px + translateX, py + i * charHeight + translateY);
+  var char = value.charCodeAt(0);
+  for (var py = y * charHeight; py < (y + height) * charHeight; py += charHeight) {
+    for (var px = x * charWidth; px < (x + width) * charWidth; px += charWidth) {
+      fillChar(char, px, py);
+    }
   }
-  fillBackground(px, py, pw, ph, backR, backG, backB, backA);
+  flush();
 }
 
 function setResolution(w, h) {
-  width = w; height = h;
   // resize canvas
-  if (w != pixelWidth || h != pixelHeight) {
+  if (w != width || h != height) {
+    width = w; height = h;
     pixelWidth = width * charWidth;
     pixelHeight = height * charHeight;
     terminal.width = pixelWidth;
     terminal.height = pixelHeight;
-    // for some reason, after canvas changes it's size font settings drop to default
-    setupContext();
+    calculateBounds();
   }
-  calculateBounds();
 }
 
 var style = getComputedStyle(terminal, null);
@@ -156,6 +182,7 @@ function calculateBounds() {
   bounds.bottom = rect.bottom - verticalBorder;
   bounds.height = rect.height - verticalBorder * 2;
 }
+calculateBounds();
 
 // init some other ui elements
 var turnOnButton = document.getElementById('turn_on_button');
