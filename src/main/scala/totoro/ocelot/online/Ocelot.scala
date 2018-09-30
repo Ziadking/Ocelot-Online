@@ -1,6 +1,8 @@
 package totoro.ocelot.online
 
 import java.io.File
+import java.net.InetSocketAddress
+import java.time.LocalDate
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
@@ -8,6 +10,7 @@ import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
+import totoro.ocelot.brain.user.User
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
@@ -68,21 +71,21 @@ object Ocelot {
         }
       })
 
-    def wsHandler: Flow[Message, Message, Any] = Flow[Message]
+    def wsHandler(user: User): Flow[Message, Message, Any] = Flow[Message]
       .mapConcat {
         case tm: TextMessage =>
           tm.textStream.runFold("")(_ + _).onComplete {
             case Success(message) =>
               val parts = message.split(" ")
               parts.head match {
-                case "keydown" => workspace.keyDown(parts(1).toInt.toChar, parts(2).toInt)
-                case "keyup" => workspace.keyUp(parts(1).toInt.toChar, parts(2).toInt)
-                case "keyup-all" => workspace.releasePressedKeys()
-                case "clipboard" => workspace.clipboard(message.drop(10))
-                case "mousedown" => workspace.mouseDown(parts(1).toInt, parts(2).toInt, parts(3).toInt)
-                case "mouseup" => workspace.mouseUp(parts(1).toInt, parts(2).toInt, parts(3).toInt)
-                case "mousedrag" => workspace.mouseDrag(parts(1).toInt, parts(2).toInt, parts(3).toInt)
-                case "mousewheel" => workspace.mouseScroll(parts(1).toInt, parts(2).toInt, parts(3).toInt)
+                case "keydown" => workspace.keyDown(parts(1).toInt.toChar, parts(2).toInt, user)
+                case "keyup" => workspace.keyUp(parts(1).toInt.toChar, parts(2).toInt, user)
+                case "keyup-all" => workspace.releasePressedKeys(user)
+                case "clipboard" => workspace.clipboard(message.drop(10), user)
+                case "mousedown" => workspace.mouseDown(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
+                case "mouseup" => workspace.mouseUp(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
+                case "mousedrag" => workspace.mouseDrag(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
+                case "mousewheel" => workspace.mouseScroll(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
                 case "state" => workspace.sendState()
                 case "turnon" =>
                   if (!workspace.isRunning) {
@@ -114,11 +117,14 @@ object Ocelot {
       .merge(source)
       .via(watchDisconnectsFlow)
 
+
     // define routes
-    val route =
+    def route(address : InetSocketAddress) =
       path("stream") {
         ignoreTrailingSlash {
-          handleWebSocketMessages(wsHandler)
+          val nickname = NameGen.name((address.toString + LocalDate.now.toString).hashCode)
+          println(s"User connected: $nickname")
+          handleWebSocketMessages(wsHandler(User(nickname)))
         }
       } ~
       path("config.js") {
@@ -131,13 +137,18 @@ object Ocelot {
       } ~
       getFromDirectory("static")
 
+
     // run
-    val bindingFuture = Http().bindAndHandle(route, Settings.get.serverHost, Settings.get.serverPort)
+    val bindingFuture = Http()
+      .bind(Settings.get.serverHost, Settings.get.serverPort)
+      .runWith(Sink foreach { conn =>
+        val address = conn.remoteAddress
+        conn.handleWith(route(address))
+      })
 
     println(s"Server online at http://${Settings.get.serverHost}:${Settings.get.serverPort}/\nPress Enter to stop...")
     StdIn.readLine()
     bindingFuture
-      .flatMap(_.unbind())
       .onComplete(_ => system.terminate())
 
     workspace.turnOff()

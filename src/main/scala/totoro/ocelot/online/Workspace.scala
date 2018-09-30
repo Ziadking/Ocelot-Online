@@ -105,36 +105,36 @@ class Workspace {
     computer.update()
   }
 
-  def keyDown(character: Char, code: Int): Unit = {
-    screen.keyDown(character, code, defaultUser)
+  def keyDown(character: Char, code: Int, user: User = defaultUser): Unit = {
+    screen.keyDown(character, code, user)
   }
 
-  def keyUp(character: Char, code: Int): Unit = {
-    screen.keyUp(character, code, defaultUser)
+  def keyUp(character: Char, code: Int, user: User = defaultUser): Unit = {
+    screen.keyUp(character, code, user)
   }
 
-  def releasePressedKeys(): Unit = {
-    keyboard.releasePressedKeys(defaultUser)
+  def releasePressedKeys(user: User = defaultUser): Unit = {
+    keyboard.releasePressedKeys(user)
   }
 
-  def clipboard(value: String): Unit = {
-    screen.clipboard(value, defaultUser)
+  def clipboard(value: String, user: User = defaultUser): Unit = {
+    screen.clipboard(value, user)
   }
 
-  def mouseDown(x: Int, y: Int, button: Int): Unit = {
-    screen.mouseDown(x, y, button, defaultUser)
+  def mouseDown(x: Int, y: Int, button: Int, user: User = defaultUser): Unit = {
+    screen.mouseDown(x, y, button, user)
   }
 
-  def mouseUp(x: Int, y: Int, button: Int): Unit = {
-    screen.mouseUp(x, y, button, defaultUser)
+  def mouseUp(x: Int, y: Int, button: Int, user: User = defaultUser): Unit = {
+    screen.mouseUp(x, y, button, user)
   }
 
-  def mouseDrag(x: Int, y: Int, button: Int): Unit = {
-    screen.mouseDrag(x, y, button, defaultUser)
+  def mouseDrag(x: Int, y: Int, button: Int, user: User = defaultUser): Unit = {
+    screen.mouseDrag(x, y, button, user)
   }
 
-  def mouseScroll(x: Int, y: Int, delta: Int): Unit = {
-    screen.mouseScroll(x, y, delta, defaultUser)
+  def mouseScroll(x: Int, y: Int, delta: Int, user: User = defaultUser): Unit = {
+    screen.mouseScroll(x, y, delta, user)
   }
 
   def turnOff(): Unit = {
