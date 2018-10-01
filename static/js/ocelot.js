@@ -212,6 +212,7 @@ function subscribeOnSocketEvents() {
     switch (parts[0]) {
       case 'beep':
         console.log("Beep: " + parts[1] + ", " + parts[2]);
+        playSound(parseInt(parts[1]), parseInt(parts[2]));
         break;
       case 'beep-pattern':
         console.log("Beep: " + parts[1]);
@@ -407,6 +408,19 @@ function turnOff() {
 }
 function askForState() {
   socket.send("state");
+}
+
+// audio
+var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+var oscillator = audioContext.createOscillator();
+oscillator.connect(context.destination);
+oscillator.type = 'square';
+
+function playSound(frequency, duration) {
+  oscillator.frequency.value = frequency;
+  var now = context.currentTime;
+  oscillator.start(now);
+  oscillator.stop(now + duration / 1000);
 }
 
 // init
