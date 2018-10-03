@@ -412,15 +412,17 @@ function askForState() {
 
 // audio
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-var oscillator = audioContext.createOscillator();
-oscillator.connect(context.destination);
-oscillator.type = 'square';
 
 function playSound(frequency, duration) {
+  var oscillator = audioContext.createOscillator();
+  var gain = audioContext.createGain();
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+  gain.gain.value = 0.1;
+  oscillator.type = 'square';
   oscillator.frequency.value = frequency;
-  var now = context.currentTime;
-  oscillator.start(now);
-  oscillator.stop(now + duration / 1000);
+  oscillator.start();
+  oscillator.stop(audioContext.currentTime + duration / 1000);
 }
 
 // init
