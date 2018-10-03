@@ -1,3 +1,8 @@
+## 0.3.3
+* Added randomly generated user names
+* Reconfigured test instance to prohibit computer owning
+* Added `computer.beep(frequency, duration)` support for client-side
+
 ## 0.3.2
 * Refactored font rendering (again)
 * Fixed: inverted scroll event
