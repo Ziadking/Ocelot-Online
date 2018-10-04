@@ -94,7 +94,7 @@ class Workspace {
 
   def turnOn(): Unit = {
     computer.turnOn()
-    println("Computer turned on.")
+    Ocelot.log.debug("Computer turned on.")
   }
 
   def isRunning: Boolean = {
@@ -139,7 +139,7 @@ class Workspace {
 
   def turnOff(): Unit = {
     computer.turnOff()
-    println("Computer turned off.")
+    Ocelot.log.debug("Computer turned off.")
   }
 
   private def getColor(value: PackedColor.Color): Int = {

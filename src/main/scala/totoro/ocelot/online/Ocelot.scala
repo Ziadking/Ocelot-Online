@@ -4,6 +4,7 @@ import java.io.File
 import java.net.InetSocketAddress
 import java.time.LocalDate
 
+import org.apache.logging.log4j.{LogManager, Logger}
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
@@ -17,8 +18,12 @@ import scala.io.StdIn
 import scala.util.{Failure, Success}
 
 object Ocelot {
+  private val Name = "ocelot.online"
   // do not forget to change version in build.sbt
   private val Version = "0.3.3"
+
+  var logger: Option[Logger] = None
+  def log: Logger = logger.getOrElse(LogManager.getLogger(Name))
 
   def main(args: Array[String]): Unit = {
     // init
@@ -47,9 +52,9 @@ object Ocelot {
           workspace.update()
           Thread.sleep(50)
         }
-        println("Main thread closed...")
+        log.debug("Main thread closed...")
       }).start()
-      println("Created new main thread.")
+      log.debug("Created new main thread.")
     }
     run()
 
@@ -65,7 +70,7 @@ object Ocelot {
           mat offer TextMessage(s"online\n$online")
           result match {
             case Failure(cause) =>
-              println(s"[ERROR] WS stream failed with $cause!")
+              log.error(s"WS stream failed!", cause)
             case _ => // ignore normal termination
           }
         }
@@ -123,7 +128,7 @@ object Ocelot {
       path("stream") {
         ignoreTrailingSlash {
           val nickname = NameGen.name((address.toString + LocalDate.now.toString).hashCode)
-          println(s"User connected: $nickname")
+          log.info(s"User connected: $nickname")
           handleWebSocketMessages(wsHandler(User(nickname)))
         }
       } ~
@@ -146,7 +151,7 @@ object Ocelot {
         conn.handleWith(route(address))
       })
 
-    println(s"Server online at http://${Settings.get.serverHost}:${Settings.get.serverPort}/\nPress Enter to stop...")
+    log.info(s"Server online at http://${Settings.get.serverHost}:${Settings.get.serverPort}/\nPress Enter to stop...")
     StdIn.readLine()
     bindingFuture
       .onComplete(_ => system.terminate())
