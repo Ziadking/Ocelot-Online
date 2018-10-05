@@ -216,6 +216,14 @@ function subscribeOnSocketEvents() {
         break;
       case 'beep-pattern':
         console.log("Beep: " + parts[1]);
+        for (var i = 0; i < parts[1].length; i++) {
+          var char = parts[1].chatAt(i);
+          if (char == '.') {
+            playSound(1000, 200)
+          } else {
+            playSound(1000, 400)
+          }
+        }
         break;
       case 'crash':
         console.error("Crash: " + parts[1]);
