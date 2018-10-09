@@ -1,59 +1,59 @@
 // environment
 // --------------------------------------------------------------------------------- //
-var width = 80;
-var height = 25;
+// the size of one (single-width) character in pixels
+const CHAR_WIDTH = 8;
+const CHAR_HEIGHT = 16;
 
-var charWidth = 8;
-var charHeight = 16;
+// terminal size in symbols
+var WIDTH = 80;
+var HEIGHT = 25;
 
-var pixelWidth = width * charWidth;
-var pixelHeight = height * charHeight;
+// terminal size in pixels
+var WIDTH_PX = WIDTH * CHAR_WIDTH;
+var HEIGHT_PX = HEIGHT * CHAR_HEIGHT;
 
-var foreR = 255, foreG = 255, foreB = 255, foreA = 255;
-var backR = 0, backG = 0, backB = 0, backA = 255 * 0.8;
-
+// position of the terminal in the browser window (used to calculate relative mouse click coordinates)
 var bounds = { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 };
+
+// current colors
+var foreR = 1, foreG = 1, foreB = 1, foreA = 1;
+var backR = 0, backG = 0, backB = 0, backA = 0.8;
+
+// matrix of chars
+var matrix = new Uint16Array(WIDTH * HEIGHT);
 
 // ui elements
 // --------------------------------------------------------------------------------- //
 var container = document.getElementById('container');
-
-var terminal = document.getElementById('terminal');
-var context = terminal.getContext('2d');
-var contextData;
-var data;
-
+var titlebar = document.getElementById('titlebar');
 var watermark = document.getElementById('watermark');
+var terminal = document.getElementById('terminal');
+var footer = document.getElementById('footer');
 
 var turnOnButton = document.getElementById('turn_on_button');
 var turnOffButton = document.getElementById('turn_off_button');
 var onlineCounter = document.getElementById('online');
 
-// font data
+// webgl
 // --------------------------------------------------------------------------------- //
-var type = {
-  'jBinary.all': 'File',
- Char: {
-   code: 'uint16',
-   width: 'byte',
-   matrix: ['array', 'byte', 'width']
- },
- File: ['array', 'Char']
+var gl = terminal.getContext('webgl');
+if (!gl) {
+  alert("Your browser does not support WebGL! [ocelot.online] needs WebGL for terminal rendering.");
+}
+const programInfo = twgl.createProgramInfo(gl, ["vs", "fs"]);
+
+function initWebGL() {
+  gl.clearColor(backG, backG, backG, backA);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
-var font = {};
+function render(time) {
+  twgl.resizeCanvasToDisplaySize(gl.canvas);
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-function loadFont() {
-  jBinary.load('fonts/unscii-16.bin', type, function(error, data) {
-    if (error == null) {
-      var array = data.readAll();
-      array.forEach(function (char) {
-        font[char.code] = char.matrix;
-      })
-    } else {
-      console.error(error);
-    }
-  })
+  // TODO
+
+  requestAnimationFrame(render);
 }
 
 // util methods
@@ -65,10 +65,6 @@ if (!String.prototype.endsWith) {
     }
     return this.substring(this_len - search.length, this_len) === search;
   };
-}
-
-function bit(byte, n) {
-  return (byte >> n) & 1 != 0;
 }
 
 function numberToColour(number) {
@@ -98,91 +94,43 @@ function isMobile() {
 // rendering
 // --------------------------------------------------------------------------------- //
 function setForeground(r, g, b) {
-  foreR = r; foreG = g; foreB = b; foreA = fancyAlpha(r, g, b) * 255;
+  foreR = r / 256; foreG = g / 256; foreB = b / 256; foreA = fancyAlpha(r, g, b);
 }
 
 function setBackground(r, g, b) {
-  backR = r; backG = g; backB = b; backA = fancyAlpha(r, g, b) * 255;
+  backR = r / 256; backG = g / 256; backB = b / 256; backA = fancyAlpha(r, g, b);
 }
 
-function updateContextData() {
-  contextData = context.getImageData(0, 0, pixelWidth, pixelHeight);
-  data = contextData.data;
-}
-
-function fillChar(char, px, py) {
-  var matrix = char != 32 && char != 0 ? font[char] : undefined;
-  for (var y = 0; y < charHeight; y++) {
-    for (var x = 0; x < charWidth; x++) {
-      var index = ((y + py) * pixelWidth + x + px) * 4;
-      var filled = false;
-      if (matrix) {
-        var matrixIndex = (y * charWidth + x)
-        filled = bit(matrix[Math.floor(matrixIndex / 8)], 7 - matrixIndex % 8);
-      }
-      if (filled) {
-        data[index] = foreR;
-        data[index + 1] = foreG;
-        data[index + 2] = foreB;
-        data[index + 3] = foreA;
-      } else {
-        data[index] = backR;
-        data[index + 1] = backG;
-        data[index + 2] = backB;
-        data[index + 3] = backA;
-      }
-    }
-  }
-}
-
-function fillText(text, px, py, vertical = false) {
-  for (var i = 0; i < text.length; i++) {
+function set(x, y, value, vertical = false) {
+  for (var i = 0; i < value.length; i++) {
     if (vertical)
-      fillChar(text.charCodeAt(i), px, py + i * charHeight);
+      matrix[(y - 1 + i) * WIDTH + x - 1] = FONT[value.charCodeAt(i)];
     else
-      fillChar(text.charCodeAt(i), px + i * charWidth, py);
+      matrix[(y - 1) * WIDTH + x - 1 + i] = FONT[value.charCodeAt(i)];
   }
-}
-
-function flush() {
-  context.putImageData(contextData, 0, 0);
-}
-
-function set(x, y, value, vertical = false, doFlush = true) {
-  var px = x * charWidth;
-  var py = y * charHeight;
-  fillText(value, px, py, vertical);
-  if (doFlush) flush();
 }
 
 function copy(x, y, width, height, xt, yt) {
-  var px = x * charWidth;
-  var py = y * charHeight;
-  var tpx = (x + xt) * charWidth;
-  var tpy = (y + yt) * charHeight;
-  var fragment = context.getImageData(px, py, width * charWidth, height * charHeight);
-  context.putImageData(fragment, tpx, tpy);
-  updateContextData();
+  // TODO
 }
 
 function fill(x, y, width, height, value) {
   var char = value.charCodeAt(0);
-  for (var py = y * charHeight; py < (y + height) * charHeight; py += charHeight) {
-    for (var px = x * charWidth; px < (x + width) * charWidth; px += charWidth) {
-      fillChar(char, px, py);
+  for (var iy = y - 1; iy < y + height - 1; iy++) {
+    for(var ix = x - 1; ix < x + width - 1; ix++) {
+      matrix[iy * WIDTH + ix] = FONT[char];
     }
   }
-  flush();
 }
 
-function setResolution(w, h) {
+function setResolution(width, height) {
   // resize canvas
-  if (w != width || h != height) {
-    width = w; height = h;
-    pixelWidth = width * charWidth;
-    pixelHeight = height * charHeight;
-    terminal.width = pixelWidth;
-    terminal.height = pixelHeight;
+  if (WIDTH != width || HEIGHT != height) {
+    WIDTH = width; HEIGHT = height;
+    WIDTH_PX = WIDTH * CHAR_WIDTH;
+    HEIGHT_PX = HEIGHT * CHAR_HEIGHT;
+    terminal.width = WIDTH_PX;
+    terminal.height = HEIGHT_PX;
     calculateBounds();
   }
 }
@@ -268,7 +216,6 @@ function subscribeOnSocketEvents() {
         // set colors to current
         setForeground(fore[0], fore[1], fore[2]);
         setBackground(back[0], back[1], back[2]);
-        flush();
         break;
       case 'turnon-failure':
         turnOnButton.classList.remove('warning');
@@ -297,11 +244,11 @@ function subscribeOnSocketEvents() {
 // subscribe to user feedback
 // --------------------------------------------------------------------------------- //
 function relativeX(e) {
-  return Math.floor(Math.min(pixelWidth - 1, Math.max(0, e.clientX - bounds.left)) / charWidth);
+  return Math.floor(Math.min(WIDTH_PX - 1, Math.max(0, e.clientX - bounds.left)) / CHAR_WIDTH);
 }
 
 function relativeY(e) {
-  return Math.floor(Math.min(pixelHeight - 1, Math.max(0, e.clientY - bounds.top)) / charHeight);
+  return Math.floor(Math.min(HEIGHT_PX - 1, Math.max(0, e.clientY - bounds.top)) / CHAR_HEIGHT);
 }
 
 var mousePressed = false
@@ -348,15 +295,16 @@ var codes = {
   115: 0x3E, 116: 0x3F, 117: 0x40, 118: 0x41, 119: 0x42,
   120: 0x43, 121: 0x44, 122: 0x57, 123: 0x58
 }
-
 var keyControl = 17;
 var keyC = 67;
 var keyV = 86;
 var keyEnter = 13;
 var keyTab = 9;
 var keyBackspace = 8;
+
 var isControlPressed = false;
 var isKeyBoardDirty = false;
+
 // do not prevent standart browser behavior for these buttons
 var whitelisted = [keyControl, keyV];
 // these keys do have their own character code that is equal to their key code
@@ -441,16 +389,16 @@ window.onload = function() {
   // graphics
   calculateBounds();
   if (isMobile()) terminal.contentEditable = true;
-  context.fillStyle = "rgba(0, 0, 0, 0.8)";
-  context.fillRect(0, 0, pixelWidth, pixelHeight);
-  updateContextData();
-  // fonts
-  loadFont();
+  initWebGL();
+  // begin rendering
+  requestAnimationFrame(render);
   // network
   if (host.endsWith("/")) host = host.substring(0, host.length - 1);
   socket = new WebSocket(host + "/stream");
   subscribeOnSocketEvents();
   // show terminal, turn off loading animation
+  titlebar.style.visibility = 'visible';
   terminal.style.visibility = 'visible';
+  footer.style.visibility = 'visible';
   watermark.classList.remove('spinning');
 }

@@ -25,9 +25,20 @@
         <a id="version" href="https://gitlab.com/cc-ru/ocelot/ocelot-online/blob/master/CHANGELOG.md">-</a>
     </div>
 </div>
-<script src="//jdataview.github.io/dist/jdataview.js"></script>
-<script src="//jdataview.github.io/dist/jbinary.js"></script>
+<script id="vs" type="notjs">
+    attribute vec4 position;
+    void main() {
+        gl_Position = position;
+    }
+</script>
+<script id="fs" type="notjs">
+    void main() {
+        gl_FragColor = vec4(0.5);
+    }
+</script>
 <script type="text/javascript" src="config.js"></script>
+<script type="text/javascript" src="js/twgl.min.js"></script>
+<script type="text/javascript" src="js/font.js"></script>
 <script type="text/javascript" src="js/ocelot.js"></script>
 </body>
 </html>

@@ -37,6 +37,7 @@ body {
 }
 
 #titlebar {
+  visibility: hidden;
   font-family: "unscii", monospace;
   font-size: 14pt;
   color: #333;
@@ -89,6 +90,7 @@ body {
 }
 
 #footer {
+  visibility: hidden;
   font-family: "unscii", monospace;
   font-size: 14pt;
   color: #333;
