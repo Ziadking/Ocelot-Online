@@ -38,8 +38,9 @@ var onlineCounter = document.getElementById('online');
 // --------------------------------------------------------------------------------- //
 var gl = terminal.getContext('webgl');
 if (!gl) {
-  alert("Your browser does not support WebGL! [ocelot.online] needs WebGL for terminal rendering.");
+  alert("Your browser does not support WebGL!");
 }
+
 const programInfo = twgl.createProgramInfo(gl, ["vs", "fs"]);
 
 function initWebGL() {
@@ -47,13 +48,14 @@ function initWebGL() {
   gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
-function render(time) {
+function render() {
   twgl.resizeCanvasToDisplaySize(gl.canvas);
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-  // TODO
+  gl.useProgram(programInfo.program);
 
-  requestAnimationFrame(render);
+
+  // TODO
 }
 
 // util methods
@@ -179,21 +181,26 @@ function subscribeOnSocketEvents() {
         break;
       case 'set':
         set(parseInt(parts[1]), parseInt(parts[2]), parts[4], parts[3] == "true");
+        render();
         break;
       case 'foreground':
         var color = numberToColour(parseInt(parts[1]));
         setForeground(color[0], color[1], color[2]);
+        render();
         break;
       case 'background':
         var color = numberToColour(parseInt(parts[1]));
         setBackground(color[0], color[1], color[2]);
+        render();
         break;
       case 'copy':
         copy(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]),
              parseInt(parts[5]), parseInt(parts[6]));
+        render();
         break;
       case 'fill':
         fill(parseInt(parts[1]), parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]), parts[5]);
+        render();
         break;
       case 'state':
         // update resolution if necessary
@@ -216,6 +223,7 @@ function subscribeOnSocketEvents() {
         // set colors to current
         setForeground(fore[0], fore[1], fore[2]);
         setBackground(back[0], back[1], back[2]);
+        render();
         break;
       case 'turnon-failure':
         turnOnButton.classList.remove('warning');
@@ -390,8 +398,6 @@ window.onload = function() {
   calculateBounds();
   if (isMobile()) terminal.contentEditable = true;
   initWebGL();
-  // begin rendering
-  requestAnimationFrame(render);
   // network
   if (host.endsWith("/")) host = host.substring(0, host.length - 1);
   socket = new WebSocket(host + "/stream");
