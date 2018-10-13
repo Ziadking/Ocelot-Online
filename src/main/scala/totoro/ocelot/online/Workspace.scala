@@ -40,8 +40,12 @@ class Workspace {
     val memory2 = new Memory(Tier.Six)
     computer.add(memory2)
 
-    val hdd = new HardDiskDrive(Tier.Three, "hdd")
-    computer.add(hdd)
+    val managedHdd = new HardDiskDrive(Tier.Three, "hdd")
+    computer.add(managedHdd)
+
+    val unmanagedHdd = new HardDiskDrive(Tier.Three, "unmanaged")
+    unmanagedHdd.setManaged(false)
+    computer.add(unmanagedHdd)
 
     val internet = new InternetCard()
     computer.add(internet)
