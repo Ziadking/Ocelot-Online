@@ -1,3 +1,6 @@
+## 0.3.4
+* Added on more hard drive (this time in the unmanaged mode)
+
 ## 0.3.3
 * Added randomly generated user names
 * Reconfigured test instance to prohibit computer owning
