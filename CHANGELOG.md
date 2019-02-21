@@ -1,3 +1,6 @@
+## 0.3.5
+* Updated to 0.2.7 version of ocelot-brain (now hard drives are persisted)
+
 ## 0.3.4
 * Added on more hard drive (this time in the unmanaged mode)
 

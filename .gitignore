@@ -12,3 +12,4 @@ cacerts
 /*.log
 /*.so
 /*.dll
+/save/
