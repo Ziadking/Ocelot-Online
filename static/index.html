@@ -7,38 +7,45 @@
     <link rel="shortcut icon" type="image/png" href="favicon.png"/>
 </head>
 <body>
-<img id="watermark" src="images/watermark.png" class="spinning centered"/>
-<div id="container" class="centered">
-    <div id="titlebar" class="noselect">
-        <a class="title" href="/">[ocelot.online]</a>
-        <div class="tools-panel">
-            <a id="turn_on_button" class="button" onclick="turnOn(); return false;">[turn on]</a>
-            <a id="turn_off_button" class="button" onclick="turnOff(); return false;">[turn off]</a>
-            <a class="button disabled">[login]</a>
-            <a class="button disabled">[register]</a>
+    <img id="watermark" src="images/watermark.png" class="spinning centered"/>
+    <div id="container" class="centered">
+        <div id="titlebar" class="noselect">
+            <a class="title" href="/">[ocelot.online]</a>
+            <div class="tools-panel">
+                <a id="turn_on_button" class="button" onclick="turnOn(); return false;">[turn on]</a>
+                <a id="turn_off_button" class="button" onclick="turnOff(); return false;">[turn off]</a>
+                <a class="button disabled">[login]</a>
+                <a class="button disabled">[register]</a>
+            </div>
+        </div>
+        <canvas id="terminal" width="640" height="400" class="crisp"></canvas>
+        <div id="footer">
+            <a href="https://webchat.esper.net/?join=cc.ru">#cc.ru (c) 2019</a>
+            <span>people online: <span id="online">0</span></span>
+            <a id="version" href="https://gitlab.com/cc-ru/ocelot/ocelot-online/blob/master/CHANGELOG.md">-</a>
         </div>
     </div>
-    <canvas id="terminal" width="640" height="400" class="crisp"></canvas>
-    <div id="footer">
-        <a href="https://webchat.esper.net/?join=cc.ru">#cc.ru (c) 2019</a>
-        <span>people online: <span id="online">0</span></span>
-        <a id="version" href="https://gitlab.com/cc-ru/ocelot/ocelot-online/blob/master/CHANGELOG.md">-</a>
-    </div>
-</div>
-<script id="vs" type="notjs">
-    attribute vec4 position;
-    void main() {
-        gl_Position = position;
-    }
-</script>
-<script id="fs" type="notjs">
-    void main() {
-        gl_FragColor = vec4(0.5);
-    }
-</script>
-<script type="text/javascript" src="config.js"></script>
-<script type="text/javascript" src="js/twgl.min.js"></script>
-<script type="text/javascript" src="js/font.js"></script>
-<script type="text/javascript" src="js/ocelot.js"></script>
+    <script id="vs" type="notjs">
+        attribute vec4 position;
+        void main() {
+            gl_Position = position;
+        }
+    </script>
+    <script id="fs" type="notjs">
+        void main() {
+            gl_FragColor = vec4(0.5);
+        }
+    </script>
+    <script type="text/javascript" src="config.js"></script>
+    <script type="text/javascript" src="js/twgl.min.js"></script>
+    <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/font.js"></script>
+    <script type="text/javascript" src="js/dom.js"></script>
+    <script type="text/javascript" src="js/audio.js"></script>
+    <script type="text/javascript" src="js/shader.js"></script>
+    <script type="text/javascript" src="js/render.js"></script>
+    <script type="text/javascript" src="js/network.js"></script>
+    <script type="text/javascript" src="js/input.js"></script>
+    <script type="text/javascript" src="js/ocelot.js"></script>
 </body>
 </html>
