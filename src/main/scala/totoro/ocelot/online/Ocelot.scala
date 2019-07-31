@@ -20,7 +20,7 @@ import scala.util.{Failure, Success}
 object Ocelot {
   private val Name = "ocelot.online"
   // do not forget to change version in build.sbt
-  private val Version = "0.3.3"
+  private val Version = "0.3.6"
 
   var logger: Option[Logger] = None
   def log: Logger = logger.getOrElse(LogManager.getLogger(Name))

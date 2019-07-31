@@ -2,9 +2,7 @@ package totoro.ocelot.online
 
 import akka.http.scaladsl.model.ws.TextMessage
 import akka.stream.scaladsl.SourceQueueWithComplete
-import totoro.ocelot.brain.entity.{
-  CPU, Cable, Case, GraphicsCard, HardDiskDrive, InternetCard, Keyboard, Memory, Redstone, Screen
-}
+import totoro.ocelot.brain.entity.{CPU, Cable, Case, GraphicsCard, HDDManaged, HDDUnmanaged, InternetCard, Keyboard, Memory, Redstone, Screen}
 import totoro.ocelot.brain.event._
 import totoro.ocelot.brain.loot.Loot
 import totoro.ocelot.brain.network.Network
@@ -40,8 +38,12 @@ class Workspace {
     val memory2 = new Memory(Tier.Six)
     computer.add(memory2)
 
-    val hdd = new HardDiskDrive(Tier.Three, "hdd")
-    computer.add(hdd)
+    val managedHdd = new HDDManaged("b59b07db-846a-4f23-ba02-420c916f294d", Tier.Three, "hdd")
+    computer.add(managedHdd)
+
+    val unmanagedHdd = new HDDUnmanaged(Tier.Three, "unmanaged")
+    unmanagedHdd.setAddress("734e0f26-5819-45e5-9069-a91fa5116b5f")
+    computer.add(unmanagedHdd)
 
     val internet = new InternetCard()
     computer.add(internet)
@@ -49,7 +51,7 @@ class Workspace {
     val redstone = new Redstone.Tier2()
     computer.add(redstone)
 
-    computer.add(Loot.AdvLoader.create())
+    computer.add(Loot.AdvLoaderEEPROM.create())
     computer.add(Loot.OpenOsFloppy.create())
 
     screen = new Screen(Tier.Two)
@@ -81,11 +83,11 @@ class Workspace {
       producer offer TextMessage(s"background\n${event.color}")
     })
     EventBus.listenTo(classOf[TextBufferCopyEvent], { case event: TextBufferCopyEvent =>
-      producer offer TextMessage(s"copy\n${event.column}\n${event.row}\n${event.width}\n${event.height}\n" +
+      producer offer TextMessage(s"copy\n${event.x}\n${event.y}\n${event.width}\n${event.height}\n" +
         s"${event.horizontalTranslation}\n${event.verticalTranslation}")
     })
     EventBus.listenTo(classOf[TextBufferFillEvent], { case event: TextBufferFillEvent =>
-      producer offer TextMessage(s"fill\n${event.column}\n${event.row}\n${event.width}\n${event.height}\n${event.value}")
+      producer offer TextMessage(s"fill\n${event.x}\n${event.y}\n${event.width}\n${event.height}\n${event.value}")
     })
     EventBus.listenTo(classOf[TextBufferSetResolutionEvent], { case event: TextBufferSetResolutionEvent =>
       producer offer TextMessage(s"resolution\n${event.width}\n${event.height}")

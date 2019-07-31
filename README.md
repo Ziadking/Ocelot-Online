@@ -3,6 +3,26 @@
 OpenComputers emulator in form of a web-application.  
 Uses `ocelot-brain` module to do all the emulation work under the hood.  
 
+### demo
+
+Demo build can be tested here: [https://ocelot.fomalhaut.me/](https://ocelot.fomalhaut.me/)
+
+It consists of a single shared computer instance
+with the following configuration:
+
+* Creative computer case
+* CPU (Tier 3)
+* Graphics card (Tier 3)
+* 2x Memory planks (Tier 3.5)
+* HDD, managed (Tier 3)
+* HDD, unmanaged (Tier 3)
+* Internet card
+* Redstone card (Tier 2)
+* Disk drive with OpenOS installation floppy inserted
+* EEPROM with advanced OS loader
+* Screen (Tier 2)
+* Keyboard
+
 ### build instructions
 
 * Import the project into your favorite IDE with the last Scala and SBT installed

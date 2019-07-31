@@ -1,3 +1,12 @@
+## 0.3.6
+* Updated to 0.3.1 version of ocelot-brain (OC upgraded to 1.7.4)
+
+## 0.3.5
+* Updated to 0.2.7 version of ocelot-brain (now hard drives are persisted)
+
+## 0.3.4
+* Added on more hard drive (this time in the unmanaged mode)
+
 ## 0.3.3
 * Added randomly generated user names
 * Reconfigured test instance to prohibit computer owning
