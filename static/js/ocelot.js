@@ -1,8 +1,10 @@
+"use strict";
+
 // init
 // --------------------------------------------------------------------------------- //
 
 window.onload = function() {
-  // dom
+  ui.init();
   document.getElementById('version').innerHTML = version;
   // graphics
   calculateBounds();

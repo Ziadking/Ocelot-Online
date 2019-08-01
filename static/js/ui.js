@@ -1,6 +1,13 @@
 // DOM elements
 // --------------------------------------------------------------------------------- //
 
+var ui = {
+  init: function() {
+    // build interface
+    ui.container = document.getElementById('container');
+  }
+}
+
 var container = document.getElementById('container');
 var titlebar = document.getElementById('titlebar');
 var watermark = document.getElementById('watermark');
