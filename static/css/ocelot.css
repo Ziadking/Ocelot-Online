@@ -8,8 +8,18 @@ body {
 }
 
 @font-face {
-  font-family: "unscii";
+  font-family: "unscii-16";
   src: url("../fonts/unscii-16.woff") format('woff');
+}
+
+@font-face {
+  font-family: "unscii-8-thin";
+  src: url("../fonts/unscii-8-thin.woff") format('woff');
+}
+
+@font-face {
+  font-family: "unscii-8";
+  src: url("../fonts/unscii-8.woff") format('woff');
 }
 
 .centered {
@@ -33,20 +43,25 @@ body {
 #container {
   flex-grow : 1;
   margin: 0 30px 30px 30px;
-  background: #00000030;
   border-radius: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 #titlebar {
-  font-family: "unscii", monospace;
+  font-family: "unscii-16", monospace;
   font-size: 14pt;
-  color: #333;
+  color: #fff;
   display: flex;
   justify-content: space-between;
-  margin: 30px;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.8);
+  box-shadow: 0px 8px 40px rgba(0, 0, 0, 0.8);
 }
 #titlebar a {
-  color: #333;
+  color: #fff;
   text-decoration: none;
 }
 .disabled {
@@ -73,6 +88,27 @@ body {
   image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
   image-rendering: crisp-edges;
   -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+}
+
+.item {
+  background: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 12px 15px 12px 15px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8);
+  font-family: "unscii-16", monospace;
+  font-size: 14pt;
+  color: #fff;
+  margin: 30px;
+}
+.item-title {
+  font-family: "unscii-8", monospace;
+  font-size: 12pt;
+}
+
+.create {
+  background: rgba(127, 168, 82, 0.8);
+  box-shadow: 0px 8px 20px rgba(66, 106, 22, 0.8);
 }
 
 #terminal {
@@ -113,6 +149,10 @@ body {
   10% { color: red; }
 }
 
+#watermark {
+  z-index: -1;
+}
+
 .hidden {
   display: none;
 }
@@ -125,4 +165,10 @@ body {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+  user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
