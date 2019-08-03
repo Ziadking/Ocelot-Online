@@ -1,10 +1,12 @@
 "use strict";
 
-// init
-// --------------------------------------------------------------------------------- //
-
 window.onload = function() {
   ui.init();
+  // routing
+  m.route(ui.container, "/dash", {
+      "/dash": page.Dashboard
+  });
+  //
   document.getElementById('version').innerHTML = version;
   // graphics
   calculateBounds();
@@ -14,9 +16,4 @@ window.onload = function() {
   if (host.endsWith("/")) host = host.substring(0, host.length - 1);
   socket = new WebSocket(host + "/stream");
   subscribeOnSocketEvents();
-  // show terminal, turn off loading animation
-  titlebar.style.visibility = 'visible';
-  terminal.style.visibility = 'visible';
-  footer.style.visibility = 'visible';
-  watermark.classList.remove('spinning');
 }

@@ -22,24 +22,6 @@ body {
   src: url("../fonts/unscii-8.woff") format('woff');
 }
 
-.centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-}
-
-.spinning {
-  -webkit-animation: spin 2s linear infinite;
-  -moz-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
-}
-@keyframes spin {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(-360deg); }
-}
-
 #container {
   flex-grow : 1;
   margin: 0 30px 30px 30px;
@@ -48,6 +30,7 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  align-content: center;
 }
 
 #titlebar {
@@ -151,6 +134,24 @@ body {
 
 #watermark {
   z-index: -1;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.spinning {
+  -webkit-animation: spin 2s linear infinite;
+  -moz-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(-360deg); }
 }
 
 .hidden {

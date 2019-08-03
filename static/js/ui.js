@@ -3,8 +3,28 @@
 
 var ui = {
   init: function() {
-    // build interface
     ui.container = document.getElementById('container');
+    ui.watermark = document.getElementById('watermark');
+  },
+  spinLoader: function() {
+    ui.watermark.classList.add('spinning');
+  },
+  stopLoader: function() {
+    ui.watermark.classList.remove('spinning');
+  }
+};
+
+var page = {
+  Dashboard: {
+    oninit: ui.spinLoader,
+    view: function () {
+      var array = state.workspaces.map(function(workspace) {
+        return m(".item", [workspace.name, m(".item-title", workspace.subtitle)]);
+      });
+      array.push(m(".item.create", ["+++", m(".item-title", "create new workspace")]));
+      return array;
+    },
+    oncreate: ui.stopLoader
   }
 }
 
