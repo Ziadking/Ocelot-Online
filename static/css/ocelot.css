@@ -1,4 +1,6 @@
-html,body { height: 100%; margin: 0px; padding: 0px; }
+/* General styling */
+/* ------------------------------------------------------------------------------------------------------------------ */
+html, body { height: 100%; margin: 0px; padding: 0px; }
 
 body {
   background-image: url("../images/skulls.png");
@@ -22,6 +24,8 @@ body {
   src: url("../fonts/unscii-8.woff") format('woff');
 }
 
+/* Main layout */
+/* ------------------------------------------------------------------------------------------------------------------ */
 #container {
   flex-grow : 1;
   margin: 0 30px 30px 30px;
@@ -50,7 +54,7 @@ body {
 .disabled {
   color: #999 !important;
 }
-.title {
+.title .item-breadcrumbs {
   display: inline-block;
   cursor: pointer;
   margin-right: 20px;
@@ -65,14 +69,21 @@ body {
   cursor: pointer;
 }
 
-.crisp {
-  image-rendering: -moz-crisp-edges; /* Firefox */
-  image-rendering: -o-crisp-edges; /* Opera */
-  image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
-  image-rendering: crisp-edges;
-  -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+#watermark {
+  z-index: -1;
 }
 
+.panel {
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 3px;
+  padding: 12px 15px 12px 15px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8);
+  color: #fff;
+  margin: 30px;
+}
+
+/* Workspaces */
+/* ------------------------------------------------------------------------------------------------------------------ */
 .item {
   background: rgba(0, 0, 0, 0.8);
   cursor: pointer;
@@ -132,10 +143,14 @@ body {
   10% { color: red; }
 }
 
-#watermark {
-  z-index: -1;
+/* Login window */
+/* ------------------------------------------------------------------------------------------------------------------ */
+#login-form {
+
 }
 
+/* Style helpers */
+/* ------------------------------------------------------------------------------------------------------------------ */
 .centered {
   position: absolute;
   top: 50%;
@@ -172,4 +187,12 @@ body {
   -webkit-user-drag: none;
   -webkit-user-select: none;
   -ms-user-select: none;
+}
+
+.crisp {
+  image-rendering: -moz-crisp-edges; /* Firefox */
+  image-rendering: -o-crisp-edges; /* Opera */
+  image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
 }

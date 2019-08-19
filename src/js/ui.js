@@ -5,18 +5,32 @@ var ui = {
   init: function() {
     ui.container = document.getElementById('container');
     ui.watermark = document.getElementById('watermark');
+    ui.breadcrumbs = document.getElementById('breadcrumbs');
+    //m.mount(ui.breadcrumbs, ui.view.Breadcrumbs);
   },
   spinLoader: function() {
     ui.watermark.classList.add('spinning');
   },
   stopLoader: function() {
     ui.watermark.classList.remove('spinning');
+  },
+  view: {
+    Breadcrumbs: {
+      view: function() {
+        return state.breadcrumbs.map(function(crumb) {
+          return m("a", { class: "item-breadcrumbs" }, crumb)
+        });
+      }
+    }
   }
 };
 
 var page = {
   Dashboard: {
-    oninit: ui.spinLoader,
+    oninit: function() {
+      ui.spinLoader();
+      state.breadcrumbs = ["/ dashboard"];
+    },
     view: function () {
       var array = state.workspaces.map(function(workspace) {
         return m(".item", [workspace.name, m(".item-title", workspace.subtitle)]);
@@ -25,6 +39,14 @@ var page = {
       return array;
     },
     oncreate: ui.stopLoader
+  },
+  Login: {
+    oninit: function() {
+      state.breadcrumbs = ["/ login"];
+    },
+    view: function() {
+      m("div", { id: "login-form", class: "centered panel" }, "Login")
+    }
   }
 }
 

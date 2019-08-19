@@ -4,6 +4,7 @@
 # Build files
 target/
 /*.jar
+/static/js
 
 # Proxy configuration
 cacerts

@@ -1,13 +1,14 @@
 "use strict";
 
 window.onload = function() {
+  // init some constants and stuff
   ui.init();
   // routing
   m.route(ui.container, "/dash", {
-      "/dash": page.Dashboard
+      "/dash": page.Dashboard,
+      "/dashboard": page.Dashboard,
+      "/login": page.Login
   });
-  //
-  document.getElementById('version').innerHTML = version;
   // graphics
   calculateBounds();
   if (isMobile()) terminal.contentEditable = true;
