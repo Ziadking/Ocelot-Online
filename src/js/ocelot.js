@@ -1,5 +1,3 @@
-"use strict";
-
 window.onload = function() {
   // init some constants and stuff
   ui.init();
