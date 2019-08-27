@@ -13,3 +13,5 @@ cacerts
 /*.so
 /*.dll
 /save/
+/ref/
+/node_modules/
