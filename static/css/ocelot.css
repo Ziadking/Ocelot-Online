@@ -24,6 +24,11 @@ body {
   src: url("../fonts/unscii-8.woff") format('woff');
 }
 
+.button {
+  display: inline-block;
+  cursor: pointer;
+}
+
 /* Main layout */
 /* ------------------------------------------------------------------------------------------------------------------ */
 #container {
@@ -54,7 +59,7 @@ body {
 .disabled {
   color: #999 !important;
 }
-.title .item-breadcrumbs {
+.title, .item-breadcrumbs {
   display: inline-block;
   cursor: pointer;
   margin-right: 20px;
@@ -64,9 +69,8 @@ body {
   display: inline-block;
 }
 
-.button {
-  display: inline-block;
-  cursor: pointer;
+.profile-panel .button {
+  margin-left: 20px;
 }
 
 #watermark {

@@ -1,18 +1,16 @@
-window.onload = function() {
-  // init some constants and stuff
-  ui.init();
-  // routing
-  m.route(ui.container, "/dash", {
-      "/dash": page.Dashboard,
-      "/dashboard": page.Dashboard,
-      "/login": page.Login
-  });
-  // graphics
-  calculateBounds();
-  if (isMobile()) terminal.contentEditable = true;
-  initWebGL();
-  // network
-  if (host.endsWith("/")) host = host.substring(0, host.length - 1);
-  socket = new WebSocket(host + "/stream");
-  subscribeOnSocketEvents();
-}
+import Layout from "./ui/layout.js";
+import Dashboard from "./ui/dashboard.js";
+import Login from "./ui/login.js";
+
+m.route(document.body, "/dash", {
+  "/dash": {
+    render: function() {
+      return m(Layout, m(Dashboard))
+    }
+  },
+  "/login": {
+    render: function() {
+      return m(Layout, m(Login))
+    }
+  }
+});

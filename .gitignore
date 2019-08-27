@@ -1,13 +1,10 @@
-#Project files
+# Project files
 /.idea
 
 # Build files
 target/
 /*.jar
-/static/js
-
-# Proxy configuration
-cacerts
+/static/js/ocelot.js
 
 # Temp files
 /*.log
