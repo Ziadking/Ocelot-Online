@@ -1,4 +1,5 @@
 import { terser } from "rollup-plugin-terser";
+import { string } from "rollup-plugin-string";
 
 module.exports = {
   input: 'src/js/ocelot.js',
@@ -6,5 +7,8 @@ module.exports = {
     file: 'static/js/ocelot.js',
     format: 'iife'
   },
-  plugins: [ terser() ]
+  plugins: [
+    terser(),
+    string({ include: ["**/*.glslv", "**/*.glslf"] })
+  ]
 };
