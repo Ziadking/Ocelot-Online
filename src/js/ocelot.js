@@ -1,4 +1,4 @@
-import Layout from "./ui/layout.js";
+import { Layout } from "./ui/layout.js";
 import Dashboard from "./ui/dashboard.js";
 import Login from "./ui/login.js";
 
