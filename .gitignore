@@ -1,16 +1,18 @@
-# Project files
+#Project files
 /.idea
 
 # Build files
 target/
 /*.jar
-/static/js/ocelot.js
+
+# Proxy configuration
+cacerts
 
 # Temp files
 /*.log
 /*.so
 /*.dll
 /save/
+/ref/
 /node_modules/
 package-lock.json
-/ref/
