@@ -1,15 +1,21 @@
 import { FONT } from "../util/font.js";
-import { numberToColour } from "../util/helpers.js";
-import vertexShaderSrc from "../../shaders/main.glslv";
-import fragmentShaderSrc from "../../shaders/main.glslf";
+import { numberToColour, fancyAlpha } from "../util/helpers.js";
+
+import vertOpaque from "../../shaders/opaque.glslv";
+import fragOpaque from "../../shaders/opaque.glslf";
+import vertTransparent from "../../shaders/transparent.glslv";
+import fragTransparent from "../../shaders/transparent.glslf";
 
 const CHAR_WIDTH = 8;
 const CHAR_HEIGHT = 16;
 
 export default class Terminal {
-  constructor(vnode, width, height) {
-    this.width = width || 80;
-    this.height = height || 25;
+  constructor(vnode) {
+    const attrs = vnode.attrs || {};
+
+    this.width = attrs.width || 80;
+    this.height = attrs.height || 25;
+    this.transparent = true; // Boolean(attrs.transparent);
 
     this.currentBG = [0, 0, 0];
     this.currentFG = [1, 1, 1];
@@ -25,17 +31,28 @@ export default class Terminal {
   }
 
   createProgram() {
-    this.programInfo = twgl.createProgramInfo(this.gl, [vertexShaderSrc, fragmentShaderSrc]);
+    if (this.transparent) {
+      this.programInfo = twgl.createProgramInfo(this.gl, [vertTransparent, fragTransparent]);
+    } else {
+      this.programInfo = twgl.createProgramInfo(this.gl, [vertOpaque, fragOpaque]);
+    }
   }
 
   createBuffers() {
     const numChars = this.width * this.height;
 
     this.buffers = {}
-    this.buffers.pos = new Float32Array(numChars * 2) // x and y coordinates
-    this.buffers.tex = new Float32Array(numChars * 2) // u and v texture coordinates
-    this.buffers.bg = new Float32Array(numChars * 3)  // background color of the cell
-    this.buffers.fg = new Float32Array(numChars * 3)  // foreground color of the cell
+    this.buffers.pos = new Float32Array(numChars * 2); // x and y coordinates
+    this.buffers.tex = new Float32Array(numChars * 2); // u and v texture coordinates
+
+    if (this.transparent) {
+      this.buffers.bg = new Float32Array(numChars * 4);  // background color of the cell
+      this.buffers.fg = new Float32Array(numChars * 4);  // foreground color of the cell
+    } else {
+      this.buffers.bg = new Float32Array(numChars * 3);
+      this.buffers.fg = new Float32Array(numChars * 3);
+    }
+
     this.buffers.char = new Array(numChars);
 
     // now, we need a buffer with rectangle vertices, composed of two triangles
@@ -47,12 +64,14 @@ export default class Terminal {
     // second triangle: (0, 1), (1, 1), (1, 0)
     const rectangle = [0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0];
 
+    const numColors = this.transparent ? 4 : 3;
+
     this.bufferInfo = twgl.createBufferInfoFromArrays(this.gl, {
       inRectPos: { data: rectangle, numComponents: 2, divisor: 0 },
       inPos: { data: this.buffers.pos, numComponents: 2, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
       inTex: { data: this.buffers.tex, numComponents: 2, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
-      inBG: { data: this.buffers.bg, numComponents: 3, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
-      inFG: { data: this.buffers.fg, numComponents: 3, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
+      inBG: { data: this.buffers.bg, numComponents: numColors, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
+      inFG: { data: this.buffers.fg, numComponents: numColors, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
     });
   }
 
@@ -82,14 +101,30 @@ export default class Terminal {
     this.buffers.tex[idx * 2 + 1] = glyphYNorm;
 
     let [r, g, b] = bg;
-    this.buffers.bg[idx * 3 + 0] = r;
-    this.buffers.bg[idx * 3 + 1] = g;
-    this.buffers.bg[idx * 3 + 2] = b;
+    if (this.transparent) {
+      let a = fancyAlpha(r, g, b);
+      this.buffers.bg[idx * 4 + 0] = r;
+      this.buffers.bg[idx * 4 + 1] = g;
+      this.buffers.bg[idx * 4 + 2] = b;
+      this.buffers.bg[idx * 4 + 3] = a;
+    } else {
+      this.buffers.bg[idx * 3 + 0] = r;
+      this.buffers.bg[idx * 3 + 1] = g;
+      this.buffers.bg[idx * 3 + 2] = b;
+    }
 
     [r, g, b] = fg;
-    this.buffers.fg[idx * 3 + 0] = r;
-    this.buffers.fg[idx * 3 + 1] = g;
-    this.buffers.fg[idx * 3 + 2] = b;
+    if (this.transparent) {
+      let a = fancyAlpha(r, g, b);
+      this.buffers.fg[idx * 4 + 0] = r;
+      this.buffers.fg[idx * 4 + 1] = g;
+      this.buffers.fg[idx * 4 + 2] = b;
+      this.buffers.fg[idx * 4 + 3] = a;
+    } else {
+      this.buffers.fg[idx * 3 + 0] = r;
+      this.buffers.fg[idx * 3 + 1] = g;
+      this.buffers.fg[idx * 3 + 2] = b;
+    }
 
     this.buffers.char[idx] = char;
   }
@@ -98,15 +133,31 @@ export default class Terminal {
     const idx = (y - 1) * this.width + x - 1;
     const char = this.buffers.char[idx];
 
-    let r = this.buffers.bg[idx * 3 + 0];
-    let g = this.buffers.bg[idx * 3 + 1];
-    let b = this.buffers.bg[idx * 3 + 2];
-    let bg = [r, g, b];
+    let r, g, b, bg, fg;
 
-    r = this.buffers.bg[idx * 3 + 0];
-    g = this.buffers.bg[idx * 3 + 1];
-    b = this.buffers.bg[idx * 3 + 2];
-    let fg = [r, g, b];
+    if (this.transparent) {
+      r = this.buffers.bg[idx * 4 + 0];
+      g = this.buffers.bg[idx * 4 + 1];
+      b = this.buffers.bg[idx * 4 + 2];
+    } else {
+      r = this.buffers.bg[idx * 3 + 0];
+      g = this.buffers.bg[idx * 3 + 1];
+      b = this.buffers.bg[idx * 3 + 2];
+    }
+
+    bg = [r, g, b];
+
+    if (this.transparent) {
+      r = this.buffers.fg[idx * 4 + 0];
+      g = this.buffers.fg[idx * 4 + 1];
+      b = this.buffers.fg[idx * 4 + 2];
+    } else {
+      r = this.buffers.fg[idx * 3 + 0];
+      g = this.buffers.fg[idx * 3 + 1];
+      b = this.buffers.fg[idx * 3 + 2];
+    }
+
+    fg = [r, g, b];
 
     return [char, bg, fg];
   }
@@ -163,6 +214,9 @@ export default class Terminal {
       return;
     }
 
+    this.gl.clearColor(0, 0, 0, 0);
+    this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+
     const pixelWidth = this.width * CHAR_WIDTH;
     const pixelHeight = this.height * CHAR_HEIGHT;
 
@@ -209,7 +263,7 @@ export default class Terminal {
     this.createProgram();
     this.createBuffers();
 
-    this.setBackground(0x333333);
+    this.setBackground(0x000000);
     this.fill(1, 1, this.width, this.height, " ");
     this.set(1, 1, "привет");
     this.set(1, 2, "я куда-то нажал, и всё исчезло");

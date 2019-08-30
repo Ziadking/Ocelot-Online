@@ -9,16 +9,21 @@ export function numberToColour(number) {
 }
 
 export function lightness(r, g, b) {
-  var max = Math.max(r, g, b);
-  var min = Math.min(r, g, b);
+  let max = Math.max(r, g, b);
+  let min = Math.min(r, g, b);
+
   return (max + min) / 2;
 }
 
-var fancyAlphaThreshold = 80;
+const FANCY_ALPHA_TRESHOLD = 80;
+
 export function fancyAlpha(r, g, b) {
-  var l = lightness(r, g, b);
-  if (l > fancyAlphaThreshold) return 1.0;
-  else return 0.8 + (l / fancyAlphaThreshold) * 0.2;
+  let l = lightness(r, g, b);
+
+  if (l > FANCY_ALPHA_TRESHOLD)
+    return 1.0;
+  else
+    return 0.8 + (l / FANCY_ALPHA_TRESHOLD) * 0.2;
 }
 
 export function isMobile() {
