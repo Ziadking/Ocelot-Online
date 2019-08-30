@@ -2,7 +2,7 @@ import { Layout } from "./ui/layout.js";
 import Dashboard from "./ui/dashboard.js";
 import Login from "./ui/login.js";
 
-import Terminal from "./terminal/terminal.js";
+import Terminal from "./ui/terminal.js";
 
 // m.route(document.body, "/dash", {
 //   "/dash": {

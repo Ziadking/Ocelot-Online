@@ -1,6 +1,6 @@
-import { FONT } from "./font.js";
+import { FONT } from "../util/font.js";
+import { numberToColour } from "../util/helpers.js";
 import vertexShaderSrc from "../../shaders/main.glslv";
-import { numberToColour } from "../util.js";
 import fragmentShaderSrc from "../../shaders/main.glslf";
 
 const CHAR_WIDTH = 8;
