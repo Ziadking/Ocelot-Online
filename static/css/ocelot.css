@@ -29,6 +29,17 @@ body {
   cursor: pointer;
 }
 
+/* General UI elements */
+/* ------------------------------------------------------------------------------------------------------------------ */
+.panel {
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 3px;
+  padding: 12px 15px 12px 15px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8);
+  color: #fff;
+  margin: 30px;
+}
+
 /* Main layout */
 /* ------------------------------------------------------------------------------------------------------------------ */
 #container {
@@ -77,28 +88,14 @@ body {
   z-index: -1;
 }
 
-.panel {
-  background: rgba(0, 0, 0, 0.8);
-  border-radius: 3px;
-  padding: 12px 15px 12px 15px;
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8);
-  color: #fff;
-  margin: 30px;
-}
-
 /* Workspaces */
 /* ------------------------------------------------------------------------------------------------------------------ */
 .item {
-  background: rgba(0, 0, 0, 0.8);
   cursor: pointer;
-  border-radius: 3px;
-  padding: 12px 15px 12px 15px;
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8);
   font-family: "unscii-16", monospace;
   font-size: 14pt;
-  color: #fff;
-  margin: 30px;
 }
+
 .item-title {
   font-family: "unscii-8", monospace;
   font-size: 12pt;
@@ -147,10 +144,38 @@ body {
   10% { color: red; }
 }
 
-/* Login window */
+/* Login form */
 /* ------------------------------------------------------------------------------------------------------------------ */
 #login-form {
+  display: flex;
+  flex-flow: column;
+  font-family: "unscii-16", monospace;
+  font-size: 14pt;
+  padding: 20px 30px;
+}
+#login-form .header {
+  margin: 10px 0 10px 0;
+}
 
+#login-form .logo, #login-form button {
+  margin: 20px;
+  align-self: center;
+}
+
+#login-form button {
+  background: rgba(127, 168, 82, 0.8);
+  box-shadow: 0px 8px 20px rgba(66, 106, 22, 0.8);
+  font-family: "unscii-16", monospace;
+  font-size: 14pt;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 30px;
+}
+
+#login-form button:active {
+  box-shadow: 0px 8px 10px rgba(66, 106, 22, 0.8);
 }
 
 /* Style helpers */

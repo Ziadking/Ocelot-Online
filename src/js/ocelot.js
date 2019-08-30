@@ -4,17 +4,17 @@ import Login from "./ui/login.js";
 
 import Terminal from "./ui/terminal.js";
 
-// m.route(document.body, "/dash", {
-//   "/dash": {
-//     render: function() {
-//       return m(Layout, m(Dashboard))
-//     }
-//   },
-//   "/login": {
-//     render: function() {
-//       return m(Layout, m(Login))
-//     }
-//   }
-// });
+m.route(document.body, "/dash", {
+  "/dash": {
+    render: function() {
+      return m(Layout, m(Dashboard))
+    }
+  },
+  "/login": {
+    render: function() {
+      return m(Layout, m(Login))
+    }
+  }
+});
 
-m.mount(document.body, Terminal);
+//m.mount(document.body, Terminal);
