@@ -148,11 +148,18 @@ input:focus {
   text-decoration: none;
 }
 
-.warning {
+.warning-f {
   animation: flash 1s linear;
 }
 @keyframes flash {
-  10% { color: red; }
+  10% { color: #d01717; }
+}
+
+.warning-b {
+  animation: flash 1s linear;
+}
+@keyframes flash {
+  10% { background: #d01717; }
 }
 
 /* Login form */
