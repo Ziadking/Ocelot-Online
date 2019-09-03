@@ -1,10 +1,11 @@
 var state = {
   workspaces: [
-    { name: "WORKSPACE #1", subtitle: "testing area for STEM" }
+    { name: "DEMO WORKSPACE", subtitle: "free collaborative arena" }
   ],
   breadcrumbs: [
     { text: "/ dashboard", url: "/dash" }
   ],
+  loggedIn: false,
 };
 
 export { state };
