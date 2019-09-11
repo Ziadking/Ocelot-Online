@@ -1,3 +1,9 @@
+## 0.3.8
+* Updated to 0.4.0 version of ocelot-brain (workspaces & persistence)
+
+## 0.3.7
+* Security patch (resource exhaustion mitigation)
+
 ## 0.3.6
 * Updated to 0.3.1 version of ocelot-brain (OC upgraded to 1.7.4)
 
