@@ -2,16 +2,17 @@ package totoro.ocelot.online
 
 import akka.http.scaladsl.model.ws.TextMessage
 import akka.stream.scaladsl.SourceQueueWithComplete
-import totoro.ocelot.brain.entity.{CPU, Cable, Case, GraphicsCard, HDDManaged, HDDUnmanaged, InternetCard, Keyboard, Memory, Redstone, Screen}
+import totoro.ocelot.brain.entity.{CPU, Case, GraphicsCard, HDDManaged, HDDUnmanaged, InternetCard, Keyboard, Memory, Redstone, Screen}
 import totoro.ocelot.brain.event._
 import totoro.ocelot.brain.loot.Loot
-import totoro.ocelot.brain.network.Network
 import totoro.ocelot.brain.user.User
 import totoro.ocelot.brain.util.{PackedColor, Tier}
+import totoro.ocelot.brain.workspace.{Workspace => BSpace}
 import totoro.ocelot.brain.{Ocelot => Brain}
 
 class Workspace {
   private val defaultUser: User = User("noname")
+  private var workspace: BSpace = _
   private var computer: Case = _
   private var screen: Screen = _
   private var keyboard: Keyboard = _
@@ -20,45 +21,33 @@ class Workspace {
   def init(): Unit = {
     Brain.initialize()
 
-    // setup simple network with a computer
-    val cable = new Cable()
-    new Network(cable.node)
+    // setup simple workspace with a computer
+    workspace = new BSpace()
 
-    computer = new Case(Tier.Four)
-    cable.node.connect(computer.node)
+    computer = workspace.add(new Case(Tier.Four))
 
-    val cpu = new CPU(Tier.Three)
-    computer.add(cpu)
+    computer.add(new CPU(Tier.Three))
+    computer.add(new GraphicsCard(Tier.Three))
+    computer.add(new Memory(Tier.Six))
+    computer.add(new Memory(Tier.Six))
 
-    val gpu = new GraphicsCard(Tier.Three)
-    computer.add(gpu)
-
-    val memory1 = new Memory(Tier.Six)
-    computer.add(memory1)
-    val memory2 = new Memory(Tier.Six)
-    computer.add(memory2)
-
-    val managedHdd = new HDDManaged("b59b07db-846a-4f23-ba02-420c916f294d", Tier.Three, "hdd")
-    computer.add(managedHdd)
+    computer.add(new HDDManaged("b59b07db-846a-4f23-ba02-420c916f294d", Tier.Three, "hdd"))
 
     val unmanagedHdd = new HDDUnmanaged(Tier.Three, "unmanaged")
     unmanagedHdd.setAddress("734e0f26-5819-45e5-9069-a91fa5116b5f")
     computer.add(unmanagedHdd)
 
-    val internet = new InternetCard()
-    computer.add(internet)
-
-    val redstone = new Redstone.Tier2()
-    computer.add(redstone)
+    computer.add(new InternetCard())
+    computer.add(new Redstone.Tier2())
 
     computer.add(Loot.AdvLoaderEEPROM.create())
     computer.add(Loot.OpenOsFloppy.create())
 
-    screen = new Screen(Tier.Two)
-    cable.node.connect(screen.node)
+    screen = workspace.add(new Screen(Tier.Two))
+    computer.connect(screen)
 
     keyboard = new Keyboard()
-    screen.node.connect(keyboard.node)
+    screen.connect(keyboard)
   }
 
   def subscribe(producer: SourceQueueWithComplete[TextMessage]): Unit = {
@@ -104,7 +93,7 @@ class Workspace {
   }
 
   def update(): Unit = {
-    computer.update()
+    workspace.update()
   }
 
   def keyDown(character: Char, code: Int, user: User = defaultUser): Unit = {

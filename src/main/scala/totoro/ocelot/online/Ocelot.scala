@@ -4,13 +4,13 @@ import java.io.File
 import java.net.InetSocketAddress
 import java.time.LocalDate
 
-import org.apache.logging.log4j.{LogManager, Logger}
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
+import org.apache.logging.log4j.{LogManager, Logger}
 import totoro.ocelot.brain.user.User
 
 import scala.concurrent.ExecutionContextExecutor
