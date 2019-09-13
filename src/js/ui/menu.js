@@ -1,7 +1,17 @@
-let state = {
+import { state } from "../state.js"
+
+let menu_state = {
   right_selected: "home",
   left_selected: undefined
 };
+
+export function selectRightMenu(id) {
+  menu_state.right_selected = id
+}
+
+export function selectLeftMenu(id) {
+  menu_state.left_selected = id
+}
 
 class MenuIcon {
   view(vnode) {
@@ -27,22 +37,32 @@ class MenuIcon {
 
 class RightMenuItem {
   view(vnode) {
-    return m("div", { class: "menu-item menu-item-right noselect", onclick: function () { state.right_selected = vnode.attrs.id; } }, [
-      m(m.route.Link, { class: "menu-item-title", href: vnode.attrs.href }, vnode.attrs.text),
-      m(MenuIcon, { icon: vnode.attrs.icon, selected: state.right_selected == vnode.attrs.id }),
+    return m(m.route.Link, {
+      class: "menu-item menu-item-right noselect",
+      onclick: function () { menu_state.right_selected = vnode.attrs.id; },
+      href: vnode.attrs.href,
+    }, [
+      m("div", { class: "menu-item-title" }, vnode.attrs.text),
+      m(MenuIcon, { icon: vnode.attrs.icon, selected: menu_state.right_selected == vnode.attrs.id }),
     ]);
   }
 }
 
 export class NavigationMenu {
   view() {
-    return m("div", { class: "menu" }, [
+    let items = [
       m(RightMenuItem, { id: "home", text: "HOME", icon: "ocelot", href: "/" }),
       m(RightMenuItem, { id: "workspaces", text: "WORKSPACES", icon: "workspaces", href: "/workspaces" }),
       m(RightMenuItem, { id: "help", text: "HELP", icon: "help", href: "/help" }),
-      m(RightMenuItem, { id: "profile", text: "PROFILE", icon: "profile", href: "/profile" }),
-      m(RightMenuItem, { id: "logout", text: "LOGOUT", icon: "logout", href: "/logout" }),
-    ]);
+    ];
+    if (state.loggedIn) {
+      items.push(m(RightMenuItem, { id: "profile", text: "PROFILE", icon: "profile", href: "/profile" }));
+      items.push(m(RightMenuItem, { id: "logout", text: "LOGOUT", icon: "logout", href: "/logout" }));
+    } else {
+      items.push(m(RightMenuItem, { id: "register", text: "REGISTER", icon: "register", href: "/register" }));
+      items.push(m(RightMenuItem, { id: "login", text: "LOGIN", icon: "login", href: "/login" }));
+    }
+    return m("div", { class: "menu" }, items);
   }
 }
 
@@ -51,11 +71,11 @@ class LeftMenuItem {
     return m("div", {
       class: "menu-item menu-item-left noselect",
       onclick: function() {
-        if (state.left_selected != vnode.attrs.id) state.left_selected = vnode.attrs.id;
-        else state.left_selected = undefined;
+        if (menu_state.left_selected != vnode.attrs.id) menu_state.left_selected = vnode.attrs.id;
+        else menu_state.left_selected = undefined;
       }
     }, [
-      m(MenuIcon, { icon: vnode.attrs.icon, selected: state.left_selected == vnode.attrs.id }),
+      m(MenuIcon, { icon: vnode.attrs.icon, selected: menu_state.left_selected == vnode.attrs.id }),
       m("div", { class: "menu-item-title" }, vnode.attrs.text),
     ]);
   }

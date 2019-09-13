@@ -6,10 +6,15 @@ body {
   background-image: url("../images/skulls.png");
   background-repeat: repeat;
   font-family: 'Alegreya Sans', sans-serif;
+  font-size: 16pt;
   display: flex;
   flex-flow: row;
   justify-content: space-between;
   align-items: center;
+}
+
+button {
+  font-family: 'Alegreya Sans', sans-serif;
   font-size: 16pt;
 }
 
@@ -36,16 +41,30 @@ body {
 input {
   border-radius: 3px;
   height: 30px;
-  background: #fff;
-  border: solid 2px #fff;
+  background-image: url("../images/skulls.png");
+  background-repeat: repeat;
+  border: solid 2px #00000033;
+  padding-left: 10px;
 }
 
 input:focus {
-  border: solid 2px rgba(127, 168, 82, 0.8);
+  border: solid 2px #7224B9CC;
 }
 
 h1, h2, h3, h4, h5 {
   font-family: "unscii-16", monospace;
+}
+
+a {
+  color: #7224B9CC;
+}
+
+a:hover {
+  color: #7224B9FF;
+}
+
+a:focus {
+  color: #FF24B9FF;
 }
 
 /* Additional UI classes */
@@ -54,7 +73,6 @@ h1, h2, h3, h4, h5 {
   background: rgba(0, 0, 0, 0.8);
   border-radius: 3px;
   padding: 12px 15px 12px 15px;
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.8);
   color: #fff;
   margin: 30px;
 }
@@ -114,6 +132,20 @@ h1, h2, h3, h4, h5 {
   -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
 }
 
+.warning-f {
+  animation: flash 1s linear;
+}
+@keyframes flash {
+  10% { color: #d01717; }
+}
+
+.warning-b {
+  animation: flash 1s linear;
+}
+@keyframes flash {
+  10% { background: #d0171733; }
+}
+
 /* Layout - Watermark Layer */
 /* ------------------------------------------------------------------------------------------------------------------ */
 
@@ -123,7 +155,13 @@ h1, h2, h3, h4, h5 {
 
 /* Layout - Container layer */
 /* ------------------------------------------------------------------------------------------------------------------ */
-#container {
+#container { }
+#content {
+  height: 100%;
+  margin: 0 120px 0 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Menu */
@@ -140,9 +178,6 @@ h1, h2, h3, h4, h5 {
   cursor: pointer;
   padding: 10px 20px 10px 20px;
   border-radius: 3px;
-}
-
-.menu-item a {
   outline: none;
   text-decoration: none;
 }
@@ -200,7 +235,6 @@ h1, h2, h3, h4, h5 {
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 #intro {
-  padding: 120px;
 }
 
 /* Workspaces */
@@ -252,43 +286,24 @@ h1, h2, h3, h4, h5 {
   text-decoration: none;
 }
 
-.warning-f {
-  animation: flash 1s linear;
-}
-@keyframes flash {
-  10% { color: #d01717; }
-}
-
-.warning-b {
-  animation: flash 1s linear;
-}
-@keyframes flash {
-  10% { background: #d01717; }
-}
-
-/* Login form */
+/* Login / Registration form */
 /* ------------------------------------------------------------------------------------------------------------------ */
-#login-form {
+.login-form {
   display: flex;
   flex-flow: column;
-  font-family: "unscii-16", monospace;
-  font-size: 14pt;
   padding: 20px 30px;
 }
-#login-form .header {
+.login-form .header {
   margin: 10px 0 10px 0;
 }
 
-#login-form .logo, #login-form button {
+.login-form .logo, .login-form button {
   margin: 20px;
   align-self: center;
 }
 
-#login-form button {
-  background: rgba(127, 168, 82, 0.8);
-  box-shadow: 0px 8px 20px rgba(66, 106, 22, 0.8);
-  font-family: "unscii-16", monospace;
-  font-size: 14pt;
+.login-form button {
+  background: #000000CC;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -297,6 +312,6 @@ h1, h2, h3, h4, h5 {
   border-radius: 3px;
 }
 
-#login-form button:active {
-  box-shadow: 0px 8px 10px rgba(66, 106, 22, 0.8);
+.login-form button:active {
+  box-shadow: 0px 4px 4px #000000CC;
 }
