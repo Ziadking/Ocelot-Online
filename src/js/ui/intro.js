@@ -1,10 +1,12 @@
 export default class Intro {
   view(vnode) {
     return m("div", { id: "intro", class: "centered" }, [
-      m("h2", "[ocelot.online]"),
+      m("h3", "[ocelot.online]"),
       m("p", "OpenComputers emulator with 99% emulation accuracy."),
       m("p", [
-        "A free collaborative workspace is available for experimenting.",
+        "A free ",
+        m(m.route.Link, { href: "/workspace/1"}, "collaborative workspace"),
+        " is available for experimenting.",
         m("br"),
         "And, of course, you can ",
         m(m.route.Link, { href: "/register" }, "register"),
