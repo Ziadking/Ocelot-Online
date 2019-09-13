@@ -142,6 +142,11 @@ h1, h2, h3, h4, h5 {
   border-radius: 3px;
 }
 
+.menu-item a {
+  outline: none;
+  text-decoration: none;
+}
+
 .menu-item-left {
   justify-content: flex-start;
 }
@@ -151,7 +156,12 @@ h1, h2, h3, h4, h5 {
 }
 
 .menu-item:hover {
-  background: #00000020;
+  background: #000000CC;
+  color: #FFFFFFCC;
+}
+
+.menu-item:hover a {
+  color: #FFFFFFCC;
 }
 
 .menu-item-title {
@@ -169,6 +179,20 @@ h1, h2, h3, h4, h5 {
 }
 
 .menu-item:hover .menu-item-title {
+  display: block;
+}
+
+.menu-icon-default {
+  display: block;
+}
+.menu-item:hover .menu-icon-default {
+  display: none;
+}
+
+.menu-icon-hover {
+  display: none;
+}
+.menu-item:hover .menu-icon-hover {
   display: block;
 }
 
