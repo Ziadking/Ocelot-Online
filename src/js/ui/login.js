@@ -7,7 +7,7 @@ export default class Login {
       m(".header", "Username"),
       m("input"),
       m(".header", "Password"),
-      m("input"),
+      m("input", { type: "password" }),
       m("button", { onclick: function() { flash(vnode.dom, false, true); } }, "Login"),
       m("p", [
         "Do not have an account?",

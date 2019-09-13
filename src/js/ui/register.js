@@ -9,9 +9,9 @@ export default class Register {
       m(".header", "E-mail"),
       m("input"),
       m(".header", "Password"),
-      m("input"),
+      m("input", { type: "password" }),
       m(".header", "Repeat password"),
-      m("input"),
+      m("input", { type: "password" }),
       m("button", { onclick: function() { flash(vnode.dom, false, true); } }, "Register"),
       m("p", [
         "Already have an account?",

@@ -25,7 +25,8 @@ export default class Intro {
         ]),
         m("p", "I wish you a pleasant experience,"),
         m("p", "Totoro"),
-      ])
+      ]),
+      m("img", { id: "signature", class: "noselect", src: "images/paw.png", ondragstart: function() { return false; } }),
     ]);
   }
 }
