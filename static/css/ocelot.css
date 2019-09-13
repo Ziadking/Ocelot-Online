@@ -240,6 +240,13 @@ a:focus {
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 #intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#intro-logo {
+  margin-bottom: 20px;
 }
 
 /* Workspaces */

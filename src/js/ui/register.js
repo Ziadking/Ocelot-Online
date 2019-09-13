@@ -3,7 +3,7 @@ import { flash } from "../util/helpers.js";
 export default class Register {
   view(vnode) {
     return m("div", { class: "login-form" }, [
-      m("img", { class: "logo noselect", src: "favicon.png", ondragstart: function() { return false; } }),
+      m("img", { class: "logo noselect", src: "images/logo.png", ondragstart: function() { return false; } }),
       m(".header", "Username"),
       m("input"),
       m(".header", "E-mail"),
