@@ -10,7 +10,7 @@ body {
   flex-flow: row;
   justify-content: space-between;
   align-items: center;
-  font-size: 14pt;
+  font-size: 16pt;
 }
 
 @font-face {
@@ -170,6 +170,13 @@ h1, h2, h3, h4, h5 {
 
 .menu-item:hover .menu-item-title {
   display: block;
+}
+
+/* Intro */
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+#intro {
+  padding: 120px;
 }
 
 /* Workspaces */
