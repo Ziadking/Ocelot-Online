@@ -1,5 +1,20 @@
 /* General styling */
 /* ------------------------------------------------------------------------------------------------------------------ */
+@font-face {
+  font-family: "unscii-16";
+  src: url("../fonts/unscii-16.woff") format('woff');
+}
+
+@font-face {
+  font-family: "unscii-8-thin";
+  src: url("../fonts/unscii-8-thin.woff") format('woff');
+}
+
+@font-face {
+  font-family: "unscii-8";
+  src: url("../fonts/unscii-8.woff") format('woff');
+}
+
 html, body { height: 100%; margin: 0px; padding: 0px; }
 
 body {
@@ -16,26 +31,16 @@ body {
 button {
   font-family: 'Alegreya Sans', sans-serif;
   font-size: 16pt;
-}
-
-@font-face {
-  font-family: "unscii-16";
-  src: url("../fonts/unscii-16.woff") format('woff');
-}
-
-@font-face {
-  font-family: "unscii-8-thin";
-  src: url("../fonts/unscii-8-thin.woff") format('woff');
-}
-
-@font-face {
-  font-family: "unscii-8";
-  src: url("../fonts/unscii-8.woff") format('woff');
-}
-
-.button {
-  display: inline-block;
+  background: #000000CC;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
   cursor: pointer;
+  border-radius: 3px;
+}
+
+button:active {
+  background: #7224B9CC;
 }
 
 input {
@@ -143,7 +148,7 @@ a:focus {
   animation: flash 1s linear;
 }
 @keyframes flash {
-  10% { background: #d0171733; }
+  10% { background: #FF24B933; }
 }
 
 /* Layout - Watermark Layer */
@@ -239,14 +244,34 @@ a:focus {
 
 /* Workspaces */
 /* ------------------------------------------------------------------------------------------------------------------ */
-.item {
+.workspace-item {
   cursor: pointer;
-  font-family: "unscii-16", monospace;
-  font-size: 14pt;
+  border-radius: 3px;
+  border: solid 2px #00000033;
+  padding: 15px 20px 15px 20px;
+  color: #000000CC;
+  margin: 30px;
 }
 
-.item-title {
-  font-family: "unscii-8", monospace;
+.workspace-item:hover {
+  border: solid 2px #000000CC;
+  background: #000000CC;
+  color: #FFFFFFCC;
+}
+
+.workspace-item:active {
+border: solid 2px #7224B9CC;
+  background: #7224B9CC;
+}
+
+.workspace-item-title {
+  font-family: "unscii-16", monospace;
+  font-size: 14pt;
+  margin-bottom: 10px;
+}
+
+.workspace-item-subtitle {
+  font-family: 'Alegreya Sans', sans-serif;
   font-size: 12pt;
 }
 
@@ -303,15 +328,5 @@ a:focus {
 }
 
 .login-form button {
-  background: #000000CC;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
   margin-top: 30px;
-  border-radius: 3px;
-}
-
-.login-form button:active {
-  box-shadow: 0px 4px 4px #000000CC;
 }
