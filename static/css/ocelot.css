@@ -307,6 +307,10 @@ border: solid 2px #7224B9CC;
   fill: transparent;
 }
 
+.workspace-wire:hover {
+  stroke: #7224B933;
+}
+
 
 .create {
   background: rgba(127, 168, 82, 0.8);
