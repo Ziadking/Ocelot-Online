@@ -1,16 +1,11 @@
 import { state } from "../state.js"
 
-let menu_state = {
-  right_selected: "home",
-  left_selected: undefined
-};
-
 export function selectRightMenu(id) {
-  menu_state.right_selected = id
+  state.menu.right = id
 }
 
 export function selectLeftMenu(id) {
-  menu_state.left_selected = id
+  state.menu.left = id
 }
 
 class MenuIcon {
@@ -39,16 +34,19 @@ class RightMenuItem {
   view(vnode) {
     return m(m.route.Link, {
       class: "menu-item menu-item-right noselect",
-      onclick: function () { menu_state.right_selected = vnode.attrs.id; },
+      onclick: function () { state.menu.right = vnode.attrs.id; },
       href: vnode.attrs.href,
     }, [
       m("div", { class: "menu-item-title" }, vnode.attrs.text),
-      m(MenuIcon, { icon: vnode.attrs.icon, selected: menu_state.right_selected == vnode.attrs.id }),
+      m(MenuIcon, { icon: vnode.attrs.icon, selected: state.menu.right == vnode.attrs.id }),
     ]);
   }
 }
 
 export class NavigationMenu {
+  oninit() {
+    if (!state.menu.right) state.menu.right = "home";
+  }
   view() {
     let items = [
       m(RightMenuItem, { id: "home", text: "HOME", icon: "ocelot", href: "/" }),
@@ -71,11 +69,11 @@ class LeftMenuItem {
     return m("div", {
       class: "menu-item menu-item-left noselect",
       onclick: function() {
-        if (menu_state.left_selected != vnode.attrs.id) menu_state.left_selected = vnode.attrs.id;
-        else menu_state.left_selected = undefined;
+        if (state.menu.left != vnode.attrs.id) state.menu.left = vnode.attrs.id;
+        else state.menu.left = undefined;
       }
     }, [
-      m(MenuIcon, { icon: vnode.attrs.icon, selected: menu_state.left_selected == vnode.attrs.id }),
+      m(MenuIcon, { icon: vnode.attrs.icon, selected: state.menu.left == vnode.attrs.id }),
       m("div", { class: "menu-item-title" }, vnode.attrs.text),
     ]);
   }

@@ -1,4 +1,5 @@
 var state = {
+  menu: {},
   workspaces: [],
   loggedIn: false,
 };
