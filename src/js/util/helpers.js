@@ -47,3 +47,17 @@ export function flash(element, fore, back) {
   if (fore) element.classList.add("warning-f");
   if (back) element.classList.add("warning-b");
 }
+
+/**
+ * Return width of the browser window
+ */
+export function getWidth() {
+  return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+}
+
+/**
+ * Return height of the browser window
+ */
+export function getHeight() {
+  return window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
+}

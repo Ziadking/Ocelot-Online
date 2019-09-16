@@ -130,11 +130,14 @@ a:focus {
 }
 
 .crisp {
-  image-rendering: -moz-crisp-edges; /* Firefox */
-  image-rendering: -o-crisp-edges; /* Opera */
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;          /* Firefox */
+  image-rendering: pixelated;                 /* Chrome */
+  image-rendering: -o-crisp-edges;            /* Opera */
   image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
   image-rendering: crisp-edges;
-  -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */
+  image-rendering: optimize-contrast;         /* CSS3 Proposed */
+  -ms-interpolation-mode: nearest-neighbor;   /* IE (non-standard property) */
 }
 
 .warning-f {
@@ -281,6 +284,29 @@ border: solid 2px #7224B9CC;
   font-family: 'Alegreya Sans', sans-serif;
   font-size: 12pt;
 }
+
+
+.workspace-block {
+  position: absolute;
+  border: solid 4px #0003;
+  border-radius: 3px;
+}
+
+.workspace-block:hover {
+  border-color: #7224B933;
+}
+
+.workspace-block:active {
+  border-color: #7224B9CC;
+}
+
+.workspace-wire {
+  position: absolute;
+  stroke: #0003;
+  stroke-width: 5;
+  fill: transparent;
+}
+
 
 .create {
   background: rgba(127, 168, 82, 0.8);

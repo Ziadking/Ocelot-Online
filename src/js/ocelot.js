@@ -41,3 +41,6 @@ m.route(document.body, "/intro", {
     }
   },
 });
+
+// init state
+workspaceInit();

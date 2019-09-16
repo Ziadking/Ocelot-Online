@@ -7,7 +7,7 @@ export default class Intro {
         m("p", "OpenComputers emulator with 99% emulation accuracy."),
         m("p", [
           "A free ",
-          m(m.route.Link, { href: "/workspace/1"}, "collaborative workspace"),
+          m(m.route.Link, { href: "/workspace/0"}, "collaborative workspace"),
           " is available for experimenting.",
           m("br"),
           "And, of course, you can ",
