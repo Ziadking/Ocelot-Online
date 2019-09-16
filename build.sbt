@@ -3,7 +3,7 @@ name := "ocelot-online"
 // do not forget to change version in Ocelot.scala
 version := "0.3.8"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.0"
 
 lazy val root = project.in(file("."))
   .dependsOn(brain % "compile->compile")
