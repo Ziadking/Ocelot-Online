@@ -1,4 +1,4 @@
-import { BuildingMenu, NavigationMenu } from "./menu.js";
+import { BuildingMenu, NavigationMenu } from "./view/menu.js";
 
 var Layout = {
   view: function(vnode) {

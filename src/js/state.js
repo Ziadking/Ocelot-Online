@@ -1,7 +1,9 @@
+/**
+ * This structure serves as a singleton state object,
+ * shared between pages and views of the Ocelot app
+ */
 var state = {
-  menu: {},
-  workspaces: [],
-  loggedIn: false,
+  user: undefined
 };
 
 export { state };

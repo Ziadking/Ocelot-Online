@@ -1,10 +1,12 @@
-import { state } from "../state.js"
+import { state } from "../../state.js"
 
 export function selectRightMenu(id) {
+  if (!state.menu) state.menu = {};
   state.menu.right = id
 }
 
 export function selectLeftMenu(id) {
+  if (!state.menu) state.menu = {};
   state.menu.left = id
 }
 
@@ -45,6 +47,7 @@ class RightMenuItem {
 
 export class NavigationMenu {
   oninit() {
+    if (!state.menu) state.menu = {};
     if (!state.menu.right) state.menu.right = "home";
   }
   view() {

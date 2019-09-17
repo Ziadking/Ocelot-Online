@@ -1,6 +1,6 @@
-import { flash } from "../util/helpers.js";
+import { flash } from "../../util/helpers.js";
 
-export default class Register {
+export class RegisterPage {
   view(vnode) {
     return m("div", { class: "login-form" }, [
       m("img", { class: "logo noselect", src: "images/logo.png", ondragstart: function() { return false; } }),

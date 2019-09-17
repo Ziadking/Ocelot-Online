@@ -1,4 +1,4 @@
-export default class Intro {
+export class IntroPage {
   view(vnode) {
     return m("div", { id: "intro" }, [
       m("img", { id: "intro-logo", class: "logo noselect", src: "images/logo.png", ondragstart: function() { return false; } }),

@@ -1,16 +1,21 @@
-import { state } from "../state.js"
+import { state } from "../../state.js";
+import { init } from "../../controller/workspace.js";
 
-export default {
-  view: function () {
-    var array = state.workspaces.map(function(workspace) {
-      return m(".workspace-item",
+export class WorkspaceListPage {
+  oninit() {
+    init();
+  }
+
+  view() {
+    var array = state.workspace.all.map(workspace =>
+      m(".workspace-item",
         { onclick: function() { m.route.set('/workspace/:id', { id: workspace.id }) } },
         [ m(".workspace-item-title", workspace.name), m(".workspace-item-subtitle", workspace.subtitle) ]
-      );
-    });
-    if (state.loggedIn) array.push(m(".item.create", [
+      )
+    );
+    if (state.user) array.push(m(".item.create", [
       m(".workspace-item-title", "+++"), m(".workspace-item-subtitle", "create new workspace")
     ]));
     return array;
-  },
+  }
 }

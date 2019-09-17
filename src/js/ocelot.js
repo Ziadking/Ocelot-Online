@@ -1,11 +1,11 @@
 import { Layout } from "./ui/layout.js";
-import WorkspaceList from "./ui/workspace-list.js";
-import Workspace from "./ui/workspace.js";
-import Login from "./ui/login.js";
-import Register from "./ui/register.js";
-import Intro from "./ui/intro.js";
+import { WorkspaceListPage } from "./ui/page/workspace-list.js";
+import { WorkspacePage } from "./ui/page/workspace.js";
+import { LoginPage } from "./ui/page/login.js";
+import { RegisterPage } from "./ui/page/register.js";
+import { IntroPage } from "./ui/page/intro.js";
 
-import { selectRightMenu } from "./ui/menu.js";
+import { selectRightMenu } from "./ui/view/menu.js";
 
 import { state } from "./state.js";
 
@@ -13,31 +13,31 @@ m.route(document.body, "/intro", {
   "/intro": {
     render: function(vnode) {
       selectRightMenu("home");
-      return m(Layout, m(Intro))
+      return m(Layout, m(IntroPage))
     }
   },
   "/workspaces": {
     render: function() {
       selectRightMenu("workspaces");
-      return m(Layout, m(WorkspaceList))
+      return m(Layout, m(WorkspaceListPage))
     }
   },
   "/workspace/:id": {
     render: function(vnode) {
       selectRightMenu("workspaces");
-      return m(Layout, m(Workspace, { id: vnode.attrs.id }))
+      return m(Layout, m(WorkspacePage, { id: vnode.attrs.id }))
     }
   },
   "/register": {
     render: function() {
       selectRightMenu("register");
-      return m(Layout, m(Register))
+      return m(Layout, m(RegisterPage))
     }
   },
   "/login": {
     render: function() {
       selectRightMenu("login");
-      return m(Layout, m(Login))
+      return m(Layout, m(LoginPage))
     }
   },
 });
