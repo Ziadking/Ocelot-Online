@@ -163,7 +163,9 @@ a:focus {
 
 /* Layout - Container layer */
 /* ------------------------------------------------------------------------------------------------------------------ */
-#container { }
+#container {
+  overflow: hidden;
+}
 #content {
   height: 100%;
   margin: 0 120px 0 120px;

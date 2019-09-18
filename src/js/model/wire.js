@@ -1,6 +1,7 @@
 
 let PATH_PADDING = 10;
 let PATH_CONTROL_STRENGTH = 0.3;
+let PATH_CONTROL_MINIMAL = 100;
 
 // wire structure be like:
 // {
@@ -84,7 +85,7 @@ export class Wire {
         by = PATH_PADDING;
       }
 
-      let distance = Math.max(Math.abs(deltax), Math.abs(deltay)) * PATH_CONTROL_STRENGTH;
+      let distance = Math.max(PATH_CONTROL_MINIMAL, Math.max(Math.abs(deltax), Math.abs(deltay)) * PATH_CONTROL_STRENGTH);
 
       if (deltay >= deltax) {
         if (deltay >= -deltax) {

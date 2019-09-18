@@ -1,30 +1,40 @@
 import { leftTop } from "../../util/helpers.js";
+import { blockIsBeingDragged, noBlockIsBeingDragged } from "../../controller/window.js";
 
 let BLOCK_SIZE = 100;
 let BLOCK_BORDER = 4;
 
 export class BlockView {
+  constructor(vnode) {
+    this.block = vnode.attrs.block;
+  }
+
+  onMouseMove(event) {
+    if (this.isDragged) {
+      let x = this.dragStartBlockX + (event.clientX - this.dragStartMouseX);
+      let y = this.dragStartBlockY + (event.clientY - this.dragStartMouseY);
+      this.block.move(x, y);
+      m.redraw();
+    }
+  }
+
+  onMouseUp(event) {
+    this.isDragged = false;
+    noBlockIsBeingDragged();
+  }
+
   view(vnode) {
     let block = vnode.attrs.block;
     return m("img", {
       src: block.texture,
       class: "crisp workspace-block noselect",
-      onmousedown: function(event) {
+      onmousedown: event => {
         this.isDragged = true;
         this.dragStartMouseX = event.clientX;
         this.dragStartMouseY = event.clientY;
         this.dragStartBlockX = block.x;
         this.dragStartBlockY = block.y;
-      },
-      onmousemove: function(e) {
-        if (this.isDragged) {
-          let x = this.dragStartBlockX + (e.clientX - this.dragStartMouseX);
-          let y = this.dragStartBlockY + (e.clientY - this.dragStartMouseY);
-          block.move(x, y);
-        }
-      },
-      onmouseup: function () {
-        this.isDragged = false;
+        blockIsBeingDragged(this);
       },
       ondragstart: function() {
         return false;
