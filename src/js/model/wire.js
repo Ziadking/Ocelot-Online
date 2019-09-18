@@ -62,7 +62,7 @@ export class Wire {
       this.x = Math.min(this.a.x, this.b.x);
       this.y = Math.min(this.a.y, this.b.y);
       let deltax = this.b.x - this.a.x;
-      let deltay = this.b.y - this.b.y;
+      let deltay = this.b.y - this.a.y;
       this.width = Math.abs(deltax) + PATH_PADDING * 2;
       this.height = Math.abs(deltay) + PATH_PADDING * 2;
 
