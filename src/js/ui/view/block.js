@@ -1,6 +1,7 @@
 import { leftTop } from "../../util/helpers.js";
 
 let BLOCK_SIZE = 100;
+let BLOCK_BORDER = 4;
 
 export class BlockView {
   view(vnode) {
@@ -12,7 +13,7 @@ export class BlockView {
         // TODO
         return false;
       },
-      style: "width: " + BLOCK_SIZE + "px; " + leftTop(block.x, block.y, BLOCK_SIZE, BLOCK_SIZE),
+      style: "width: " + BLOCK_SIZE + "px; " + leftTop(block.x - BLOCK_BORDER, block.y - BLOCK_BORDER, BLOCK_SIZE, BLOCK_SIZE),
     });
   }
 }

@@ -59,8 +59,8 @@ export class Wire {
     //       / 3 \
 
     if (this.a != null && this.b != null) {
-      this.x = Math.min(this.a.x, this.b.x);
-      this.y = Math.min(this.a.y, this.b.y);
+      this.x = Math.min(this.a.x, this.b.x) - PATH_PADDING;
+      this.y = Math.min(this.a.y, this.b.y) - PATH_PADDING;
       let deltax = this.b.x - this.a.x;
       let deltay = this.b.y - this.a.y;
       this.width = Math.abs(deltax) + PATH_PADDING * 2;
