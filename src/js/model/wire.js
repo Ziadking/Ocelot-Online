@@ -2,6 +2,7 @@
 let PATH_PADDING = 10;
 let PATH_CONTROL_STRENGTH = 0.3;
 let PATH_CONTROL_MINIMAL = 100;
+let PATH_CONTROL_INTERPOLATION = 0.3;
 
 // wire structure be like:
 // {
@@ -117,16 +118,31 @@ export class Wire {
         }
       }
 
+      // interpolate between the old control point locations and the new desired ones
+      let icx, icy, idx, idy;
+
+      if (this.path) {
+        icx = this.cx + (cx - this.cx) * PATH_CONTROL_INTERPOLATION;
+        icy = this.cy + (cy - this.cy) * PATH_CONTROL_INTERPOLATION;
+        idx = this.dx + (dx - this.dx) * PATH_CONTROL_INTERPOLATION;
+        idy = this.dy + (dy - this.dy) * PATH_CONTROL_INTERPOLATION;
+      } else {
+        icx = cx;
+        icy = cy;
+        idx = dx;
+        idy = dy;
+      }
+
       // generate new path
       this.path = "M " + ax + " " + ay + " " +
-                  "C " + cx + " " + cy +
-                  ", " + dx + " " + dy +
+                  "C " + icx + " " + icy +
+                  ", " + idx + " " + idy +
                   ", " + bx + " " + by;
 
-      this.cx = cx;
-      this.cy = cy;
-      this.dx = dx;
-      this.dy = dy;
+      this.cx = icx;
+      this.cy = icy;
+      this.dx = idx;
+      this.dy = idy;
     }
   }
 }
