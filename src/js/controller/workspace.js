@@ -8,15 +8,22 @@ let inited = false;
 export function init() {
   if (!inited) {
     let workspace = new Workspace(0, "DEMO WORKSPACE", "free collaborative arena");
-    let caseBlock = new Block("address1", -100, 0, "case");
-    let screenBlock = new Block("address2", 100, 10, "screen");
-    let wire = new Wire();
-    wire.connect(caseBlock);
-    wire.connect(screenBlock);
-    wire.update();
+    let caseBlock = new Block("d163fbd7-4b34-4e22-85c7-4b4554713770", -100, -50, "case");
+    let screenBlock = new Block("ac3635dc-6e85-474c-bcf1-ec8b8ef419b3", 100, -40, "screen");
+    let driveBlock = new Block("dfd01a26-de2f-442f-bc62-6cdeed76a7c8", 50, 150, "drive");
+    let wire1 = new Wire();
+    wire1.connect(caseBlock);
+    wire1.connect(screenBlock);
+    wire1.update();
     workspace.addBlock(caseBlock);
     workspace.addBlock(screenBlock);
-    workspace.addWire(wire);
+    workspace.addWire(wire1);
+    let wire2 = new Wire();
+    wire2.connect(caseBlock);
+    wire2.connect(driveBlock);
+    wire2.update();
+    workspace.addBlock(driveBlock);
+    workspace.addWire(wire2);
 
     state.workspace = {};
     state.workspace.all = [ workspace ];
