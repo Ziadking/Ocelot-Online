@@ -6,6 +6,7 @@ import java.time.LocalDate
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.{ContentType, HttpCharsets, HttpEntity, HttpResponse, MediaTypes}
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
@@ -134,7 +135,10 @@ object Ocelot {
       } ~
       path("config.js") {
         get {
-          complete(s"var version = '$Version'; var host = '${Settings.get.clientHost}';")
+          complete {
+            HttpResponse(entity = HttpEntity(ContentType(MediaTypes.`application/javascript`, HttpCharsets.`UTF-8`),
+              s"var version = '$Version'; var host = '${Settings.get.clientHost}';"))
+          }
         }
       } ~
       pathEndOrSingleSlash {
