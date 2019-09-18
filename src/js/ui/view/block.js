@@ -25,8 +25,7 @@ export class BlockView {
 
   view(vnode) {
     let block = vnode.attrs.block;
-    return m("img", {
-      src: block.texture,
+    return m("div", {
       class: "crisp workspace-block noselect",
       onmousedown: event => {
         this.isDragged = true;
@@ -40,6 +39,9 @@ export class BlockView {
         return false;
       },
       style: "width: " + BLOCK_SIZE + "px; " + leftTop(block.x - BLOCK_BORDER, block.y - BLOCK_BORDER, BLOCK_SIZE, BLOCK_SIZE),
-    });
+    }, [
+      m("img", { src: block.texture }),
+      m("div", block.address)
+    ]);
   }
 }

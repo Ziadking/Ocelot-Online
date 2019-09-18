@@ -290,16 +290,34 @@ border: solid 2px #7224B9CC;
 
 .workspace-block {
   position: absolute;
-  border: solid 4px #0003;
+  background: #0003;
+  color: #000c;
+  padding: 4px;
   border-radius: 3px;
+  font-family: "unscii-8", monospace;
+  font-size: 12pt;
+}
+
+.workspace-block img {
+  width: 100%;
+}
+
+.workspace-block div {
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: -4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: "";
 }
 
 .workspace-block:hover {
-  border-color: #7224B933;
+  background: #7224B933;
 }
 
 .workspace-block:active {
-  border-color: #7224B9CC;
+  background: #7224B9CC;
+  color: #fffc;
 }
 
 .workspace-wire {
