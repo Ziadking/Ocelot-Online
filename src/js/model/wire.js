@@ -90,9 +90,9 @@ export class Wire {
         if (deltay >= -deltax) {
           // quadrant 1
           cx = ax;
-          cy = ay - distance;
+          cy = ay + distance;
           dx = bx;
-          dy = bx + distance;
+          dy = by - distance;
         } else {
           // quadrant 4
           cx = ax - distance;
@@ -110,9 +110,9 @@ export class Wire {
         } else {
           // quadrant 3
           cx = ax;
-          cy = ay + distance;
+          cy = ay - distance;
           dx = bx;
-          dy = by - distance;
+          dy = by + distance;
         }
       }
 
