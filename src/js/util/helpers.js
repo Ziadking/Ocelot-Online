@@ -64,10 +64,9 @@ export function getHeight() {
 
 /**
  * Generate left and top style parameters for an object with given size.
- * The coordinate system is centered on the screen.
  */
 export function leftTop(x, y, width, height) {
-  let left = getWidth() / 2 + x - width / 2;
-  let top = getHeight() / 2 + y - height / 2;
+  let left = x - width / 2;
+  let top = y - height / 2;
   return "left: " + left + "px; top: " + top + "px;";
 }

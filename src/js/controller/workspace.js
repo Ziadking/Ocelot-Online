@@ -6,6 +6,7 @@ import { Wire } from "../model/wire.js";
 let inited = false;
 
 export function init() {
+  // create demo workspace
   if (!inited) {
     let workspace = new Workspace(0, "DEMO WORKSPACE", "free collaborative arena");
     let caseBlock = new Block("d163fbd7-4b34-4e22-85c7-4b4554713770", -100, -50, "case");

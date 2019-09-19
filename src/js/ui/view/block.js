@@ -1,5 +1,5 @@
 import { leftTop } from "../../util/helpers.js";
-import { blockIsBeingDragged, noBlockIsBeingDragged } from "../../controller/window.js";
+import { registerMouseEventTarget, unregisterMouseEventTarget } from "../../controller/window.js";
 
 let BLOCK_SIZE = 100;
 let BLOCK_BORDER = 4;
@@ -8,6 +8,8 @@ export class BlockView {
   constructor(vnode) {
     this.block = vnode.attrs.block;
   }
+
+  onMouseDown(event) {}
 
   onMouseMove(event) {
     if (this.isDragged) {
@@ -20,27 +22,29 @@ export class BlockView {
 
   onMouseUp(event) {
     this.isDragged = false;
-    noBlockIsBeingDragged();
+    unregisterMouseEventTarget(this);
   }
 
   view(vnode) {
     let block = vnode.attrs.block;
+    let parent = vnode.attrs.parent;
     return m("div", {
       class: "crisp workspace-block noselect",
       onmousedown: event => {
-        if (event.button == 0) {
+        if (event.button == 0) { // left mouse button
           this.isDragged = true;
           this.dragStartMouseX = event.clientX;
           this.dragStartMouseY = event.clientY;
           this.dragStartBlockX = block.x;
           this.dragStartBlockY = block.y;
-          blockIsBeingDragged(this);
+          registerMouseEventTarget(this);
         }
       },
       ondragstart: function() {
         return false;
       },
-      style: "width: " + BLOCK_SIZE + "px; " + leftTop(block.x - BLOCK_BORDER, block.y - BLOCK_BORDER, BLOCK_SIZE, BLOCK_SIZE),
+      style: "width: " + BLOCK_SIZE + "px; " +
+             leftTop(parent.x + block.x - BLOCK_BORDER, parent.y + block.y - BLOCK_BORDER, BLOCK_SIZE, BLOCK_SIZE),
     }, [
       m("img", { src: block.texture }),
       m("div", block.address)
