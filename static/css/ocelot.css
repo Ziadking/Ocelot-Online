@@ -325,9 +325,14 @@ border: solid 2px #7224B9CC;
   stroke: #0003;
   stroke-width: 5;
   fill: transparent;
+  pointer-events: none;
 }
 
-.workspace-wire:hover {
+.workspace-wire path {
+  pointer-events: auto;
+}
+
+.workspace-wire path:hover {
   stroke: #7224B933;
 }
 
