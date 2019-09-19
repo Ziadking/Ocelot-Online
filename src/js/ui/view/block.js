@@ -28,12 +28,14 @@ export class BlockView {
     return m("div", {
       class: "crisp workspace-block noselect",
       onmousedown: event => {
-        this.isDragged = true;
-        this.dragStartMouseX = event.clientX;
-        this.dragStartMouseY = event.clientY;
-        this.dragStartBlockX = block.x;
-        this.dragStartBlockY = block.y;
-        blockIsBeingDragged(this);
+        if (event.button == 0) {
+          this.isDragged = true;
+          this.dragStartMouseX = event.clientX;
+          this.dragStartMouseY = event.clientY;
+          this.dragStartBlockX = block.x;
+          this.dragStartBlockY = block.y;
+          blockIsBeingDragged(this);
+        }
       },
       ondragstart: function() {
         return false;
