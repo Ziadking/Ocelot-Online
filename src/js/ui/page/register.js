@@ -16,7 +16,7 @@ export class RegisterPage {
       m("p", [
         "Already have an account?",
         m("br"),
-        "The you can just ",
+        "Then you can just ",
         m(m.route.Link, { href: "/login" }, "login"),
         "."
       ]),

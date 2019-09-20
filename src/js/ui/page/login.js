@@ -12,7 +12,7 @@ export class LoginPage {
       m("p", [
         "Do not have an account?",
         m("br"),
-        "The you can just ",
+        "Then you can just ",
         m(m.route.Link, { href: "/register" }, "register"),
         "."
       ]),
