@@ -28,6 +28,18 @@ export class BlockView {
   view(vnode) {
     let block = vnode.attrs.block;
     let parent = vnode.attrs.parent;
+    let elements = [
+      m("img", { src: block.texture })
+    ];
+    if (block.overlays) {
+      block.overlays.map(overlay => elements.push(
+        m("img", {
+          id: overlay.id,
+          class: "overlay",
+          src: overlay.texture,
+          style: "width: " + BLOCK_SIZE + "px; " + (overlay.visible ? "" : "display: none;") })
+      ));
+    }
     return m("div", {
       class: "crisp workspace-block noselect",
       onmousedown: event => {
@@ -46,8 +58,8 @@ export class BlockView {
       style: "width: " + BLOCK_SIZE + "px; " +
              leftTop(parent.x + block.x - BLOCK_BORDER, parent.y + block.y - BLOCK_BORDER, BLOCK_SIZE, BLOCK_SIZE),
     }, [
-      m("img", { src: block.texture }),
-      m("div", block.address)
+      m("div", { class: "texture" }, elements),
+      m("div", { class: "address" }, block.address)
     ]);
   }
 }

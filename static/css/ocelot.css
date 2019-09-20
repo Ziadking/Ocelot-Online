@@ -304,6 +304,9 @@ border: solid 2px #7224B9CC;
 
 .workspace-block div {
   width: 100%;
+}
+
+.workspace-block .address {
   margin-top: 4px;
   margin-bottom: -4px;
   white-space: nowrap;
@@ -318,6 +321,12 @@ border: solid 2px #7224B9CC;
 .workspace-block:active {
   background: #7224B9CC;
   color: #fffc;
+}
+
+.workspace-block .overlay {
+  position: absolute;
+  top: 4px;
+  left: 4px;
 }
 
 .workspace-wire {

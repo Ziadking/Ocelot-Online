@@ -8,11 +8,15 @@
 // }
 
 export class Block {
-  constructor(address, x, y, texture) {
+  constructor(address, x, y, texture, overlays) {
     this.address = address;
     this.x = x;
     this.y = y;
     this.texture = "images/textures/" + texture + ".png";
+    this.overlays = overlays;
+    if (this.overlays) {
+      this.overlays.map(overlay => overlay.texture = "images/textures/" + overlay.texture + ".png");
+    }
     this.wires = [];
   }
 
