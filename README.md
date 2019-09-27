@@ -1,7 +1,7 @@
 ## ocelot-online
 
 OpenComputers emulator in form of a web-application.  
-Uses `ocelot-brain` module to do all the emulation work under the hood.  
+Uses the `ocelot-brain` module to do all the emulation work under the hood.  
 
 ### demo
 
@@ -24,17 +24,24 @@ with the following configuration:
 * Keyboard
 
 ### build instructions
-
+#### frontend
+* Install [rollup.js](https://rollupjs.org/guide/en/)
+* Run `rollup -c` command from the project directory
+* The `static/js/ocelot.js` will be generated
+* Take the whole `static` folder
+#### backend
 * Import the project into your favorite IDE with the last Scala and SBT installed
-* Put a compiled `ocelot-brain` JAR file into `lib/` directory (create it if necessary)
-* Run `sbt assembly` task to package the project to a JAR file with dependencies
+* Pull the `ocelot-brain` submodule
+* Run `sbt assembly` task to build the server-side to a JAR file with dependencies
 * Take the JAR file from `target/scala-x.xx/` folder
-* Run it using `java -jar ocelot-online-x.x.x.jar` command
 
-The working directory of ocelot.online instance must contain the `static/`
-folder from this repo and the configured `ocelot.conf` file.  
-Also, you can put there a `brain.conf` file to configure the emulator core.
-This config file is just a copy of OpenComputers configuration.
+### how to run
+* Make sure that the project directory contains Ocelot Online JAR file, the `static` folder, and the `ocelot.conf` file
+* (The `brain.conf` file for Ocelot Brain is optional)
+* Run Ocelot using `java -jar ocelot-online-x.x.x.jar` command
 
-**P.S.** This project is a *work-in-progress*, breaking changes and bugs will break
-things from time to time. Beware.
+### disclaimer
+This project is a *work-in-progress*, breaking changes and bugs will break
+things from time to time.
+
+Beware.
