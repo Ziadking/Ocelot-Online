@@ -1,6 +1,9 @@
 import { state } from "../../state.js";
-import { BlockView } from "../view/block.js";
+import { Entity } from "../../const/entity.js";
+
 import { WireView } from "../view/wire.js";
+import { BlockView } from "../view/block.js";
+import { BlockScreenView } from "../view/block-screen.js";
 
 import { init } from "../../controller/workspace.js";
 import { registerMouseEventTarget, unregisterMouseEventTarget } from "../../controller/window.js";
@@ -42,6 +45,13 @@ export class WorkspacePage {
     unregisterMouseEventTarget(this);
   }
 
+  matchEntityView(entity) {
+    switch (entity) {
+      case Entity.SCREEN: return BlockScreenView;
+      default: return BlockView;
+    }
+  }
+
   view(vnode) {
     let id = vnode.attrs.id;
     state.workspace.current = state.workspace.all.find(w => w.id == id);
@@ -58,7 +68,7 @@ export class WorkspacePage {
       // generate blocks
       elements.push(
         state.workspace.current.blocks.map(block => {
-          return m(BlockView, { block: block, parent: this });
+          return m(this.matchEntityView(block.entity), { block: block, parent: this });
         })
       );
     }

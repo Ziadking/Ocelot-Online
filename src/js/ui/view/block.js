@@ -4,28 +4,19 @@ import { registerMouseEventTarget, unregisterMouseEventTarget } from "../../cont
 let BLOCK_SIZE = 100;
 let BLOCK_BORDER = 4;
 
+/**
+ * The block view can be in two states - folded and unfolded.
+ * When folded the block shows a rectangular block with texture, address and overlays.
+ * When unfolded it shows some kind of interface - the exact interface is determined by the block type.
+ */
+
 export class BlockView {
   constructor(vnode) {
     this.block = vnode.attrs.block;
+    this.folded = true;
   }
 
-  onMouseDown(event) {}
-
-  onMouseMove(event) {
-    if (this.isDragged) {
-      let x = this.dragStartBlockX + (event.clientX - this.dragStartMouseX);
-      let y = this.dragStartBlockY + (event.clientY - this.dragStartMouseY);
-      this.block.move(x, y);
-      m.redraw();
-    }
-  }
-
-  onMouseUp(event) {
-    this.isDragged = false;
-    unregisterMouseEventTarget(this);
-  }
-
-  view(vnode) {
+  blockInterface(vnode) {
     let block = vnode.attrs.block;
     let parent = vnode.attrs.parent;
     let elements = [
@@ -52,6 +43,9 @@ export class BlockView {
           registerMouseEventTarget(this);
         }
       },
+      oncontextmenu: event => { // right mouse button
+        this.onContextMenu(event);
+      },
       ondragstart: function() {
         return false;
       },
@@ -61,5 +55,34 @@ export class BlockView {
       m("div", { class: "texture" }, elements),
       m("div", { class: "address" }, block.address)
     ]);
+  }
+
+  onMouseDown(event) {}
+
+  onMouseMove(event) {
+    if (this.isDragged) {
+      let x = this.dragStartBlockX + (event.clientX - this.dragStartMouseX);
+      let y = this.dragStartBlockY + (event.clientY - this.dragStartMouseY);
+      this.block.move(x, y);
+      m.redraw();
+    }
+  }
+
+  onMouseUp(event) {
+    this.isDragged = false;
+    unregisterMouseEventTarget(this);
+  }
+
+  onContextMenu(event) {
+    event.preventDefault();
+    this.folded = !this.folded;
+  }
+
+  view(vnode) {
+    if (this.folded || !this.detailsInterface) {
+      return this.blockInterface(vnode);
+    } else {
+      return this.detailsInterface(vnode);
+    }
   }
 }

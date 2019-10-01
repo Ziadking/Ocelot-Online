@@ -8,7 +8,8 @@
 // }
 
 export class Block {
-  constructor(address, x, y, texture, overlays) {
+  constructor(entity, address, x, y, texture, overlays) {
+    this.entity = entity;
     this.address = address;
     this.x = x;
     this.y = y;
@@ -18,6 +19,11 @@ export class Block {
       this.overlays.map(overlay => overlay.texture = "images/textures/" + overlay.texture + ".png");
     }
     this.wires = [];
+  }
+
+  addOverlay(id, texture, visible) {
+    if (!this.overlays) this.overlays = [];
+    this.overlays.push({ id: id, texture: "images/textures/" + texture + ".png", visible: visible });
   }
 
   move(x, y) {
