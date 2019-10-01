@@ -4,6 +4,7 @@ import { Entity } from "../../const/entity.js";
 import { WireView } from "../view/wire.js";
 import { BlockView } from "../view/block.js";
 import { BlockScreenView } from "../view/block-screen.js";
+import { BlockCaseView } from "../view/block-case.js";
 
 import { init } from "../../controller/workspace.js";
 import { registerMouseEventTarget, unregisterMouseEventTarget } from "../../controller/window.js";
@@ -48,6 +49,7 @@ export class WorkspacePage {
   matchEntityView(entity) {
     switch (entity) {
       case Entity.SCREEN: return BlockScreenView;
+      case Entity.CASE: return BlockCaseView;
       default: return BlockView;
     }
   }
