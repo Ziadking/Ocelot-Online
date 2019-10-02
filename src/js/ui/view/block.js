@@ -13,24 +13,17 @@ let BLOCK_BORDER = 4;
 export class BlockView {
   constructor(vnode) {
     this.block = vnode.attrs.block;
+    this.parent = vnode.attrs.parent;
     this.folded = true;
+    this.width = BLOCK_SIZE;
+    this.height = BLOCK_SIZE + 20;
   }
 
-  blockInterface(vnode) {
-    let block = vnode.attrs.block;
-    let parent = vnode.attrs.parent;
-    let elements = [
-      m("img", { src: block.texture })
-    ];
-    if (block.overlays) {
-      block.overlays.map(overlay => elements.push(
-        m("img", {
-          id: overlay.id,
-          class: "overlay",
-          src: overlay.texture,
-          style: "width: " + BLOCK_SIZE + "px; " + (overlay.visible ? "" : "display: none;") })
-      ));
-    }
+  /**
+   * This interface is a container for block interface.
+   * It manages the position of block and the ability to drag the block.
+   */
+  basicInterface(vnode, children) {
     return m("div", {
       class: "crisp workspace-block noselect",
       onmousedown: event => {
@@ -38,8 +31,8 @@ export class BlockView {
           this.isDragged = true;
           this.dragStartMouseX = event.clientX;
           this.dragStartMouseY = event.clientY;
-          this.dragStartBlockX = block.x;
-          this.dragStartBlockY = block.y;
+          this.dragStartBlockX = this.block.x;
+          this.dragStartBlockY = this.block.y;
           registerMouseEventTarget(this);
         }
       },
@@ -49,12 +42,32 @@ export class BlockView {
       ondragstart: function() {
         return false;
       },
-      style: "width: " + BLOCK_SIZE + "px; " +
-             leftTop(parent.x + block.x - BLOCK_BORDER, parent.y + block.y - BLOCK_BORDER, BLOCK_SIZE, BLOCK_SIZE),
-    }, [
+      style: "width: " + this.width + "px; height: " + this.height + "px; " +
+             leftTop(this.parent.x + this.block.x - BLOCK_BORDER, this.parent.y + this.block.y - BLOCK_BORDER, this.width, this.height),
+    }, children);
+  }
+
+  /**
+   * The interface of a square block, with texture and overlays.
+   * This is the default block UI in folded state.
+   */
+  blockInterface(vnode) {
+    let elements = [
+      m("img", { src: this.block.texture })
+    ];
+    if (this.block.overlays) {
+      this.block.overlays.map(overlay => elements.push(
+        m("img", {
+          id: overlay.id,
+          class: "overlay",
+          src: overlay.texture,
+          style: "width: " + BLOCK_SIZE + "px; " + (overlay.visible ? "" : "display: none;") })
+      ));
+    }
+    return [
       m("div", { class: "texture" }, elements),
-      m("div", { class: "address" }, block.address)
-    ]);
+      m("div", { class: "address" }, this.block.address)
+    ];
   }
 
   onMouseDown(event) {}
@@ -80,9 +93,9 @@ export class BlockView {
 
   view(vnode) {
     if (this.folded || !this.detailsInterface) {
-      return this.blockInterface(vnode);
+      return this.basicInterface(vnode, this.blockInterface(vnode));
     } else {
-      return this.detailsInterface(vnode);
+      return this.basicInterface(vnode, this.detailsInterface(vnode));
     }
   }
 }
