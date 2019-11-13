@@ -128,7 +128,7 @@ object Ocelot {
       path("stream") {
         ignoreTrailingSlash {
           val nickname = NameGen.name((address.toString + LocalDate.now.toString).hashCode)
-          log.info(s"User connected: $nickname")
+          log.info(s"User connected: $nickname ($address / ${address.getAddress.getCanonicalHostName})")
           handleWebSocketMessages(wsHandler(User(nickname)))
         }
       } ~
