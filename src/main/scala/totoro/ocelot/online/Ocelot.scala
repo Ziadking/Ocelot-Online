@@ -6,6 +6,7 @@ import java.time.LocalDate
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.HttpHeader
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
@@ -122,14 +123,19 @@ object Ocelot {
       .merge(source)
       .via(watchDisconnectsFlow)
 
-
     // define routes
     def route(address : InetSocketAddress) =
       path("stream") {
         ignoreTrailingSlash {
-          val nickname = NameGen.name((address.toString + LocalDate.now.toString).hashCode)
-          log.info(s"User connected: $nickname ($address / ${address.getAddress.getCanonicalHostName})")
-          handleWebSocketMessages(wsHandler(User(nickname)))
+            optionalHeaderValueByName("X-Real-Ip") { realIp =>
+              val nickname = NameGen.name((address.toString + LocalDate.now.toString).hashCode)
+              val ip = realIp match {
+                case Some(ip) => ip
+                case None => "NGINX proxy not configured"
+              }
+              log.info(s"User connected: $nickname ($address / ${address.getAddress.getCanonicalHostName} / $ip)")
+              handleWebSocketMessages(wsHandler(User(nickname)))
+            }
         }
       } ~
       path("config.js") {
