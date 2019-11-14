@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.HttpHeader
+import akka.http.scaladsl.model.{HttpHeader, HttpResponse, StatusCode, StatusCodes}
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
@@ -133,8 +133,10 @@ object Ocelot {
                 case Some(ip) => ip
                 case None => "NGINX proxy not configured"
               }
-              log.info(s"User connected: $nickname ($address / ${address.getAddress.getCanonicalHostName} / $ip)")
-              handleWebSocketMessages(wsHandler(User(nickname)))
+              val maskedIp = address.toString
+              val banned = Settings.get.blacklist.exists(value => ip.contains(value) || maskedIp.contains(value))
+              log.info(s"User connected: $nickname ($maskedIp / ${address.getAddress.getCanonicalHostName} / $ip${ if (banned) " / banned" else "" })")
+              if (!banned) handleWebSocketMessages(wsHandler(User(nickname))) else complete(HttpResponse(StatusCodes.PaymentRequired))
             }
         }
       } ~
