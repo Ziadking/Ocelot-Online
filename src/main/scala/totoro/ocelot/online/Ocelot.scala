@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ContentType, HttpCharsets, HttpEntity, HttpResponse, MediaTypes}
+import akka.http.scaladsl.model.{HttpHeader, HttpResponse, StatusCode, StatusCodes}
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
 object Ocelot {
   private val Name = "ocelot.online"
   // do not forget to change version in build.sbt
-  private val Version = "0.3.8"
+  private val Version = "0.3.10"
 
   var logger: Option[Logger] = None
   def log: Logger = logger.getOrElse(LogManager.getLogger(Name))
@@ -123,14 +123,21 @@ object Ocelot {
       .merge(source)
       .via(watchDisconnectsFlow)
 
-
     // define routes
     def route(address : InetSocketAddress) =
       path("stream") {
         ignoreTrailingSlash {
-          val nickname = NameGen.name((address.toString + LocalDate.now.toString).hashCode)
-          log.info(s"User connected: $nickname")
-          handleWebSocketMessages(wsHandler(User(nickname)))
+            optionalHeaderValueByName("X-Real-Ip") { realIp =>
+              val nickname = NameGen.name((address.toString + LocalDate.now.toString).hashCode)
+              val ip = realIp match {
+                case Some(ip) => ip
+                case None => "NGINX proxy not configured"
+              }
+              val maskedIp = address.toString
+              val banned = Settings.get.blacklist.exists(value => ip.contains(value) || maskedIp.contains(value))
+              log.info(s"User connected: $nickname ($maskedIp / ${address.getAddress.getCanonicalHostName} / $ip${ if (banned) " / banned" else "" })")
+              if (!banned) handleWebSocketMessages(wsHandler(User(nickname))) else complete(HttpResponse(StatusCodes.PaymentRequired))
+            }
         }
       } ~
       path("config.js") {

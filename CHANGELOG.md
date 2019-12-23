@@ -1,3 +1,9 @@
+## 0.3.10
+* Security fix: official patch for the "too long without yielding" issue
+
+## 0.3.9
+* Fix: `computer.getDeviceInfo()`
+
 ## 0.3.8
 * Updated to 0.4.0 version of ocelot-brain (workspaces & persistence)
 
