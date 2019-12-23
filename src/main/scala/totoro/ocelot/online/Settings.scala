@@ -2,10 +2,10 @@ package totoro.ocelot.online
 
 import java.io.File
 
-import scala.jdk.CollectionConverters._
 import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.collection.mutable
+import scala.jdk.CollectionConverters._
 
 class Settings(val config: Config) {
   val serverHost: String = config.getString("server.host")
