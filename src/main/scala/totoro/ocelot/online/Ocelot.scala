@@ -28,6 +28,9 @@ object Ocelot {
 
   def main(args: Array[String]): Unit = {
     // init
+    log.info("Ocelot.Online initialization...")
+    log.info(s"Version: $Version")
+
     implicit val system: ActorSystem = ActorSystem("ocelot-system")
     implicit val materializer: ActorMaterializer = ActorMaterializer()
     // needed for the future flatMap/onComplete in the end
