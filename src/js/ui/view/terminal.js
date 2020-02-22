@@ -1,21 +1,21 @@
-import { FONT } from "../util/font.js";
-import { numberToColour, fancyAlpha } from "../util/helpers.js";
+import { FONT } from "../../util/font.js";
+import { numberToColour, fancyAlpha } from "../../util/helpers.js";
 
-import vertOpaque from "../../shaders/opaque.glslv";
-import fragOpaque from "../../shaders/opaque.glslf";
-import vertTransparent from "../../shaders/transparent.glslv";
-import fragTransparent from "../../shaders/transparent.glslf";
+import vertOpaque from "../../../shaders/opaque.glslv";
+import fragOpaque from "../../../shaders/opaque.glslf";
+import vertTransparent from "../../../shaders/transparent.glslv";
+import fragTransparent from "../../../shaders/transparent.glslf";
 
 const CHAR_WIDTH = 8;
 const CHAR_HEIGHT = 16;
 
-export default class Terminal {
+export class Terminal {
   constructor(vnode) {
     const attrs = vnode.attrs || {};
 
     this.width = attrs.width || 80;
     this.height = attrs.height || 25;
-    this.transparent = true; // Boolean(attrs.transparent);
+    this.transparent = attrs.transparent || false;
 
     this.currentBG = [0, 0, 0];
     this.currentFG = [1, 1, 1];

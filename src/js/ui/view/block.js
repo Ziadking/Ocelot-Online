@@ -88,7 +88,6 @@ export class BlockView {
 
   onContextMenu(event) {
     event.preventDefault();
-    this.folded = !this.folded;
   }
 
   view(vnode) {
@@ -99,3 +98,5 @@ export class BlockView {
     }
   }
 }
+
+export {BLOCK_SIZE, BLOCK_BORDER};

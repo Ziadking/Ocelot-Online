@@ -255,6 +255,15 @@ a:focus {
   margin-bottom: 30px;
 }
 
+#intro-text {
+  padding: 30px;
+  border-radius: 3px;
+}
+
+#signature {
+  margin-top: 30px;
+}
+
 /* Workspaces */
 /* ------------------------------------------------------------------------------------------------------------------ */
 .workspace-item {
@@ -374,6 +383,7 @@ border: solid 2px #7224B9CC;
   display: flex;
   flex-flow: column;
   padding: 20px 30px;
+  border-radius: 3px;
 }
 .login-form .header {
   margin: 10px 0 10px 0;

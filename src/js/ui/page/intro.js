@@ -3,7 +3,7 @@ export class IntroPage {
     return m("div", { id: "intro" }, [
       m("img", { id: "intro-logo", class: "logo noselect", src: "images/logo.png", ondragstart: function() { return false; } }),
       m("h3", "[ocelot.online]"),
-      m("div", [
+      m("div", { id: "intro-text" }, [
         m("p", "OpenComputers emulator with 99% emulation accuracy."),
         m("p", [
           "A free ",
