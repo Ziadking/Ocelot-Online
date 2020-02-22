@@ -91,7 +91,7 @@ object Ocelot {
                 case "mousedown" => workspace.mouseDown(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
                 case "mouseup" => workspace.mouseUp(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
                 case "mousedrag" => workspace.mouseDrag(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
-                case "mousewheel" => workspace.mouseScroll(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
+                case "mousewheel" => workspace.mouseScroll(parts(1).toInt, parts(2).toInt, parts(3).toFloat.toInt, user)
                 case "state" => workspace.sendState()
                 case "turnon" =>
                   if (!workspace.isRunning) {
