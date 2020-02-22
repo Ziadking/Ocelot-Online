@@ -1,3 +1,6 @@
+## 0.3.11
+* Fix: allow real numbers in mouse wheel event delta
+
 ## 0.3.10
 * Security fix: official patch for the "too long without yielding" issue
 
