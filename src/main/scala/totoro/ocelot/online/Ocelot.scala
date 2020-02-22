@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
 object Ocelot {
   private val Name = "ocelot.online"
   // do not forget to change version in build.sbt
-  private val Version = "0.3.10"
+  private val Version = "0.3.11"
 
   var logger: Option[Logger] = None
   def log: Logger = logger.getOrElse(LogManager.getLogger(Name))
@@ -91,7 +91,7 @@ object Ocelot {
                 case "mousedown" => workspace.mouseDown(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
                 case "mouseup" => workspace.mouseUp(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
                 case "mousedrag" => workspace.mouseDrag(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
-                case "mousewheel" => workspace.mouseScroll(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
+                case "mousewheel" => workspace.mouseScroll(parts(1).toInt, parts(2).toInt, parts(3).toFloat.toInt, user)
                 case "state" => workspace.sendState()
                 case "turnon" =>
                   if (!workspace.isRunning) {
