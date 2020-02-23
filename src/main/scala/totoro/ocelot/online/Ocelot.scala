@@ -13,6 +13,7 @@ import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
 import org.apache.logging.log4j.{LogManager, Logger}
 import totoro.ocelot.brain.user.User
+import totoro.ocelot.online.net.Packet
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
@@ -39,7 +40,7 @@ object Ocelot {
     Settings.load(new File("ocelot.conf"))
 
     // demo source
-    val queue = Source.queue[TextMessage](256, OverflowStrategy.dropHead)
+    val queue = Source.queue[BinaryMessage](256, OverflowStrategy.dropHead)
     val (mat, source) = queue.toMat(BroadcastHub.sink(bufferSize = 256))(Keep.both).run()
     source.runWith(Sink.ignore)
 
@@ -63,15 +64,15 @@ object Ocelot {
     run()
 
     // create websockets handler
-    var online = 0
+    var online: Short = 0
 
     def watchDisconnectsFlow[T]: Flow[T, T, Any] = Flow[T]
       .watchTermination()((_, f) => {
-        online += 1
-        mat offer TextMessage(s"online\n$online")
+        online = (online + 1).toShort
+        mat offer Packet.online(online)
         f.onComplete { result =>
-          online -= 1
-          mat offer TextMessage(s"online\n$online")
+          online = (online - 1).toShort
+          mat offer Packet.online(online)
           result match {
             case Failure(cause) =>
               log.error(s"WS stream failed!", cause)
@@ -83,6 +84,7 @@ object Ocelot {
     def wsHandler(user: User): Flow[Message, Message, Any] = Flow[Message]
       .mapConcat {
         case tm: TextMessage =>
+          // TODO: change incoming to be binary packages too
           tm.textStream.runFold("")(_ + _).onComplete {
             case Success(message) =>
               val parts = message.split(" ")
@@ -100,19 +102,19 @@ object Ocelot {
                   if (!workspace.isRunning) {
                     workspace.turnOn()
                     run()
-                    mat offer TextMessage("turnon-success")
+                    mat offer Packet.turnOnResult(true)
                   } else {
-                    mat offer TextMessage("turnon-failure")
+                    mat offer Packet.turnOnResult(false)
                   }
                 case "turnoff" =>
                   if (workspace.isRunning) {
                     workspace.turnOff()
-                    mat offer TextMessage("turnoff-success")
+                    mat offer Packet.turnOffResult(true)
                   } else {
-                    mat offer TextMessage("turnoff-failure")
+                    mat offer Packet.turnOffResult(false)
                   }
                 case "online" =>
-                  mat offer TextMessage(s"online\n$online")
+                  mat offer Packet.online(online)
                 case _ => // pass
               }
             case _ =>

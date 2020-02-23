@@ -1,6 +1,6 @@
 package totoro.ocelot.online
 
-import akka.http.scaladsl.model.ws.TextMessage
+import akka.http.scaladsl.model.ws.{BinaryMessage, TextMessage}
 import akka.stream.scaladsl.SourceQueueWithComplete
 import totoro.ocelot.brain.entity.{CPU, Case, GraphicsCard, HDDManaged, HDDUnmanaged, InternetCard, Keyboard, Memory, Redstone, Screen}
 import totoro.ocelot.brain.event._
@@ -9,6 +9,7 @@ import totoro.ocelot.brain.user.User
 import totoro.ocelot.brain.util.{PackedColor, Tier}
 import totoro.ocelot.brain.workspace.{Workspace => BSpace}
 import totoro.ocelot.brain.{Ocelot => Brain}
+import totoro.ocelot.online.net.Packet
 
 class Workspace {
   private val defaultUser: User = User("noname")
@@ -16,7 +17,7 @@ class Workspace {
   private var computer: Case = _
   private var screen: Screen = _
   private var keyboard: Keyboard = _
-  private var producer: SourceQueueWithComplete[TextMessage] = _
+  private var producer: SourceQueueWithComplete[BinaryMessage] = _
 
   def init(): Unit = {
     Brain.initialize()
@@ -50,36 +51,36 @@ class Workspace {
     screen.connect(keyboard)
   }
 
-  def subscribe(producer: SourceQueueWithComplete[TextMessage]): Unit = {
+  def subscribe(producer: SourceQueueWithComplete[BinaryMessage]): Unit = {
     this.producer = producer
     // register some listeners
     EventBus.listenTo(classOf[BeepEvent], { case event: BeepEvent =>
-      producer offer TextMessage(s"beep\n${event.frequency}\n${event.duration}")
+      producer offer Packet.beep(event.frequency, event.duration)
     })
     EventBus.listenTo(classOf[BeepPatternEvent], { case event: BeepPatternEvent =>
-      producer offer TextMessage(s"beep-pattern\n${event.pattern}")
+      producer offer Packet.beepPattern(event.pattern)
     })
     EventBus.listenTo(classOf[MachineCrashEvent], { case event: MachineCrashEvent =>
-      producer offer TextMessage(s"crash\n${event.message}")
+      producer offer Packet.crash(event.message)
     })
     EventBus.listenTo(classOf[TextBufferSetEvent], { case event: TextBufferSetEvent =>
-      producer offer TextMessage(s"set\n${event.x}\n${event.y}\n${event.vertical}\n${event.value}")
+      producer offer Packet.set(event.x.toByte, event.y.toByte, event.vertical, event.value)
     })
     EventBus.listenTo(classOf[TextBufferSetForegroundColorEvent], { case event: TextBufferSetForegroundColorEvent =>
-      producer offer TextMessage(s"foreground\n${event.color}")
+      producer offer Packet.foreground(event.color)
     })
     EventBus.listenTo(classOf[TextBufferSetBackgroundColorEvent], { case event: TextBufferSetBackgroundColorEvent =>
-      producer offer TextMessage(s"background\n${event.color}")
+      producer offer Packet.background(event.color)
     })
     EventBus.listenTo(classOf[TextBufferCopyEvent], { case event: TextBufferCopyEvent =>
-      producer offer TextMessage(s"copy\n${event.x}\n${event.y}\n${event.width}\n${event.height}\n" +
-        s"${event.horizontalTranslation}\n${event.verticalTranslation}")
+      producer offer Packet.copy(event.x.toByte, event.y.toByte, event.width.toByte, event.height.toByte,
+        event.horizontalTranslation.toByte, event.verticalTranslation.toByte)
     })
     EventBus.listenTo(classOf[TextBufferFillEvent], { case event: TextBufferFillEvent =>
-      producer offer TextMessage(s"fill\n${event.x}\n${event.y}\n${event.width}\n${event.height}\n${event.value}")
+      producer offer Packet.fill(event.x.toByte, event.y.toByte, event.width.toByte, event.height.toByte, event.value)
     })
     EventBus.listenTo(classOf[TextBufferSetResolutionEvent], { case event: TextBufferSetResolutionEvent =>
-      producer offer TextMessage(s"resolution\n${event.width}\n${event.height}")
+      producer offer Packet.resolution(event.width.toByte, event.height.toByte)
     })
   }
 
@@ -138,57 +139,6 @@ class Workspace {
   }
 
   def sendState(): Unit = {
-    val state = new StringBuilder("state\n")
-
-    // write current resolution
-    state ++= screen.data.width + "\n"
-    state ++= screen.data.height + "\n"
-
-    // write current colors
-    state ++= getColor(screen.data.foreground).toString + "\n"
-    state ++= getColor(screen.data.background).toString + "\n"
-
-    // write the matrix, optimized as a bunch of `set` operations
-    var lastColor: Short = -1
-    var lastX: Int = -1
-    var lastY: Int = -1
-    val value: StringBuilder = new StringBuilder
-
-    def set(): Unit = {
-      if (value.nonEmpty) {
-        state ++= lastX.toString + "\n"
-        state ++= lastY.toString + "\n"
-        val fore = PackedColor.unpackForeground(lastColor, screen.data.format)
-        val back = PackedColor.unpackBackground(lastColor, screen.data.format)
-        state ++= fore.toString + "\n"
-        state ++= back.toString + "\n"
-        state ++= value.result() + "\n"
-        value.clear()
-      }
-    }
-
-    for (y <- 0 until screen.data.height) {
-      for (x <- 0 until screen.data.width) {
-        val currentColor = screen.data.color(y)(x)
-        val currentChar = screen.data.buffer(y)(x)
-        if (currentColor != lastColor) {
-          if (lastColor >= 0) {
-            set()
-          }
-          lastColor = currentColor
-          lastX = x
-          lastY = y
-        }
-        value += currentChar
-      }
-      set()
-      lastX = 0
-      lastY += 1
-    }
-    // write the last one set
-    set()
-
-    // send
-    producer offer TextMessage(state.result())
+    producer offer Packet.state(screen.data)
   }
 }
