@@ -1,10 +1,8 @@
 import { FONT } from "../../util/font.js";
 import { numberToColour, fancyAlpha } from "../../util/helpers.js";
 
-import vertOpaque from "../../../shaders/opaque.glslv";
-import fragOpaque from "../../../shaders/opaque.glslf";
-import vertTransparent from "../../../shaders/transparent.glslv";
-import fragTransparent from "../../../shaders/transparent.glslf";
+import vertShader from "../../../shaders/screen.glslv";
+import fragShader from "../../../shaders/screen.glslf";
 
 const CHAR_WIDTH = 8;
 const CHAR_HEIGHT = 16;
@@ -15,7 +13,6 @@ export class Terminal {
 
     this.width = attrs.width || 80;
     this.height = attrs.height || 25;
-    this.transparent = attrs.transparent || false;
 
     this.currentBG = [0, 0, 0];
     this.currentFG = [1, 1, 1];
@@ -30,12 +27,17 @@ export class Terminal {
     }, () => this.fontLoaded = true);
   }
 
+  loadMask() {
+    this.maskLoaded = false;
+    this.maskTexture = twgl.createTexture(this.gl, {
+      src: "images/ocelot-mask.png",
+      minMag: this.gl.LINEAR,
+      wrap: this.gl.CLAMP_TO_EDGE,
+    }, () => this.maskLoaded = true);
+  }
+
   createProgram() {
-    if (this.transparent) {
-      this.programInfo = twgl.createProgramInfo(this.gl, [vertTransparent, fragTransparent]);
-    } else {
-      this.programInfo = twgl.createProgramInfo(this.gl, [vertOpaque, fragOpaque]);
-    }
+    this.programInfo = twgl.createProgramInfo(this.gl, [vertShader, fragShader]);
   }
 
   createBuffers() {
@@ -45,13 +47,8 @@ export class Terminal {
     this.buffers.pos = new Float32Array(numChars * 2); // x and y coordinates
     this.buffers.tex = new Float32Array(numChars * 2); // u and v texture coordinates
 
-    if (this.transparent) {
-      this.buffers.bg = new Float32Array(numChars * 4);  // background color of the cell
-      this.buffers.fg = new Float32Array(numChars * 4);  // foreground color of the cell
-    } else {
-      this.buffers.bg = new Float32Array(numChars * 3);
-      this.buffers.fg = new Float32Array(numChars * 3);
-    }
+    this.buffers.bg = new Float32Array(numChars * 3);
+    this.buffers.fg = new Float32Array(numChars * 3);
 
     this.buffers.char = new Array(numChars);
 
@@ -64,14 +61,12 @@ export class Terminal {
     // second triangle: (0, 1), (1, 1), (1, 0)
     const rectangle = [0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0];
 
-    const numColors = this.transparent ? 4 : 3;
-
     this.bufferInfo = twgl.createBufferInfoFromArrays(this.gl, {
       inRectPos: { data: rectangle, numComponents: 2, divisor: 0 },
       inPos: { data: this.buffers.pos, numComponents: 2, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
       inTex: { data: this.buffers.tex, numComponents: 2, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
-      inBG: { data: this.buffers.bg, numComponents: numColors, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
-      inFG: { data: this.buffers.fg, numComponents: numColors, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
+      inBG: { data: this.buffers.bg, numComponents: 3, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
+      inFG: { data: this.buffers.fg, numComponents: 3, divisor: 1, drawType: this.gl.DYNAMIC_DRAW },
     });
   }
 
@@ -101,30 +96,14 @@ export class Terminal {
     this.buffers.tex[idx * 2 + 1] = glyphYNorm;
 
     let [r, g, b] = bg;
-    if (this.transparent) {
-      let a = fancyAlpha(r, g, b);
-      this.buffers.bg[idx * 4 + 0] = r;
-      this.buffers.bg[idx * 4 + 1] = g;
-      this.buffers.bg[idx * 4 + 2] = b;
-      this.buffers.bg[idx * 4 + 3] = a;
-    } else {
-      this.buffers.bg[idx * 3 + 0] = r;
-      this.buffers.bg[idx * 3 + 1] = g;
-      this.buffers.bg[idx * 3 + 2] = b;
-    }
+    this.buffers.bg[idx * 3 + 0] = r;
+    this.buffers.bg[idx * 3 + 1] = g;
+    this.buffers.bg[idx * 3 + 2] = b;
 
     [r, g, b] = fg;
-    if (this.transparent) {
-      let a = fancyAlpha(r, g, b);
-      this.buffers.fg[idx * 4 + 0] = r;
-      this.buffers.fg[idx * 4 + 1] = g;
-      this.buffers.fg[idx * 4 + 2] = b;
-      this.buffers.fg[idx * 4 + 3] = a;
-    } else {
-      this.buffers.fg[idx * 3 + 0] = r;
-      this.buffers.fg[idx * 3 + 1] = g;
-      this.buffers.fg[idx * 3 + 2] = b;
-    }
+    this.buffers.fg[idx * 3 + 0] = r;
+    this.buffers.fg[idx * 3 + 1] = g;
+    this.buffers.fg[idx * 3 + 2] = b;
 
     this.buffers.char[idx] = char;
   }
@@ -135,27 +114,15 @@ export class Terminal {
 
     let r, g, b, bg, fg;
 
-    if (this.transparent) {
-      r = this.buffers.bg[idx * 4 + 0];
-      g = this.buffers.bg[idx * 4 + 1];
-      b = this.buffers.bg[idx * 4 + 2];
-    } else {
-      r = this.buffers.bg[idx * 3 + 0];
-      g = this.buffers.bg[idx * 3 + 1];
-      b = this.buffers.bg[idx * 3 + 2];
-    }
+    r = this.buffers.bg[idx * 3 + 0];
+    g = this.buffers.bg[idx * 3 + 1];
+    b = this.buffers.bg[idx * 3 + 2];
 
     bg = [r, g, b];
 
-    if (this.transparent) {
-      r = this.buffers.fg[idx * 4 + 0];
-      g = this.buffers.fg[idx * 4 + 1];
-      b = this.buffers.fg[idx * 4 + 2];
-    } else {
-      r = this.buffers.fg[idx * 3 + 0];
-      g = this.buffers.fg[idx * 3 + 1];
-      b = this.buffers.fg[idx * 3 + 2];
-    }
+    r = this.buffers.fg[idx * 3 + 0];
+    g = this.buffers.fg[idx * 3 + 1];
+    b = this.buffers.fg[idx * 3 + 2];
 
     fg = [r, g, b];
 
@@ -209,7 +176,7 @@ export class Terminal {
     if (this.shouldStop)
       return;
 
-    if (!this.hasChanged || !this.fontLoaded) {
+    if (!this.hasChanged || !this.fontLoaded || !this.maskLoaded) {
       window.requestAnimationFrame(() => this.render());
       return;
     }
@@ -232,6 +199,8 @@ export class Terminal {
       uCharSize: [2.0 / this.width, 2.0 / this.height],
       uGlyphSize: [8 / 2048, 16 / 2048],
       uFont: this.fontTexture,
+      uMask: this.maskTexture,
+      uResolution: [pixelWidth, pixelHeight],
     });
 
     twgl.setAttribInfoBufferFromArray(this.gl, this.bufferInfo.attribs.inPos, this.buffers.pos);
@@ -260,6 +229,7 @@ export class Terminal {
     }
 
     this.loadFont();
+    this.loadMask();
     this.createProgram();
     this.createBuffers();
 
