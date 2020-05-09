@@ -38,8 +38,9 @@ object PacketDecoder {
       case WORKSPACE_GET_PERMISSIONS => new PacketWorkspaceGetPermissions()
       case WORKSPACE_PERMISSIONS => new PacketWorkspacePermissions()
       case WORKSPACE_GET_STATE => new PacketWorkspaceGetState()
+      case WORKSPACE_STATE => new PacketWorkspaceState()
 
-      // TODO: WORKSPACE_STATE must be here, and the rest of the protocol
+      // TODO: the rest of the protocol must be here
 
     }).decode(buffer)
   }
