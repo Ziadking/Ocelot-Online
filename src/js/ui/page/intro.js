@@ -19,12 +19,12 @@ export class IntroPage {
         m("p", [
           "Please report anything that bothers you to the ",
           m("a", { href: "https://gitlab.com/cc-ru/ocelot/ocelot-online/issues" }, "issue tracker"),
-          ", or just to me in ",
-          m("a", { href: "https://webchat.esper.net/?join=cc.ru" }, "IRC"),
+          ", or just to us in our ",
+          m("a", { href: "https://webchat.esper.net/?join=cc.ru" }, "IRC channel"),
           "."
         ]),
-        m("p", "I wish you a pleasant experience,"),
-        m("p", "Totoro"),
+        m("p", "We wish you a pleasant experience,"),
+        m("p", "Ocelot Team"),
       ]),
       m("img", { id: "signature", class: "noselect", src: "images/paw.png", ondragstart: function() { return false; } }),
     ]);

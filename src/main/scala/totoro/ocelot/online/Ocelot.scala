@@ -10,19 +10,21 @@ import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
-import akka.stream.{ActorMaterializer, OverflowStrategy}
+import akka.stream.OverflowStrategy
 import org.apache.logging.log4j.{LogManager, Logger}
 import totoro.ocelot.brain.user.User
-import totoro.ocelot.online.net.Packet
+import totoro.ocelot.online.net.packet.PacketOnline
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
-import scala.util.{Failure, Success}
+import scala.util.Failure
 
 object Ocelot {
   private val Name = "ocelot.online"
   // do not forget to change version in build.sbt
   private val Version = "0.3.11"
+
+  private val universe = new Universe()
 
   var logger: Option[Logger] = None
   def log: Logger = logger.getOrElse(LogManager.getLogger(Name))
@@ -33,35 +35,17 @@ object Ocelot {
     log.info(s"Version: $Version")
 
     implicit val system: ActorSystem = ActorSystem("ocelot-system")
-    implicit val materializer: ActorMaterializer = ActorMaterializer()
-    // needed for the future flatMap/onComplete in the end
-    implicit val executionContext: ExecutionContextExecutor = system.dispatcher
+    implicit val executionContext: ExecutionContextExecutor = system.dispatcher // for our futures
 
     Settings.load(new File("ocelot.conf"))
 
-    // demo source
-    val queue = Source.queue[BinaryMessage](256, OverflowStrategy.dropHead)
+    // create a broadcast Source
+    val queue = Source.queue[BinaryMessage](bufferSize = 256, OverflowStrategy.dropHead)
     val (mat, source) = queue.toMat(BroadcastHub.sink(bufferSize = 256))(Keep.both).run()
     source.runWith(Sink.ignore)
 
-    // init demo workspace
-    val workspace = new Workspace()
-    workspace.init()
-    workspace.subscribe(mat)
-
-    workspace.turnOn()
-
-    def run(): Unit = {
-      new Thread(() => {
-        while (workspace.isRunning) {
-          workspace.update()
-          Thread.sleep(50)
-        }
-        log.debug("Main thread closed...")
-      }).start()
-      log.debug("Created new main thread.")
-    }
-    run()
+    // init emulator
+    universe.init()
 
     // create websockets handler
     var online: Short = 0
@@ -69,10 +53,10 @@ object Ocelot {
     def watchDisconnectsFlow[T]: Flow[T, T, Any] = Flow[T]
       .watchTermination()((_, f) => {
         online = (online + 1).toShort
-        mat offer Packet.online(online)
+        mat offer new PacketOnline(0, online).asMessage()
         f.onComplete { result =>
           online = (online - 1).toShort
-          mat offer Packet.online(online)
+          mat offer new PacketOnline(0, online).asMessage()
           result match {
             case Failure(cause) =>
               log.error(s"WS stream failed!", cause)
@@ -84,45 +68,14 @@ object Ocelot {
     def wsHandler(user: User): Flow[Message, Message, Any] = Flow[Message]
       .mapConcat {
         case tm: TextMessage =>
-          // TODO: change incoming to be binary packages too
-          tm.textStream.runFold("")(_ + _).onComplete {
-            case Success(message) =>
-              val parts = message.split(" ")
-              parts.head match {
-                case "keydown" => workspace.keyDown(parts(1).toInt.toChar, parts(2).toInt, user)
-                case "keyup" => workspace.keyUp(parts(1).toInt.toChar, parts(2).toInt, user)
-                case "keyup-all" => workspace.releasePressedKeys(user)
-                case "clipboard" => workspace.clipboard(message.drop(10), user)
-                case "mousedown" => workspace.mouseDown(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
-                case "mouseup" => workspace.mouseUp(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
-                case "mousedrag" => workspace.mouseDrag(parts(1).toInt, parts(2).toInt, parts(3).toInt, user)
-                case "mousewheel" => workspace.mouseScroll(parts(1).toInt, parts(2).toInt, parts(3).toFloat.toInt, user)
-                case "state" => workspace.sendState()
-                case "turnon" =>
-                  if (!workspace.isRunning) {
-                    workspace.turnOn()
-                    run()
-                    mat offer Packet.turnOnResult(true)
-                  } else {
-                    mat offer Packet.turnOnResult(false)
-                  }
-                case "turnoff" =>
-                  if (workspace.isRunning) {
-                    workspace.turnOff()
-                    mat offer Packet.turnOffResult(true)
-                  } else {
-                    mat offer Packet.turnOffResult(false)
-                  }
-                case "online" =>
-                  mat offer Packet.online(online)
-                case _ => // pass
-              }
-            case _ =>
-          }
+          // ignore text messages but drain content to avoid the stream being clogged
+          tm.textStream.runWith(Sink.ignore)
           Nil
         case bm: BinaryMessage =>
-          // ignore binary messages but drain content to avoid the stream being clogged
-          bm.dataStream.runWith(Sink.ignore)
+          bm.toStrict(Settings.get.serverTimeout).onComplete(message => {
+            // TODO: parse binary messages here
+            println(message)
+          })
           Nil
       }
       .merge(source)
@@ -139,7 +92,7 @@ object Ocelot {
                 case None => "NGINX proxy not configured"
               }
               val maskedIp = address.toString
-              val banned = Settings.get.blacklist.exists(value => ip.contains(value) || maskedIp.contains(value))
+              val banned = Settings.get.serverBlacklist.exists(value => ip.contains(value) || maskedIp.contains(value))
               log.info(s"User connected: $nickname ($maskedIp / ${address.getAddress.getCanonicalHostName} / $ip${ if (banned) " / banned" else "" })")
               if (!banned) handleWebSocketMessages(wsHandler(User(nickname))) else complete(HttpResponse(StatusCodes.PaymentRequired))
             }
@@ -160,6 +113,8 @@ object Ocelot {
 
 
     // run
+    universe.run()
+
     val bindingFuture = Http()
       .bind(Settings.get.serverHost, Settings.get.serverPort)
       .runWith(Sink foreach { conn =>
@@ -169,9 +124,14 @@ object Ocelot {
 
     log.info(s"Server online at http://${Settings.get.serverHost}:${Settings.get.serverPort}/\nPress Enter to stop...")
     StdIn.readLine()
+
+    // stop
     bindingFuture
       .onComplete(_ => system.terminate())
 
-    workspace.turnOff()
+    universe.stop()
+    universe.dispose()
+
+    log.info("Bye...")
   }
 }
