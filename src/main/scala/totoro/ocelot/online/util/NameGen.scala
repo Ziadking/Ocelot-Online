@@ -1,4 +1,4 @@
-package totoro.ocelot.online
+package totoro.ocelot.online.util
 
 import scala.util.Random
 

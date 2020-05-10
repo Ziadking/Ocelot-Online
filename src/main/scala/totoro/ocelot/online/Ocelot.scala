@@ -14,6 +14,7 @@ import akka.stream.OverflowStrategy
 import org.apache.logging.log4j.{LogManager, Logger}
 import totoro.ocelot.brain.user.User
 import totoro.ocelot.online.net.packet.PacketOnline
+import totoro.ocelot.online.util.NameGen
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn

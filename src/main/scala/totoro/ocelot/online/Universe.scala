@@ -1,8 +1,13 @@
 package totoro.ocelot.online
 
+import totoro.ocelot.brain.entity.{CPU, Case, GraphicsCard, HDDManaged, HDDUnmanaged, InternetCard, Keyboard, Memory, Redstone, Screen}
+import totoro.ocelot.brain.loot.Loot
+import totoro.ocelot.brain.util.Tier
 import totoro.ocelot.brain.{Ocelot => Brain}
 import totoro.ocelot.online.user.User
+import totoro.ocelot.online.util.IdGen
 import totoro.ocelot.online.workspace.Workspace
+import totoro.ocelot.online.workspace.block.{BlockCase, BlockScreen}
 
 import scala.collection.mutable.ListBuffer
 
@@ -13,11 +18,21 @@ class Universe {
   val admin = new User(0, "totoro", "betternot", "dmitry.zhidenkov@gmail.com")
 
   def init(): Unit = {
+    Brain.initialize()
     Ocelot.log.info("Universe initialization...")
 
+    // -------------------------------------------------------------------------------------------------------------- //
     // initialize demo workspace
-    val demospace = new Workspace("Public Sandbox", admin)
-    // TODO: init demo workspace here
+    val demospace = new Workspace(0, "Public Sandbox", admin)
+
+    val blockCase = new BlockCase(IdGen.id(), 0, 0, Tier.Four)
+    demospace.add(blockCase)
+
+    val blockScreen = new BlockScreen(IdGen.id(), 100, 0, Tier.Two)
+    demospace.add(blockScreen)
+
+    demospace.connect(blockCase, blockScreen)
+    // -------------------------------------------------------------------------------------------------------------- //
 
     // create main update thread
     thread = new Thread {
@@ -35,8 +50,6 @@ class Universe {
         }
       }
     }
-    // init brain
-    Brain.initialize()
   }
 
   def run(): Unit = {
