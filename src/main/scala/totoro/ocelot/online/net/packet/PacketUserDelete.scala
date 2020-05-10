@@ -1,6 +1,7 @@
 package totoro.ocelot.online.net.packet
 
-import totoro.ocelot.online.net.PacketType
+import totoro.ocelot.online.net.PacketTypes
+import totoro.ocelot.online.net.PacketTypes.PacketType
 
 /**
   * Request to delete user account (by user ID)
@@ -13,5 +14,5 @@ import totoro.ocelot.online.net.PacketType
   */
 
 class PacketUserDelete extends PacketSingleID {
-  override var packetType: Byte = PacketType.USER_DELETE
+  override var packetType: PacketType = PacketTypes.USER_DELETE
 }

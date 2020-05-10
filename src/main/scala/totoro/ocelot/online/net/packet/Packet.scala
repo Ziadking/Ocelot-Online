@@ -1,10 +1,10 @@
 package totoro.ocelot.online.net.packet
 
-import java.nio.charset.{Charset, StandardCharsets}
 import java.nio.{ByteBuffer, ByteOrder}
 
 import akka.http.scaladsl.model.ws.BinaryMessage
 import akka.util.{ByteString, ByteStringBuilder}
+import totoro.ocelot.online.net.PacketTypes.PacketType
 import totoro.ocelot.online.util.BinaryHelper
 
 /**
@@ -20,7 +20,7 @@ import totoro.ocelot.online.util.BinaryHelper
 abstract class Packet {
   protected implicit val order: ByteOrder = BinaryHelper.DefaultOrder
 
-  var packetType: Byte
+  var packetType: PacketType
   var thread: Int = 0
 
   /**

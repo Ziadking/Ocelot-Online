@@ -1,6 +1,7 @@
 package totoro.ocelot.online.net.packet
 
-import totoro.ocelot.online.net.PacketType
+import totoro.ocelot.online.net.PacketTypes
+import totoro.ocelot.online.net.PacketTypes.PacketType
 
 /**
   * Request for user details by user ID.
@@ -13,5 +14,5 @@ import totoro.ocelot.online.net.PacketType
   */
 
 class PacketUserGetDetails extends PacketSingleID {
-  override var packetType: Byte = PacketType.USER_GET_DETAILS
+  override var packetType: PacketType = PacketTypes.USER_GET_DETAILS
 }

@@ -9,7 +9,7 @@ import totoro.ocelot.online.net.packet._
 
 object PacketDecoder {
   def decode(message: BinaryMessage.Strict): Packet = {
-    import PacketType._
+    import PacketTypes._
 
     val buffer = message.data.asByteBuffer
     val packetType = buffer.get()

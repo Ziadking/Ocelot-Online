@@ -3,7 +3,8 @@ package totoro.ocelot.online.net.packet
 import java.nio.ByteBuffer
 
 import akka.util.ByteStringBuilder
-import totoro.ocelot.online.net.PacketType
+import totoro.ocelot.online.net.PacketTypes
+import totoro.ocelot.online.net.PacketTypes.PacketType
 import totoro.ocelot.online.workspace.WorkspaceDescription
 
 import scala.collection.mutable.ListBuffer
@@ -19,7 +20,7 @@ import scala.collection.mutable.ListBuffer
   */
 
 class PacketWorkspaceList extends Packet {
-  override var packetType: Byte = PacketType.WORKSPACE_LIST
+  override var packetType: PacketType = PacketTypes.WORKSPACE_LIST
 
   val list: ListBuffer[WorkspaceDescription] = ListBuffer.empty
 

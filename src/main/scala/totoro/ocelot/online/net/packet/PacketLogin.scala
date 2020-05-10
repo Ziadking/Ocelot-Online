@@ -3,7 +3,8 @@ package totoro.ocelot.online.net.packet
 import java.nio.ByteBuffer
 
 import akka.util.ByteStringBuilder
-import totoro.ocelot.online.net.PacketType
+import totoro.ocelot.online.net.PacketTypes
+import totoro.ocelot.online.net.PacketTypes.PacketType
 import totoro.ocelot.online.util.BinaryHelper
 
 /**
@@ -17,7 +18,7 @@ import totoro.ocelot.online.util.BinaryHelper
   */
 
 class PacketLogin extends Packet {
-  override var packetType: Byte = PacketType.LOGIN
+  override var packetType: PacketType = PacketTypes.LOGIN
 
   var nickname: String = _
   var password: String = _

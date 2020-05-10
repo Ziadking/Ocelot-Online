@@ -1,6 +1,8 @@
 package totoro.ocelot.online.net
 
-object PacketType {
+object PacketTypes {
+  type PacketType = Byte
+
   // general
   val SUCCESS: Byte = 0
   val FAIL: Byte = 1

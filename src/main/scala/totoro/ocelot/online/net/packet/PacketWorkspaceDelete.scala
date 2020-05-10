@@ -1,6 +1,7 @@
 package totoro.ocelot.online.net.packet
 
-import totoro.ocelot.online.net.PacketType
+import totoro.ocelot.online.net.PacketTypes
+import totoro.ocelot.online.net.PacketTypes.PacketType
 
 /**
   * Request to delete a workspace (by its ID).
@@ -13,5 +14,5 @@ import totoro.ocelot.online.net.PacketType
   */
 
 class PacketWorkspaceDelete extends PacketSingleID {
-  override var packetType: Byte = PacketType.WORKSPACE_DELETE
+  override var packetType: PacketType = PacketTypes.WORKSPACE_DELETE
 }

@@ -3,7 +3,8 @@ package totoro.ocelot.online.net.packet
 import java.nio.ByteBuffer
 
 import akka.util.ByteStringBuilder
-import totoro.ocelot.online.net.PacketType
+import totoro.ocelot.online.net.PacketTypes
+import totoro.ocelot.online.net.PacketTypes.PacketType
 
 /**
   * Util packet that tells the number of people currently online.
@@ -17,7 +18,7 @@ import totoro.ocelot.online.net.PacketType
   */
 
 class PacketOnline extends PacketSingleID {
-  override var packetType: Byte = PacketType.ONLINE
+  override var packetType: PacketType = PacketTypes.ONLINE
 
   def this(thread: Int, number: Int) {
     this()

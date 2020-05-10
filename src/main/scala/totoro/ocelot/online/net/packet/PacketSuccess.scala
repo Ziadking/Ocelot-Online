@@ -1,7 +1,8 @@
 package totoro.ocelot.online.net.packet
 
-import totoro.ocelot.online.net.PacketType
+import totoro.ocelot.online.net.PacketTypes
+import totoro.ocelot.online.net.PacketTypes.PacketType
 
 class PacketSuccess extends Packet {
-  override var packetType: Byte = PacketType.SUCCESS
+  override var packetType: PacketType = PacketTypes.SUCCESS
 }

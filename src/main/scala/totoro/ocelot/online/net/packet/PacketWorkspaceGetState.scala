@@ -1,6 +1,7 @@
 package totoro.ocelot.online.net.packet
 
-import totoro.ocelot.online.net.PacketType
+import totoro.ocelot.online.net.PacketTypes
+import totoro.ocelot.online.net.PacketTypes.PacketType
 
 /**
   * Request for workspace state (by ID).
@@ -13,5 +14,5 @@ import totoro.ocelot.online.net.PacketType
   */
 
 class PacketWorkspaceGetState extends PacketSingleID {
-  override var packetType: Byte = PacketType.WORKSPACE_GET_STATE
+  override var packetType: PacketType = PacketTypes.WORKSPACE_GET_STATE
 }

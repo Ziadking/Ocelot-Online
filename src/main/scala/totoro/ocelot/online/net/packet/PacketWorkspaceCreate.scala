@@ -3,7 +3,8 @@ package totoro.ocelot.online.net.packet
 import java.nio.ByteBuffer
 
 import akka.util.ByteStringBuilder
-import totoro.ocelot.online.net.PacketType
+import totoro.ocelot.online.net.PacketTypes
+import totoro.ocelot.online.net.PacketTypes.PacketType
 import totoro.ocelot.online.util.BinaryHelper
 
 /**
@@ -17,7 +18,7 @@ import totoro.ocelot.online.util.BinaryHelper
   */
 
 class PacketWorkspaceCreate extends Packet {
-  override var packetType: Byte = PacketType.WORKSPACE_CREATE
+  override var packetType: PacketType = PacketTypes.WORKSPACE_CREATE
 
   var name: String = _
 
