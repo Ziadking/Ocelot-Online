@@ -123,8 +123,8 @@ object Ocelot {
         conn.handleWith(route(address))
       })
 
-    log.info(s"Server online at http://${Settings.get.serverHost}:${Settings.get.serverPort}/\nPress Enter to stop...")
-    StdIn.readLine()
+    log.info(s"Server online at http://${Settings.get.serverHost}:${Settings.get.serverPort}/\nEnter 'stop' to shutdown...")
+    while (StdIn.readLine().toLowerCase() != "stop") {}
 
     // stop
     bindingFuture
