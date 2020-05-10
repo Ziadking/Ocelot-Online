@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit
 import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.collection.mutable
-import scala.concurrent.duration.{Duration, FiniteDuration}
+import scala.concurrent.duration.FiniteDuration
 import scala.jdk.CollectionConverters._
 
 class Settings(val config: Config) {

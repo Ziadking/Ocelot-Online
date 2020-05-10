@@ -1,7 +1,7 @@
 package totoro.ocelot.online.util
 
-import java.nio.{ByteBuffer, ByteOrder}
 import java.nio.charset.{Charset, StandardCharsets}
+import java.nio.{ByteBuffer, ByteOrder}
 
 import akka.util.ByteStringBuilder
 

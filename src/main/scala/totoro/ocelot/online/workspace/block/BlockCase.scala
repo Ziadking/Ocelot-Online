@@ -1,7 +1,7 @@
 package totoro.ocelot.online.workspace.block
 
-import totoro.ocelot.brain.entity.{CPU, Case, GraphicsCard, HDDManaged, HDDUnmanaged, InternetCard, Memory, Redstone}
 import totoro.ocelot.brain.entity.traits.Entity
+import totoro.ocelot.brain.entity.{CPU, Case, GraphicsCard, HDDManaged, HDDUnmanaged, InternetCard, Memory, Redstone}
 import totoro.ocelot.brain.loot.Loot
 import totoro.ocelot.brain.network.Network
 import totoro.ocelot.brain.util.Tier

@@ -1,7 +1,5 @@
 package totoro.ocelot.online
 
-import totoro.ocelot.brain.entity.{CPU, Case, GraphicsCard, HDDManaged, HDDUnmanaged, InternetCard, Keyboard, Memory, Redstone, Screen}
-import totoro.ocelot.brain.loot.Loot
 import totoro.ocelot.brain.util.Tier
 import totoro.ocelot.brain.{Ocelot => Brain}
 import totoro.ocelot.online.user.User

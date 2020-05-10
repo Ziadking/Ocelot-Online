@@ -1,8 +1,5 @@
 package totoro.ocelot.online.net.packet
 
-import java.nio.ByteBuffer
-
-import akka.util.ByteStringBuilder
 import totoro.ocelot.online.net.PacketTypes
 import totoro.ocelot.online.net.PacketTypes.PacketType
 
