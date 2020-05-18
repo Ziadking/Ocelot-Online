@@ -1,3 +1,4 @@
+import { connect } from "./network/network.js";
 import { Layout } from "./ui/layout.js";
 import { WorkspaceListPage } from "./ui/page/workspace-list.js";
 import { WorkspacePage } from "./ui/page/workspace.js";
@@ -7,8 +8,7 @@ import { IntroPage } from "./ui/page/intro.js";
 
 import { selectRightMenu } from "./ui/view/menu.js";
 
-import { state } from "./state.js";
-
+// init routing
 m.route(document.body, "/intro", {
   "/intro": {
     render: function(vnode) {
@@ -41,3 +41,6 @@ m.route(document.body, "/intro", {
     }
   },
 });
+
+// init network
+connect();

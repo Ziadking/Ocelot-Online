@@ -13,12 +13,13 @@ import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
 import org.apache.logging.log4j.{LogManager, Logger}
 import totoro.ocelot.brain.user.User
+import totoro.ocelot.online.net.{PacketDecoder, PacketTypes}
 import totoro.ocelot.online.net.packet.PacketOnline
 import totoro.ocelot.online.util.NameGen
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
-import scala.util.Failure
+import scala.util.{Failure, Success}
 
 object Ocelot {
   private val Name = "ocelot.online"
@@ -49,14 +50,14 @@ object Ocelot {
     universe.init()
 
     // create websockets handler
-    var online: Short = 0
+    var online: Int = 0
 
     def watchDisconnectsFlow[T]: Flow[T, T, Any] = Flow[T]
       .watchTermination()((_, f) => {
-        online = (online + 1).toShort
+        online = online + 1
         mat offer new PacketOnline(0, online).asMessage()
         f.onComplete { result =>
-          online = (online - 1).toShort
+          online = online - 1
           mat offer new PacketOnline(0, online).asMessage()
           result match {
             case Failure(cause) =>
@@ -73,10 +74,18 @@ object Ocelot {
           tm.textStream.runWith(Sink.ignore)
           Nil
         case bm: BinaryMessage =>
-          bm.toStrict(Settings.get.serverTimeout).onComplete(message => {
-            // TODO: parse binary messages here
-            println(message)
-          })
+          bm.toStrict(Settings.get.serverTimeout).onComplete {
+            case Success(message) =>
+              val packet = PacketDecoder.decode(message)
+              packet.packetType match {
+                case PacketTypes.GET_ONLINE =>
+                  mat offer new PacketOnline(0, online).asMessage()
+                case ignored =>
+                  log.info(s"Incoming packet ignored: $ignored")
+              }
+            case Failure(exception) =>
+              log.error("Cannot parse incoming message as BinaryMessage.Strict!", exception)
+          }
           Nil
       }
       .merge(source)

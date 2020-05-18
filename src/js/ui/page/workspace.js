@@ -1,5 +1,5 @@
 import { state } from "../../state.js";
-import { Entity } from "../../const/entity.js";
+import { BlockTypes } from "../../const/blocktypes.js";
 
 import { WireView } from "../view/wire.js";
 import { BlockView } from "../view/block.js";
@@ -48,8 +48,8 @@ export class WorkspacePage {
 
   matchEntityView(entity) {
     switch (entity) {
-      case Entity.SCREEN: return BlockScreenView;
-      case Entity.CASE: return BlockCaseView;
+      case BlockTypes.SCREEN: return BlockScreenView;
+      case BlockTypes.CASE: return BlockCaseView;
       default: return BlockView;
     }
   }

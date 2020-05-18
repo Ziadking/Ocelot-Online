@@ -12,6 +12,15 @@ var Layout = {
       ),
       m(BuildingMenu),
       m(NavigationMenu),
+      m("div", { id: "nameplate" }, [
+        m("a", { id: "version", href: "https://gitlab.com/cc-ru/ocelot/ocelot-online/blob/master/CHANGELOG.md" }, [
+          "EAP: ", version
+        ]),
+        m("div", [
+          "people online: ", m("span", { id: "online" }, 0)
+        ]),
+        m("a", { href: "https://webchat.esper.net/?join=cc.ru" }, "#cc.ru (c) 2020")
+      ])
     ]
   }
 }

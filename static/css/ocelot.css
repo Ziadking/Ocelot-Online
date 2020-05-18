@@ -155,14 +155,7 @@ a:focus {
   10% { background: #FF24B933; }
 }
 
-/* Layout - Watermark Layer */
-/* ------------------------------------------------------------------------------------------------------------------ */
-
-#watermark {
-  z-index: -1;
-}
-
-/* Layout - Container layer */
+/* Layout */
 /* ------------------------------------------------------------------------------------------------------------------ */
 #container {
   overflow: hidden;
@@ -173,6 +166,14 @@ a:focus {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#nameplate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 20px 30px;
+  z-index: -1;
 }
 
 /* Menu */
