@@ -74,26 +74,22 @@ object Ocelot {
           // ignore text messages but drain content to avoid the stream being clogged
           tm.textStream.runWith(Sink.ignore)
           Nil
-        case bm: BinaryMessage =>
-          bm.toStrict(Settings.get.serverTimeout).onComplete {
-            case Success(message) =>
-              val packet = PacketDecoder.decode(message)
-              log.debug(s">>> $packet")
-              packet.packetType match {
-                case PacketTypes.GET_ONLINE =>
-                  mat offer new PacketOnline(0, online).asMessage()
-                case PacketTypes.WORKSPACE_GET_LIST =>
-                  mat offer new PacketWorkspaceList(
-                    packet.thread,
-                    universe.workspaces.map(workspace => WorkspaceDescription(workspace.id, workspace.name, workspace.description))
-                  ).asMessage()
-                case _ =>
-                  log.info(s"Incoming packet ignored: $packet")
-              }
-            case Failure(exception) =>
-              log.error("Cannot parse incoming message as BinaryMessage.Strict!", exception)
+        case bm: BinaryMessage.Strict =>
+          val packet = PacketDecoder.decode(bm)
+          log.debug(s">>> $packet")
+          packet.packetType match {
+            case PacketTypes.GET_ONLINE =>
+              new PacketOnline(0, online).asMessage() :: Nil
+            case PacketTypes.WORKSPACE_GET_LIST =>
+              new PacketWorkspaceList(
+                packet.thread,
+                universe.workspaces.map(workspace => WorkspaceDescription(workspace.id, workspace.name, workspace.description))
+              ).asMessage() :: Nil
+            case _ =>
+              log.info(s"Incoming packet ignored: $packet")
+              Nil
           }
-          Nil
+        case _ => Nil
       }
       .merge(source)
       .via(watchDisconnectsFlow)
