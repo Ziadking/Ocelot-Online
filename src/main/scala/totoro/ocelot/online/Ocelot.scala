@@ -14,8 +14,9 @@ import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
 import org.apache.logging.log4j.{LogManager, Logger}
 import totoro.ocelot.brain.user.User
 import totoro.ocelot.online.net.{PacketDecoder, PacketTypes}
-import totoro.ocelot.online.net.packet.PacketOnline
+import totoro.ocelot.online.net.packet.{PacketOnline, PacketWorkspaceList}
 import totoro.ocelot.online.util.NameGen
+import totoro.ocelot.online.workspace.WorkspaceDescription
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
@@ -77,11 +78,17 @@ object Ocelot {
           bm.toStrict(Settings.get.serverTimeout).onComplete {
             case Success(message) =>
               val packet = PacketDecoder.decode(message)
+              log.debug(s">>> $packet")
               packet.packetType match {
                 case PacketTypes.GET_ONLINE =>
                   mat offer new PacketOnline(0, online).asMessage()
-                case ignored =>
-                  log.info(s"Incoming packet ignored: $ignored")
+                case PacketTypes.WORKSPACE_GET_LIST =>
+                  mat offer new PacketWorkspaceList(
+                    packet.thread,
+                    universe.workspaces.map(workspace => WorkspaceDescription(workspace.id, workspace.name, workspace.description))
+                  ).asMessage()
+                case _ =>
+                  log.info(s"Incoming packet ignored: $packet")
               }
             case Failure(exception) =>
               log.error("Cannot parse incoming message as BinaryMessage.Strict!", exception)

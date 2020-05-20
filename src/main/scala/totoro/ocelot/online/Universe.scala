@@ -21,7 +21,7 @@ class Universe {
 
     // -------------------------------------------------------------------------------------------------------------- //
     // initialize demo workspace
-    val demospace = new Workspace(0, "Public Sandbox", admin)
+    val demospace = new Workspace(0, "Public Sandbox", "free collaborative workspace", admin)
 
     val blockCase = new BlockCase(IdGen.id(), 0, 0, Tier.Four)
     demospace.add(blockCase)
@@ -30,6 +30,8 @@ class Universe {
     demospace.add(blockScreen)
 
     demospace.connect(blockCase, blockScreen)
+
+    workspaces.append(demospace)
     // -------------------------------------------------------------------------------------------------------------- //
 
     // create main update thread

@@ -54,4 +54,8 @@ abstract class Packet {
     thread = data.getInt()
     this
   }
+
+  override def toString: String = {
+    s"[ $packetType / $thread ]"
+  }
 }

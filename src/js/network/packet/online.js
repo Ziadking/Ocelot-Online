@@ -8,8 +8,10 @@ let Online = {
     data.setUint32(Header.SIZE, online);
     return data;
   },
+
+  // data: AdvancedDataView
   decode: function(data) {
-    return data.getUint32(Header.SIZE);
+    return data.getInt();
   }
 };
 

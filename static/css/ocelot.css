@@ -155,6 +155,10 @@ a:focus {
   10% { background: #FF24B933; }
 }
 
+.lowlevel {
+  z-index: -1;
+}
+
 /* Layout */
 /* ------------------------------------------------------------------------------------------------------------------ */
 #container {
@@ -291,6 +295,7 @@ border: solid 2px #7224B9CC;
   font-family: "unscii-16", monospace;
   font-size: 14pt;
   margin-bottom: 10px;
+  text-transform: uppercase;
 }
 
 .workspace-item-subtitle {

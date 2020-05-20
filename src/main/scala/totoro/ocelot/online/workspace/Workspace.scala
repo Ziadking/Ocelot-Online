@@ -19,7 +19,7 @@ import scala.collection.mutable.ListBuffer
   * And also a set of workspace-related permissions.
   */
 
-class Workspace(var id: Int, var name: String, creator: User) {
+class Workspace(var id: Int, var name: String, var description: String, creator: User) {
   val permissions: ListBuffer[Permission] = ListBuffer.empty
   val blocks: ListBuffer[Block] = ListBuffer.empty
   val wires: ListBuffer[Wire] = ListBuffer.empty
@@ -138,12 +138,13 @@ class Workspace(var id: Int, var name: String, creator: User) {
   /**
     * Build a workspace state for frontend.
     * Format:
-    * <id><name><number-of-permissions>(<permission>, ...)<num-of-blocks>(<block>, ...)<num-of-wires>(<wire>, ...)
+    * <id><name><description><number-of-permissions>(<permission>, ...)<num-of-blocks>(<block>, ...)<num-of-wires>(<wire>, ...)
     */
   def encode(builder: ByteStringBuilder): Unit = {
     // descpription
     builder.putInt(id)
     BinaryHelper.encodeString(builder, name, withLen = true)
+    BinaryHelper.encodeString(builder, description, withLen = true)
 
     // permissions
     builder.putInt(permissions.size)

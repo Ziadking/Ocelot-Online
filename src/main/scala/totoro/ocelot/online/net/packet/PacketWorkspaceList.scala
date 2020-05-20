@@ -24,7 +24,7 @@ class PacketWorkspaceList extends Packet {
 
   val list: ListBuffer[WorkspaceDescription] = ListBuffer.empty
 
-  def this(thread: Int, list: Seq[WorkspaceDescription]) {
+  def this(thread: Int, list: ListBuffer[WorkspaceDescription]) {
     this()
     this.thread = thread
     this.list.addAll(list)
