@@ -1,6 +1,7 @@
 import { PacketTypes } from "../const/packettypes.js";
 import { GetOnline } from "./packet/get_online.js";
 import { Online } from "./packet/online.js";
+import { WorkspaceDescription } from "./packet/workspace_description.js";
 import { UserGetDetails } from "./packet/user_get_details.js";
 import { UserDetails } from "./packet/user_details.js";
 
@@ -60,10 +61,7 @@ export function connect() {
         case PacketTypes.WORKSPACE_LIST:
           state.workspace.list.value.length = 0;
           while (data.getRemaining() > 0) {
-            let id = data.getInt();
-            let name = data.getString(true);
-            let description = data.getString(true);
-            state.workspace.list.value.push({ id: id, name: name, description: description });
+            state.workspace.list.value.push(WorkspaceDescription.decode(data));
           }
           state.workspace.list.loading = false;
           console.log("Got new workspaces list: ", state.workspace.list.value);
