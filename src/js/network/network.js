@@ -1,6 +1,8 @@
 import { PacketTypes } from "../const/packettypes.js";
 import { GetOnline } from "./packet/get_online.js";
 import { Online } from "./packet/online.js";
+import { UserGetDetails } from "./packet/user_get_details.js";
+import { UserDetails } from "./packet/user_details.js";
 
 import { AdvancedDataView } from "./dataview.js";
 
@@ -50,8 +52,10 @@ export function connect() {
         case PacketTypes.ONLINE:
           let online = Online.decode(data);
           console.log("People online: " + online);
+          // update the DOM element
           let element = document.getElementById('online');
           if (element) element.innerHTML = online;
+          //
           break;
         case PacketTypes.WORKSPACE_LIST:
           state.workspace.list.value.length = 0;
@@ -64,6 +68,10 @@ export function connect() {
           state.workspace.list.loading = false;
           console.log("Got new workspaces list: ", state.workspace.list.value);
           m.redraw();
+          break;
+        case PacketTypes.USER_DETAILS:
+          state.user = UserDetails.decode(data);
+          console.log("Got user details: ", state.user);
           break;
         default:
           console.log("Incoming unparsed packet (type: " + type + "): " + event.data);
@@ -79,6 +87,7 @@ export function connect() {
     sendStack.length = 0;
     // init `people online` counter
     send(GetOnline.encode());
+    send(UserGetDetails.encode(0, 0));
   };
   socket.onclose = function(event) {
     connected = false;

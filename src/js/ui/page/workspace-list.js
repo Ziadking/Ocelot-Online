@@ -15,12 +15,12 @@ export class WorkspaceListPage {
     state.workspace.list.value.forEach(workspace =>
       array.push(m(".workspace-item",
         { onclick: function() { m.route.set('/workspace/:id', { id: workspace.id }) } },
-        [ m(".workspace-item-title", workspace.name), m(".workspace-item-subtitle", workspace.description) ]
+        [ m(".workspace-item-title.noselect", workspace.name), m(".workspace-item-subtitle.noselect", workspace.description) ]
       ))
     );
 
-    if (state.user) array.push(m(".item.create", [
-      m(".workspace-item-title", "+++"), m(".workspace-item-subtitle", "create new workspace")
+    if (state.user) array.push(m(".workspace-item.create", [
+      m(".workspace-item-title.noselect", "+++"), m(".workspace-item-subtitle.noselect", "create new workspace")
     ]));
 
     return array;

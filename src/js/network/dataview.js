@@ -48,4 +48,29 @@ export class AdvancedDataView {
     this.offset = this.offset + len;
     return string;
   }
+
+  putByte(byte) {
+    this.data.setUint8(this.offset, byte);
+    this.offset = this.offset + 1;
+  }
+
+  putShort(short) {
+    this.data.setUint16(this.offset, short);
+    this.offset = this.offset + 2;
+  }
+
+  putInt(int) {
+    this.data.setUint32(this.offset, int);
+    this.offset = this.offset + 4;
+  }
+
+  // TODO: test it
+  putString(string, withLen = false) {
+    let encoded = encodeString(string);
+    if (withLen) {
+      this.putShort(encoded.length);
+    }
+    this.data.set(encoded, this.offset);
+    this.offset = this.offset + encoded.length;
+  }
 }

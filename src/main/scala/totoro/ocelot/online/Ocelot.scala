@@ -12,15 +12,15 @@ import akka.http.scaladsl.server.Directives._
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
 import org.apache.logging.log4j.{LogManager, Logger}
-import totoro.ocelot.brain.user.User
 import totoro.ocelot.online.net.{PacketDecoder, PacketTypes}
-import totoro.ocelot.online.net.packet.{PacketOnline, PacketWorkspaceList}
-import totoro.ocelot.online.util.NameGen
+import totoro.ocelot.online.net.packet.{PacketOnline, PacketUserDetails, PacketWorkspaceList}
+import totoro.ocelot.online.user.User
+import totoro.ocelot.online.util.{IdGen, NameGen}
 import totoro.ocelot.online.workspace.WorkspaceDescription
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.io.StdIn
-import scala.util.{Failure, Success}
+import scala.util.Failure
 
 object Ocelot {
   private val Name = "ocelot.online"
@@ -85,6 +85,9 @@ object Ocelot {
                 packet.thread,
                 universe.workspaces.map(workspace => WorkspaceDescription(workspace.id, workspace.name, workspace.description))
               ).asMessage() :: Nil
+            case PacketTypes.USER_GET_DETAILS =>
+              new PacketUserDetails(packet.thread, user.id, user.nickname, user.email)
+                .asMessage() :: Nil
             case _ =>
               log.info(s"Incoming packet ignored: $packet")
               Nil
@@ -107,7 +110,10 @@ object Ocelot {
               val maskedIp = address.toString
               val banned = Settings.get.serverBlacklist.exists(value => ip.contains(value) || maskedIp.contains(value))
               log.info(s"User connected: $nickname ($maskedIp / ${address.getAddress.getCanonicalHostName} / $ip${ if (banned) " / banned" else "" })")
-              if (!banned) handleWebSocketMessages(wsHandler(User(nickname))) else complete(HttpResponse(StatusCodes.PaymentRequired))
+              if (!banned) {
+                val user = new User(IdGen.id(), nickname, "betternot", "noreply@fomalhaut.me", guest = true)
+                handleWebSocketMessages(wsHandler(user))
+              } else complete(HttpResponse(StatusCodes.PaymentRequired))
             }
         }
       } ~
