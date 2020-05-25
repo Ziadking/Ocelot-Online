@@ -33,7 +33,7 @@ object BinaryHelper {
     if (withLen) {
       val len = data.getShort()
       val array = new Array[Byte](len)
-      data.get(array, data.position, len)
+      data.get(array, 0, len)
       new String(array, DefaultCharset)
     } else {
       val slice = data.slice()
