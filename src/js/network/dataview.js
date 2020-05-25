@@ -1,18 +1,10 @@
-let utf8encoder = new TextEncoder('utf-8');
-let utf8decoder = new TextDecoder('utf-8');
-
-function encodeString(str) {
-  return utf8encoder.encode(str);
-}
-
-function decodeString(buffer) {
-  return utf8decoder.decode(buffer);
-}
+import { encodeString, decodeString } from "../util/helpers.js";
 
 export class AdvancedDataView {
   constructor(arrayBuffer) {
     this.buffer = arrayBuffer;
     this.data = new DataView(arrayBuffer);
+    this.byteView = new Uint8Array(arrayBuffer);
     this.offset = 0;
   }
 
@@ -21,6 +13,8 @@ export class AdvancedDataView {
   getLength() { return this.buffer.byteLength }
 
   getOffset() { return this.offset; }
+
+  setOffset(value) { this.offset = value; }
 
   getRemaining() { return this.buffer.byteLength - this.offset; }
 
@@ -64,13 +58,16 @@ export class AdvancedDataView {
     this.offset = this.offset + 4;
   }
 
-  // TODO: test it
   putString(string, withLen = false) {
     let encoded = encodeString(string);
+    this.putEncodedString(encoded, withLen);
+  }
+
+  putEncodedString(encoded, withLen = false) {
     if (withLen) {
       this.putShort(encoded.length);
     }
-    this.data.set(encoded, this.offset);
+    this.byteView.set(encoded, this.offset);
     this.offset = this.offset + encoded.length;
   }
 }

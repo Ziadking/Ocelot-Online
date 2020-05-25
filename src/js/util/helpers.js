@@ -70,3 +70,21 @@ export function leftTop(x, y, width, height) {
   let top = y - height / 2;
   return "left: " + left + "px; top: " + top + "px;";
 }
+
+
+let utf8encoder = new TextEncoder('utf-8');
+let utf8decoder = new TextDecoder('utf-8');
+
+/**
+ * Return byte array with a `str` encoded as UTF-8.
+ */
+export function encodeString(str) {
+  return utf8encoder.encode(str);
+}
+
+/**
+ * Return a string decoded from byte array (buffer) as UTF-8.
+ */
+export function decodeString(buffer) {
+  return utf8decoder.decode(buffer);
+}
