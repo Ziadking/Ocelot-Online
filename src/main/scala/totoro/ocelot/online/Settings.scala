@@ -14,6 +14,7 @@ class Settings(val config: Config) {
   val serverPort: Int = config.getInt("server.port")
   val serverBlacklist: mutable.Buffer[String] = config.getStringList("server.blacklist").asScala
   val serverTimeout: FiniteDuration = FiniteDuration(config.getInt("server.timeout"), TimeUnit.MILLISECONDS)
+  val serverDebug: Boolean = config.getBoolean("server.debug")
 
   val clientHost: String = config.getString("client.host")
 }

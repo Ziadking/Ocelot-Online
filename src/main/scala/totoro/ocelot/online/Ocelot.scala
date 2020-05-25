@@ -13,7 +13,7 @@ import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
 import org.apache.logging.log4j.{LogManager, Logger}
 import totoro.ocelot.online.net.{PacketDecoder, PacketTypes}
-import totoro.ocelot.online.net.packet.{PacketOnline, PacketUserDetails, PacketWorkspaceList}
+import totoro.ocelot.online.net.packet.{PacketFail, PacketOnline, PacketUserDetails, PacketWorkspaceGetState, PacketWorkspaceList, PacketWorkspaceState}
 import totoro.ocelot.online.user.User
 import totoro.ocelot.online.util.{IdGen, NameGen}
 import totoro.ocelot.online.workspace.WorkspaceDescription
@@ -75,7 +75,7 @@ object Ocelot {
           tm.textStream.runWith(Sink.ignore)
           Nil
         case bm: BinaryMessage.Strict =>
-          log.debug(s">:> $bm")
+          if (Settings.get.serverDebug) log.debug(s">:> $bm")
           val packet = PacketDecoder.decode(bm)
           packet.packetType match {
             case PacketTypes.GET_ONLINE =>
@@ -91,8 +91,15 @@ object Ocelot {
             case PacketTypes.MOUSE =>
               mat offer bm
               Nil
+            case PacketTypes.WORKSPACE_GET_STATE =>
+              val id = packet.asInstanceOf[PacketWorkspaceGetState].id
+              val workspace = universe.workspace(id)
+              (workspace match {
+                case Some(w) => new PacketWorkspaceState(packet.thread, w).asMessage()
+                case None => new PacketFail(packet.thread, s"No workspace with ID: $id exists.").asMessage()
+              }) :: Nil
             case _ =>
-              log.info(s"Incoming packet ignored: $packet")
+              if (Settings.get.serverDebug) log.info(s"Incoming packet ignored: $packet")
               Nil
           }
         case _ => Nil

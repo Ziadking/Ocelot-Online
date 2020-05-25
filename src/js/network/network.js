@@ -3,6 +3,7 @@ import { GetOnline } from "./packet/get_online.js";
 import { Online } from "./packet/online.js";
 import { Mouse } from "./packet/mouse.js";
 import { WorkspaceDescription } from "./packet/workspace_description.js";
+import { WorkspaceState } from "./packet/workspace_state.js";
 import { UserGetDetails } from "./packet/user_get_details.js";
 import { UserDetails } from "./packet/user_details.js";
 
@@ -73,12 +74,18 @@ export function connect() {
             state.workspace.list.value.push(WorkspaceDescription.decode(data));
           }
           state.workspace.list.loading = false;
-          if (state.debug) console.log("Got new workspaces list: ", state.workspace.list.value);
           m.redraw();
+          if (state.debug) console.log("Got new workspaces list: ", state.workspace.list.value);
           break;
         case PacketTypes.USER_DETAILS:
           state.user = UserDetails.decode(data);
           if (state.debug) console.log("Got user details: ", state.user);
+          break;
+        case PacketTypes.WORKSPACE_STATE:
+          state.workspace.current.value = WorkspaceState.decode(data);
+          state.workspace.current.loading = false;
+          m.redraw();
+          if (state.debug) console.log("Got new workspace state: ", state.workspace.current.value);
           break;
         default:
           if (state.debug) console.log("Incoming unparsed packet (type: " + type + "): " + event.data);

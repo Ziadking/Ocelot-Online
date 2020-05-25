@@ -52,6 +52,8 @@ class Universe {
     }
   }
 
+  def workspace(id: Int): Option[Workspace] = workspaces.find(w => w.id == id)
+
   def run(): Unit = {
     if (thread != null){
       thread.start()

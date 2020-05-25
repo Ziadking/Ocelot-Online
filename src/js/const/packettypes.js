@@ -22,6 +22,8 @@ let PacketTypes = {
   // workspace
   WORKSPACE_GET_LIST: 25,
   WORKSPACE_LIST: 26,
+  WORKSPACE_GET_STATE: 29,
+  WORKSPACE_STATE: 30,
 };
 
 export { PacketTypes };
