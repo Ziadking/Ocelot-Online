@@ -1,11 +1,14 @@
 import { PacketTypes } from "../const/packettypes.js";
 import { GetOnline } from "./packet/get_online.js";
 import { Online } from "./packet/online.js";
+import { Mouse } from "./packet/mouse.js";
 import { WorkspaceDescription } from "./packet/workspace_description.js";
 import { UserGetDetails } from "./packet/user_get_details.js";
 import { UserDetails } from "./packet/user_details.js";
 
 import { AdvancedDataView } from "./dataview.js";
+
+import { awakePointer } from "../ui/pointers.js";
 
 import { state } from "../state.js";
 
@@ -25,7 +28,7 @@ function reconnect() {
 }
 
 export function send(packet) {
-  console.log("Sending: ", new Uint8Array(packet.buffer));
+  if (state.debug) console.log("Sending: ", new Uint8Array(packet.buffer));
   if (connected) {
     socket.send(packet);
   } else {
@@ -42,7 +45,7 @@ export function connect() {
   // subscribe to events
   socket.onmessage = function(event) {
     if (event.data instanceof ArrayBuffer) {
-      console.log("[NETWORK] Incoming:", new Uint8Array(event.data));
+      if (state.debug) console.log("Incoming:", new Uint8Array(event.data));
       let data = new AdvancedDataView(event.data);
       // universal header of all ocelot packets
       // 1 byte: packet type, 4 bytes: thread ID (which may be 0000 if not used)
@@ -52,11 +55,17 @@ export function connect() {
       switch (type) {
         case PacketTypes.ONLINE:
           let online = Online.decode(data);
-          console.log("People online: " + online);
+          if (state.debug) console.log("People online: " + online);
           // update the DOM element
           let element = document.getElementById('online');
           if (element) element.innerHTML = online;
           //
+          break;
+        case PacketTypes.MOUSE:
+          let mouse = Mouse.decode(data);
+          if (mouse.id != state.user.id) {
+            awakePointer(mouse.id, mouse.x, mouse.y, mouse.nickname);
+          }
           break;
         case PacketTypes.WORKSPACE_LIST:
           state.workspace.list.value.length = 0;
@@ -64,15 +73,15 @@ export function connect() {
             state.workspace.list.value.push(WorkspaceDescription.decode(data));
           }
           state.workspace.list.loading = false;
-          console.log("Got new workspaces list: ", state.workspace.list.value);
+          if (state.debug) console.log("Got new workspaces list: ", state.workspace.list.value);
           m.redraw();
           break;
         case PacketTypes.USER_DETAILS:
           state.user = UserDetails.decode(data);
-          console.log("Got user details: ", state.user);
+          if (state.debug) console.log("Got user details: ", state.user);
           break;
         default:
-          console.log("Incoming unparsed packet (type: " + type + "): " + event.data);
+          if (state.debug) console.log("Incoming unparsed packet (type: " + type + "): " + event.data);
       }
     }
   }

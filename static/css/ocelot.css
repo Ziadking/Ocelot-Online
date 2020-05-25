@@ -26,6 +26,7 @@ body {
   flex-flow: row;
   justify-content: space-between;
   align-items: center;
+  overflow: hidden;
 }
 
 button {
@@ -383,6 +384,37 @@ border: solid 2px #7224B9CC;
   outline: none;
   caret-color: transparent;
   color: transparent;
+}
+
+
+.pointer {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.pointer-label {
+  margin-top: -15px;
+  margin-left: 27px;
+  font-family: "unscii-8", monospace;
+  text-shadow:
+    1px 1px 0 #fff,
+    -1px 1px 0 #fff,
+    1px -1px 0 #fff,
+    -1px -1px 0 #fff;
+}
+
+.pointer-fade-out {
+  animation: pointer-fade-animation 1s ease-out;
+}
+
+@keyframes pointer-fade-animation {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 /* Login / Registration form */

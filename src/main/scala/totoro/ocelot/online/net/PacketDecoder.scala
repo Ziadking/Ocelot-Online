@@ -20,6 +20,7 @@ object PacketDecoder {
       case FAIL => new PacketFail()
       case GET_ONLINE => new PacketGetOnline()
       case ONLINE => new PacketOnline()
+      case MOUSE => new PacketMouse()
 
       // user related
       case REGISTER => new PacketRegister()

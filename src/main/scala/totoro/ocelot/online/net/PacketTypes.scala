@@ -6,8 +6,14 @@ object PacketTypes {
   // general
   val SUCCESS: Byte = 0
   val FAIL: Byte = 1
+
   val GET_ONLINE: Byte = 2
   val ONLINE: Byte = 3
+
+  val PING: Byte = 4
+  val PONG: Byte = 5
+
+  val MOUSE: Byte = 6
 
   // user-related
   val REGISTER: Byte = 10

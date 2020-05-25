@@ -11,6 +11,9 @@ import { registerMouseEventTarget, unregisterMouseEventTarget } from "../../cont
 
 import { getWidth, getHeight } from "../../util/helpers.js";
 
+import { Mouse } from "../../network/packet/mouse.js";
+import { send } from "../../network/network.js";
+
 export class WorkspacePage {
   oninit() {
     init();
@@ -36,6 +39,7 @@ export class WorkspacePage {
       this.y = this.dragStartY + (event.clientY - this.dragStartMouseY);
       m.redraw();
     }
+    send(Mouse.encode(0, state.user.id, event.clientX, event.clientY, state.user.nickname));
   }
 
   onMouseUp(event) {

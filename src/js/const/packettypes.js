@@ -6,8 +6,14 @@ let PacketTypes = {
   // general
   SUCCESS: 0,
   FAIL: 1,
+
   GET_ONLINE: 2,
   ONLINE: 3,
+
+  PING: 4,
+  PONG: 5,
+
+  MOUSE: 6,
 
   // users
   USER_GET_DETAILS: 15,

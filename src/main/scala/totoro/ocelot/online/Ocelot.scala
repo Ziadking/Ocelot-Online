@@ -75,8 +75,8 @@ object Ocelot {
           tm.textStream.runWith(Sink.ignore)
           Nil
         case bm: BinaryMessage.Strict =>
+          log.debug(s">:> $bm")
           val packet = PacketDecoder.decode(bm)
-          log.debug(s">>> $packet")
           packet.packetType match {
             case PacketTypes.GET_ONLINE =>
               new PacketOnline(0, online).asMessage() :: Nil
@@ -88,6 +88,9 @@ object Ocelot {
             case PacketTypes.USER_GET_DETAILS =>
               new PacketUserDetails(packet.thread, user.id, user.nickname, user.email)
                 .asMessage() :: Nil
+            case PacketTypes.MOUSE =>
+              mat offer bm
+              Nil
             case _ =>
               log.info(s"Incoming packet ignored: $packet")
               Nil

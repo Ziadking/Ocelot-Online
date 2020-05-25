@@ -4,6 +4,7 @@
  */
 
 var state = {
+  debug: false,
   user: undefined,
   workspace: {
     list: {
