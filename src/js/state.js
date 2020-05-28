@@ -6,11 +6,15 @@
 var state = {
   debug: false,
   user: undefined,
+  mouseX: 0, mouseY: 0, // these coordinates will be used to locate the free end of new wires, for example
   workspace: {
+    // list of workspace descriptions
     list: {
       loading: true,
       value: []
     },
+    // visual model of the current workspace
+    // (this model is build based on the full workspace state packet received from websocket)
     current: {
       loading: true,
       value: undefined

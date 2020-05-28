@@ -23,10 +23,10 @@ class Universe {
     // initialize demo workspace
     val demospace = new Workspace(0, "Public Sandbox", "free collaborative workspace", admin)
 
-    val blockCase = new BlockCase(IdGen.id(), 0, 0, Tier.Four)
+    val blockCase = new BlockCase(IdGen.id(), -100, -20, Tier.One)
     demospace.add(blockCase)
 
-    val blockScreen = new BlockScreen(IdGen.id(), 100, 0, Tier.Two)
+    val blockScreen = new BlockScreen(IdGen.id(), 100, 20, Tier.Three)
     demospace.add(blockScreen)
 
     demospace.connect(blockCase, blockScreen)

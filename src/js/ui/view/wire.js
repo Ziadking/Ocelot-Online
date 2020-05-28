@@ -1,11 +1,9 @@
-import { leftTop } from "../../util/helpers.js";
-
 export class WireView {
   view(vnode) {
     let wire = vnode.attrs.wire;
     let parent = vnode.attrs.parent;
     return m("svg[width=" + wire.width + "][height=" + wire.height + "]",
-      { class: "workspace-wire", style: leftTop(parent.x + wire.x, parent.y + wire.y, 0, 0) },
+      { class: "workspace-wire", style: { left: (parent.x + wire.x) + "px", top: (parent.y + wire.y) + "px" } },
       [ m("path[d=" + wire.path + "]") ]
     );
   }

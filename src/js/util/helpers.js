@@ -62,15 +62,6 @@ export function getHeight() {
   return window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
 }
 
-/**
- * Generate left and top style parameters for an object with given size.
- */
-export function leftTop(x, y, width, height) {
-  let left = x - width / 2;
-  let top = y - height / 2;
-  return "left: " + left + "px; top: " + top + "px;";
-}
-
 
 let utf8encoder = new TextEncoder('utf-8');
 let utf8decoder = new TextDecoder('utf-8');

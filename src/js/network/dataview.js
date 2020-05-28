@@ -31,7 +31,7 @@ export class AdvancedDataView {
   }
 
   getInt() {
-    let int = this.data.getUint32(this.offset);
+    let int = this.data.getInt32(this.offset);
     this.offset = this.offset + 4;
     return int;
   }

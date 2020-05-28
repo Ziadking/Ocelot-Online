@@ -24,6 +24,9 @@ let PacketTypes = {
   WORKSPACE_LIST: 26,
   WORKSPACE_GET_STATE: 29,
   WORKSPACE_STATE: 30,
+
+  // blocks
+  BLOCK_MOVE: 41,
 };
 
 export { PacketTypes };

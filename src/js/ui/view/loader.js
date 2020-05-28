@@ -1,5 +1,3 @@
-import { leftTop } from "../../util/helpers.js";
-
 export class Loader {
   view(vnode) {
     let visible = vnode.attrs.visible;

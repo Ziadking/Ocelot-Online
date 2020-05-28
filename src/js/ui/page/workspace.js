@@ -11,8 +11,8 @@ import { registerMouseEventTarget, unregisterMouseEventTarget } from "../../cont
 
 import { getWidth, getHeight } from "../../util/helpers.js";
 
-import { WorkspaceGetState } from "../../network/packet/workspace_get_state.js";
 import { Mouse } from "../../network/packet/mouse.js";
+import { WorkspaceGetState } from "../../network/packet/workspace-get-state.js";
 import { send } from "../../network/network.js";
 
 export class WorkspacePage {
@@ -24,10 +24,24 @@ export class WorkspacePage {
     }
     registerMouseEventTarget(this);
     // calculate coordinate plane center
-    this.x = getWidth() / 2;
-    this.y = getHeight() / 2;
+    this.setPosition(getWidth() / 2, getHeight() / 2);
     // request update of workspace data
+    state.workspace.current.loading = true;
     send(WorkspaceGetState.encode());
+  }
+
+  onupdate(vnode) {
+    this.setPosition(this.x, this.y); // update the coordinates in workspace model
+  }
+
+  setPosition(x, y) {
+    this.x = x;
+    this.y = y;
+    let workspace = state.workspace.current.value;
+    if (workspace) {
+      workspace.x = x;
+      workspace.y = y;
+    }
   }
 
   onMouseDown(event) {
@@ -42,12 +56,14 @@ export class WorkspacePage {
 
   onMouseMove(event) {
     if (this.isDragged) {
-      this.x = this.dragStartX + (event.clientX - this.dragStartMouseX);
-      this.y = this.dragStartY + (event.clientY - this.dragStartMouseY);
+      this.setPosition(
+        this.dragStartX + (event.clientX - this.dragStartMouseX),
+        this.dragStartY + (event.clientY - this.dragStartMouseY)
+      );
       m.redraw();
     }
     if (state.user) {
-      send(Mouse.encode(0, state.user.id, event.clientX, event.clientY, state.user.nickname));
+      send(Mouse.encode(0, state.user.id, event.clientX - this.x, event.clientY - this.y, state.user.nickname));
     }
   }
 
@@ -70,7 +86,7 @@ export class WorkspacePage {
   view(vnode) {
     let elements = [ m(Loader, { visible: state.workspace.current.loading }) ];
 
-    if (state.workspace.current.value != undefined) {
+    if (state.workspace.current.value) {
       // generate wires
       elements.push(
         Object.values(state.workspace.current.value.wires).map(wire => {
@@ -80,8 +96,8 @@ export class WorkspacePage {
 
       // generate blocks
       elements.push(
-        state.workspace.current.value.blocks.map(block => {
-          return m(this.matchEntityView(block.entity), { block: block, parent: this });
+        Object.values(state.workspace.current.value.blocks).map(block => {
+          return m(this.matchEntityView(block.type), { block: block, parent: this });
         })
       );
     }

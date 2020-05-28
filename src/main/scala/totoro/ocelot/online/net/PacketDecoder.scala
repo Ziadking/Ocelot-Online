@@ -42,6 +42,9 @@ object PacketDecoder {
       case WORKSPACE_GET_STATE => new PacketWorkspaceGetState()
       case WORKSPACE_STATE => new PacketWorkspaceState()
 
+      // block related
+      case BLOCK_MOVE => new PacketBlockMove()
+
       // TODO: the rest of the protocol must be here
 
     }).decode(buffer)

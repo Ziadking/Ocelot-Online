@@ -54,7 +54,7 @@ export class NavigationMenu {
     let items = [
       m(RightMenuItem, { id: "home", text: "HOME", icon: "ocelot", href: "/" }),
       m(RightMenuItem, { id: "workspaces", text: "WORKSPACES", icon: "workspaces", href: "/workspaces" }),
-      m(RightMenuItem, { id: "help", text: "HELP", icon: "help", href: "/help" }),
+      m(RightMenuItem, { id: "help", text: "HELP", icon: "help", href: "/intro" }),
     ];
     if (state.loggedIn) {
       items.push(m(RightMenuItem, { id: "profile", text: "PROFILE", icon: "profile", href: "/profile" }));

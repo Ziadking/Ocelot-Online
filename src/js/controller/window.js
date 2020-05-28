@@ -22,6 +22,8 @@ export function init() {
     });
     window.addEventListener("mousemove", event => {
       event.redraw = false;
+      state.mouseX = event.clientX;
+      state.mouseY = event.clientY;
       mouseEventTargets.map(target => target.onMouseMove(event));
     });
     window.addEventListener("mouseup", event => {

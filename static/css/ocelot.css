@@ -323,12 +323,17 @@ border: solid 2px #7224B9CC;
   box-shadow: 0px 2px 2px #0000005c;
 }
 
-.workspace-block img {
-  width: 100%;
+.workspace-block:hover {
+  background: #7224B933;
 }
 
-.workspace-block div {
-  width: 100%;
+.workspace-block:active {
+  background: #7224B9CC;
+  color: #fffc;
+}
+
+.workspace-block .content {
+  position: relative;
 }
 
 .workspace-block .address {
@@ -339,19 +344,8 @@ border: solid 2px #7224B9CC;
   text-overflow: "";
 }
 
-.workspace-block:hover {
-  background: #7224B933;
-}
-
-.workspace-block:active {
-  background: #7224B9CC;
-  color: #fffc;
-}
-
-.workspace-block .overlay {
+.workspace-block .texture {
   position: absolute;
-  top: 4px;
-  left: 4px;
 }
 
 .workspace-wire {

@@ -1,5 +1,8 @@
 package totoro.ocelot.online.workspace.block
 
+import java.nio.ByteBuffer
+
+import akka.util.ByteStringBuilder
 import totoro.ocelot.brain.entity.traits.Entity
 import totoro.ocelot.brain.entity.{CPU, Case, GraphicsCard, HDDManaged, HDDUnmanaged, InternetCard, Memory, Redstone}
 import totoro.ocelot.brain.loot.Loot
@@ -39,4 +42,14 @@ class BlockCase extends FoldableBlock {
   }
 
   override def entity: Entity = computer
+
+  override def encode(builder: ByteStringBuilder): ByteStringBuilder = {
+    super.encode(builder)
+    builder.putByte(computer.tier.toByte)
+  }
+
+  override def decode(data: ByteBuffer, withBlockType: Boolean): Block = {
+    super.decode(data, withBlockType)
+    // TODO: decide if the case `tier` need to be decoded in here, and how
+  }
 }

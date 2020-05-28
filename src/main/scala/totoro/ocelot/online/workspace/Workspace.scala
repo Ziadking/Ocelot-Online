@@ -34,6 +34,17 @@ class Workspace(var id: Int, var name: String, var description: String, creator:
     brainspace.add(block.entity)
   }
 
+  def moveBlock(id: Int, x: Int, y: Int): Unit = {
+    moveBlock(blocks.find(_.id == id).orNull, x, y)
+  }
+
+  def moveBlock(block: Block, x: Int, y: Int): Unit = {
+    if (block != null) {
+      block.x = x
+      block.y = y
+    }
+  }
+
   /**
     * Removes the block and all connected wires
     */

@@ -2,7 +2,7 @@ import { Loader } from "../view/loader.js";
 
 import { state } from "../../state.js";
 import { send } from "../../network/network.js";
-import { WorkspaceGetList } from "../../network/packet/workspace_get_list.js";
+import { WorkspaceGetList } from "../../network/packet/workspace-get-list.js";
 
 export class WorkspaceListPage {
   oninit() {

@@ -40,8 +40,9 @@ let WorkspaceState = {
       }
       // block-type dependent stuff
       if (blocks[i].type == BlockTypes.CASE || blocks[i].type == BlockTypes.SCREEN) {
-        blocks[i].folded = data.getByte() == 1
-        blocks[i].turnedOn = data.getByte() == 1
+        blocks[i].folded = data.getByte() == 1;
+        blocks[i].turnedOn = data.getByte() == 1;
+        blocks[i].tier = data.getByte();
       }
     }
 

@@ -1,12 +1,12 @@
-import { leftTop } from "../../util/helpers.js";
 import { registerMouseEventTarget, unregisterMouseEventTarget } from "../../controller/window.js";
+import { state } from "../../state.js";
 
-let BLOCK_SIZE = 100;
-let BLOCK_BORDER = 4;
+import { BlockMove } from "../../network/packet/block-move.js";
+import { send } from "../../network/network.js";
 
 /**
  * The block view can be in two states - folded and unfolded.
- * When folded the block shows a rectangular block with texture, address and overlays.
+ * When folded the block shows a rectangular block with layered textures and address at the bottom.
  * When unfolded it shows some kind of interface - the exact interface is determined by the block type.
  */
 
@@ -14,9 +14,9 @@ export class BlockView {
   constructor(vnode) {
     this.block = vnode.attrs.block;
     this.parent = vnode.attrs.parent;
-    this.folded = true;
-    this.width = BLOCK_SIZE;
-    this.height = BLOCK_SIZE + 20;
+    this.folded = this.block.folded;
+    this.width = this.block.width;
+    this.height = this.block.height;
   }
 
   /**
@@ -42,9 +42,21 @@ export class BlockView {
       ondragstart: function() {
         return false;
       },
-      style: "width: " + this.width + "px; height: " + this.height + "px; " +
-             leftTop(this.parent.x + this.block.x - BLOCK_BORDER, this.parent.y + this.block.y - BLOCK_BORDER, this.width, this.height),
-    }, children);
+      style: {
+        left: (this.parent.x + this.block.x - this.block.width / 2) + "px",
+        top: (this.parent.y + this.block.y - this.block.height / 2) + "px",
+        "z-index": this.isDragged ? 2 : 0,
+      },
+    },
+      [ m("div", {
+        class: "content",
+        style: {
+          width: this.width + "px",
+          height: this.height + "px",
+        }
+      }, children),
+      m("div", { class: "address", style: { width: this.width + "px" } }, this.block.address) ]
+    );
   }
 
   /**
@@ -52,38 +64,42 @@ export class BlockView {
    * This is the default block UI in folded state.
    */
   blockInterface(vnode) {
-    let elements = [
-      m("img", { src: this.block.texture })
-    ];
-    if (this.block.overlays) {
-      this.block.overlays.map(overlay => elements.push(
-        m("img", {
-          id: overlay.id,
-          class: "overlay",
-          src: overlay.texture,
-          style: "width: " + BLOCK_SIZE + "px; " + (overlay.visible ? "" : "display: none;") })
-      ));
-    }
-    return [
-      m("div", { class: "texture" }, elements),
-      m("div", { class: "address" }, this.block.address)
-    ];
+    let elements = this.block.textures.map(texture =>
+      m("img", {
+        class: "texture",
+        src: texture.url,
+        style: {
+          visibility: texture.visible ? "visible" : "hidden",
+          width: this.width + "px",
+          height: this.height + "px",
+          left: texture.x,
+          top: texture.y,
+        }
+      })
+    );
+    return elements;
   }
 
   onMouseDown(event) {}
 
   onMouseMove(event) {
     if (this.isDragged) {
+      // update block position on the screen
       let x = this.dragStartBlockX + (event.clientX - this.dragStartMouseX);
       let y = this.dragStartBlockY + (event.clientY - this.dragStartMouseY);
-      this.block.move(x, y);
+      let workspace = state.workspace.current.value;
+      if (workspace) workspace.moveBlock(this.block, x, y);
       m.redraw();
+
+      // notify backend
+      send(BlockMove.encode(0, this.block.id, this.block.x, this.block.y));
     }
   }
 
   onMouseUp(event) {
     this.isDragged = false;
     unregisterMouseEventTarget(this);
+    m.redraw();
   }
 
   onContextMenu(event) {
@@ -98,5 +114,3 @@ export class BlockView {
     }
   }
 }
-
-export {BLOCK_SIZE, BLOCK_BORDER};

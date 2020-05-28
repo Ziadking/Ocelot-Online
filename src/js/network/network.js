@@ -1,13 +1,16 @@
 import { PacketTypes } from "../const/packettypes.js";
-import { GetOnline } from "./packet/get_online.js";
+import { GetOnline } from "./packet/get-online.js";
 import { Online } from "./packet/online.js";
 import { Mouse } from "./packet/mouse.js";
-import { WorkspaceDescription } from "./packet/workspace_description.js";
-import { WorkspaceState } from "./packet/workspace_state.js";
-import { UserGetDetails } from "./packet/user_get_details.js";
-import { UserDetails } from "./packet/user_details.js";
+import { WorkspaceDescription } from "./packet/workspace-description.js";
+import { WorkspaceState } from "./packet/workspace-state.js";
+import { BlockMove } from "./packet/block-move.js";
+import { UserGetDetails } from "./packet/user-get-details.js";
+import { UserDetails } from "./packet/user-details.js";
 
 import { AdvancedDataView } from "./dataview.js";
+
+import { Workspace } from "../model/workspace.js";
 
 import { awakePointer } from "../ui/pointers.js";
 
@@ -63,9 +66,14 @@ export function connect() {
           //
           break;
         case PacketTypes.MOUSE:
-          let mouse = Mouse.decode(data);
-          if (mouse.id != state.user.id) {
-            awakePointer(mouse.id, mouse.x, mouse.y, mouse.nickname);
+          var packet = Mouse.decode(data);
+          var workspace = state.workspace.current.value;
+          if (packet.id != state.user.id) {
+            if (workspace) {
+              awakePointer(packet.id, packet.x + (workspace.x || 0), packet.y + (workspace.y || 0), packet.nickname);
+            } else {
+              awakePointer(packet.id, packet.x, packet.y, packet.nickname);
+            }
           }
           break;
         case PacketTypes.WORKSPACE_LIST:
@@ -82,10 +90,23 @@ export function connect() {
           if (state.debug) console.log("Got user details: ", state.user);
           break;
         case PacketTypes.WORKSPACE_STATE:
-          state.workspace.current.value = WorkspaceState.decode(data);
+          let workstate = WorkspaceState.decode(data);
+          if (!state.workspace.current.value) {
+            state.workspace.current.value = Workspace.from(workstate);
+          } else {
+            state.workspace.current.value.update(workstate);
+          }
           state.workspace.current.loading = false;
           m.redraw();
           if (state.debug) console.log("Got new workspace state: ", state.workspace.current.value);
+          break;
+        case PacketTypes.BLOCK_MOVE:
+          var packet = BlockMove.decode(data);
+          var workspace = state.workspace.current.value;
+          if (workspace) {
+            workspace.moveBlock(packet.id, packet.x, packet.y);
+            m.redraw();
+          }
           break;
         default:
           if (state.debug) console.log("Incoming unparsed packet (type: " + type + "): " + event.data);

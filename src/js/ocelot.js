@@ -9,7 +9,7 @@ import { IntroPage } from "./ui/page/intro.js";
 import { selectRightMenu } from "./ui/view/menu.js";
 
 // init routing
-m.route(document.body, "/intro", {
+m.route(document.body, "/workspace/0", {
   "/intro": {
     render: function(vnode) {
       selectRightMenu("home");
