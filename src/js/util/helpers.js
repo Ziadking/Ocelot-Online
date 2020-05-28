@@ -79,3 +79,15 @@ export function encodeString(str) {
 export function decodeString(buffer) {
   return utf8decoder.decode(buffer);
 }
+
+
+/**
+ * Browser checks
+ */
+export function isChrome() {
+  return !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+}
+
+export function isFirefox() {
+  return typeof InstallTrigger !== 'undefined';
+}

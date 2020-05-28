@@ -1,4 +1,5 @@
 import { state } from "../state.js";
+import { isChrome } from "../util/helpers.js";
 
 let initialized = false;
 let mouseEventTargets = [];
@@ -30,6 +31,16 @@ export function init() {
       event.redraw = false;
       mouseEventTargets.map(target => target.onMouseUp(event));
     });
+
+    // check browser
+    if (isChrome()) {
+      state.error = {
+        text: "For better experience with Ocelot.Online we recommend Mozilla Firefox.",
+        buttons: [ { text: "> Proceed Anyway", callback: function() { state.error = undefined; } } ]
+      };
+    }
+    //
+
     initialized = true;
   }
 }

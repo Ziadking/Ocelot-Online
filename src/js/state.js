@@ -19,7 +19,8 @@ var state = {
       loading: true,
       value: undefined
     }
-  }
+  },
+  error: undefined // { text: "...", buttons: [ { text: "...", callback: f() } ] }
 };
 
 export { state };
