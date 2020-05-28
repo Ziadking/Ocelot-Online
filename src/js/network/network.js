@@ -101,11 +101,13 @@ export function connect() {
           if (state.debug) console.log("Got new workspace state: ", state.workspace.current.value);
           break;
         case PacketTypes.BLOCK_MOVE:
-          var packet = BlockMove.decode(data);
           var workspace = state.workspace.current.value;
           if (workspace) {
-            workspace.moveBlock(packet.id, packet.x, packet.y);
-            m.redraw();
+            var packet = BlockMove.decode(data);
+            if (!state.user || packet.thread != state.user.id) {
+              workspace.moveBlock(packet.id, packet.x, packet.y);
+              m.redraw();
+            }
           }
           break;
         default:

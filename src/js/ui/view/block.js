@@ -92,7 +92,7 @@ export class BlockView {
       m.redraw();
 
       // notify backend
-      send(BlockMove.encode(0, this.block.id, this.block.x, this.block.y));
+      send(BlockMove.encode(state.user ? state.user.id : 0, this.block.id, this.block.x, this.block.y));
     }
   }
 
