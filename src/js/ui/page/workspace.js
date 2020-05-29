@@ -1,4 +1,5 @@
 import { state } from "../../state.js";
+import { Event, Bus } from "../../event.js";
 import { BlockTypes } from "../../const/blocktypes.js";
 
 import { Loader } from "../view/loader.js";
@@ -11,18 +12,30 @@ import { registerMouseEventTarget, unregisterMouseEventTarget } from "../../cont
 
 import { getWidth, getHeight } from "../../util/helpers.js";
 
+import { awakePointer } from "../pointers.js";
+
 import { Mouse } from "../../network/packet/mouse.js";
 import { WorkspaceGetState } from "../../network/packet/workspace-get-state.js";
 import { send } from "../../network/network.js";
 
 export class WorkspacePage {
+
   oninit(vnode) {
+    this.ID = "WORKSPACE";
     // init stuff
     let id = vnode.attrs.id;
     if (state.workspace.current.value == undefined || state.workspace.current.value.id != id) {
       state.workspace.current.value = state.workspace.list.value.find(w => w.id == id);
     }
     registerMouseEventTarget(this);
+    Bus.sub(this.ID, Event.REMOTE_MOUSE_MOVE, function(data) {
+      var workspace = state.workspace.current.value;
+      if (workspace) {
+        awakePointer(data.id, data.x + (workspace.x || 0), data.y + (workspace.y || 0), data.nickname);
+      } else {
+        awakePointer(data.id, data.x, data.y, data.nickname);
+      }
+    });
     // calculate coordinate plane center
     this.setPosition(getWidth() / 2, getHeight() / 2);
     // request update of workspace data
@@ -73,6 +86,7 @@ export class WorkspacePage {
 
   onremove() {
     unregisterMouseEventTarget(this);
+    Bus.unsub(this.ID, Event.REMOTE_MOUSE_MOVE);
   }
 
   matchEntityView(entity) {

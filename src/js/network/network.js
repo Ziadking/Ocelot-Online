@@ -13,9 +13,8 @@ import { AdvancedDataView } from "./dataview.js";
 
 import { Workspace } from "../model/workspace.js";
 
-import { awakePointer } from "../ui/pointers.js";
-
 import { state } from "../state.js";
+import { Event, Bus } from "../event.js";
 
 let threadId = 1;
 
@@ -68,13 +67,8 @@ export function connect() {
           break;
         case PacketTypes.MOUSE:
           var packet = Mouse.decode(data);
-          var workspace = state.workspace.current.value;
           if (packet.id != state.user.id) {
-            if (workspace) {
-              awakePointer(packet.id, packet.x + (workspace.x || 0), packet.y + (workspace.y || 0), packet.nickname);
-            } else {
-              awakePointer(packet.id, packet.x, packet.y, packet.nickname);
-            }
+            Bus.fire(Event.REMOTE_MOUSE_MOVE, packet);
           }
           break;
         case PacketTypes.WORKSPACE_LIST:
