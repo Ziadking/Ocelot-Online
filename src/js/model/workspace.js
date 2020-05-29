@@ -143,6 +143,25 @@ export class Workspace {
     }
   }
 
+  foldBlock(block, flag) {
+    let id = this.getId(block);
+    if (this.blocks[id]) {
+      if (this.blocks[id].type == BlockTypes.CASE || this.blocks[id].type == BlockTypes.SCREEN) {
+        this.blocks[id].folded = flag;
+      }
+    }
+  }
+
+  turnOnBlock(block, flag) {
+    let id = this.getId(block);
+    if (this.blocks[id]) {
+      if (this.blocks[id].type == BlockTypes.CASE || this.blocks[id].type == BlockTypes.SCREEN) {
+        this.blocks[id].turnedOn = flag;
+        this.blocks[id].textures[1].visible = flag;
+      }
+    }
+  }
+
   /**
    * @param block: can be either a Block instance or a block ID
    */

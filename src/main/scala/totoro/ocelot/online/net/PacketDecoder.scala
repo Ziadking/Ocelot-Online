@@ -44,6 +44,8 @@ object PacketDecoder {
 
       // block related
       case BLOCK_MOVE => new PacketBlockMove()
+      case BLOCK_TOGGLE_FOLD => new PacketBlockToggleFold()
+      case BLOCK_TOGGLE_POWER => new PacketBlockTogglePower()
 
       // TODO: the rest of the protocol must be here
 

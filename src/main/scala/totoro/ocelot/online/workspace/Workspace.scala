@@ -9,7 +9,7 @@ import totoro.ocelot.brain.workspace.{Workspace => Brainspace}
 import totoro.ocelot.online.user.User
 import totoro.ocelot.online.user.permission.Permission
 import totoro.ocelot.online.util.{BinaryHelper, IdGen}
-import totoro.ocelot.online.workspace.block.Block
+import totoro.ocelot.online.workspace.block.{Block, FoldableBlock}
 
 import scala.collection.mutable.ListBuffer
 
@@ -21,7 +21,7 @@ import scala.collection.mutable.ListBuffer
 
 class Workspace(var id: Int, var name: String, var description: String, creator: User) {
   val permissions: ListBuffer[Permission] = ListBuffer.empty
-  val blocks: ListBuffer[Block] = ListBuffer.empty
+  val blocks: ListBuffer[Block] = ListBuffer.empty // TODO: replace with Map
   val wires: ListBuffer[Wire] = ListBuffer.empty
 
   val brainspace: Brainspace = new Brainspace()
@@ -42,6 +42,30 @@ class Workspace(var id: Int, var name: String, var description: String, creator:
     if (block != null) {
       block.x = x
       block.y = y
+    }
+  }
+
+  def foldBlock(id: Int, folded: Boolean): Unit = {
+    foldBlock(blocks.find(_.id == id).orNull, folded)
+  }
+
+  def foldBlock(block: Block, folded: Boolean): Unit = {
+    if (block != null) {
+      block match {
+        case foldable: FoldableBlock => foldable.folded = folded
+      }
+    }
+  }
+
+  def turnOnBlock(id: Int, turnedOn: Boolean): Unit = {
+    turnOnBlock(blocks.find(_.id == id).orNull, turnedOn)
+  }
+
+  def turnOnBlock(block: Block, turnedOn: Boolean): Unit = {
+    if (block != null) {
+      block match {
+        case foldable: FoldableBlock => foldable.turnedOn = turnedOn
+      }
     }
   }
 

@@ -2,11 +2,12 @@ import { PacketTypes } from "../const/packettypes.js";
 import { GetOnline } from "./packet/get-online.js";
 import { Online } from "./packet/online.js";
 import { Mouse } from "./packet/mouse.js";
+import { UserGetDetails } from "./packet/user-get-details.js";
+import { UserDetails } from "./packet/user-details.js";
 import { WorkspaceDescription } from "./packet/workspace-description.js";
 import { WorkspaceState } from "./packet/workspace-state.js";
 import { BlockMove } from "./packet/block-move.js";
-import { UserGetDetails } from "./packet/user-get-details.js";
-import { UserDetails } from "./packet/user-details.js";
+import { BlockToggle } from "./packet/block-toggle.js";
 
 import { AdvancedDataView } from "./dataview.js";
 
@@ -106,6 +107,20 @@ export function connect() {
             var packet = BlockMove.decode(data);
             if (!state.user || packet.thread != state.user.id) {
               workspace.moveBlock(packet.id, packet.x, packet.y);
+              m.redraw();
+            }
+          }
+          break;
+        case PacketTypes.BLOCK_TOGGLE_FOLD: case PacketTypes.BLOCK_TOGGLE_POWER:
+          var workspace = state.workspace.current.value;
+          if (workspace) {
+            var packet = BlockToggle.decode(data);
+            if (!state.user || packet.thread != state.user.id) {
+              if (type == PacketTypes.BLOCK_TOGGLE_FOLD) {
+                workspace.foldBlock(packet.id, packet.flag);
+              } else {
+                workspace.turnOnBlock(packet.id, packet.flag);
+              }
               m.redraw();
             }
           }

@@ -37,9 +37,11 @@ object PacketTypes {
 
   val BLOCK_CREATE: Byte = 40 // expect BLOCK_STATE in return (or FAIL)
   val BLOCK_MOVE: Byte = 41
-  val BLOCK_DELETE: Byte = 42
-  val BLOCK_GET_STATE: Byte = 43
-  val BLOCK_STATE: Byte = 44 // state is dependent on the block type, it may be just the address, or a screen matrix, etc.
+  val BLOCK_TOGGLE_FOLD: Byte = 42
+  val BLOCK_TOGGLE_POWER: Byte = 43
+  val BLOCK_DELETE: Byte = 44
+  val BLOCK_GET_STATE: Byte = 45
+  val BLOCK_STATE: Byte = 46 // state is dependent on the block type, it may be just the address, or a screen matrix, etc.
 
   val WIRE_CREATE: Byte = 60 // expect WIRE_STATE in return (or FAIL)
   val WIRE_DELETE: Byte = 61

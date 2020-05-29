@@ -13,7 +13,7 @@ import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
 import org.apache.logging.log4j.{LogManager, Logger}
 import totoro.ocelot.online.net.{PacketDecoder, PacketTypes}
-import totoro.ocelot.online.net.packet.{PacketBlockMove, PacketFail, PacketOnline, PacketUserDetails, PacketWorkspaceGetState, PacketWorkspaceList, PacketWorkspaceState}
+import totoro.ocelot.online.net.packet.{PacketBlockMove, PacketBlockToggleFold, PacketBlockTogglePower, PacketFail, PacketOnline, PacketUserDetails, PacketWorkspaceGetState, PacketWorkspaceList, PacketWorkspaceState}
 import totoro.ocelot.online.user.User
 import totoro.ocelot.online.util.{IdGen, NameGen}
 import totoro.ocelot.online.workspace.WorkspaceDescription
@@ -101,6 +101,16 @@ object Ocelot {
             case PacketTypes.BLOCK_MOVE =>
               val parsed = packet.asInstanceOf[PacketBlockMove]
               universe.workspace(0).foreach(w => w.moveBlock(parsed.id, parsed.x, parsed.y))
+              mat offer bm
+              Nil
+            case PacketTypes.BLOCK_TOGGLE_FOLD =>
+              val parsed = packet.asInstanceOf[PacketBlockToggleFold]
+              universe.workspace(0).foreach(w => w.foldBlock(parsed.id, parsed.folded))
+              mat offer bm
+              Nil
+            case PacketTypes.BLOCK_TOGGLE_POWER =>
+              val parsed = packet.asInstanceOf[PacketBlockTogglePower]
+              universe.workspace(0).foreach(w => w.turnOnBlock(parsed.id, parsed.powered))
               mat offer bm
               Nil
             case _ =>

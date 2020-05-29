@@ -14,9 +14,14 @@ export class BlockView {
   constructor(vnode) {
     this.block = vnode.attrs.block;
     this.parent = vnode.attrs.parent;
-    this.folded = this.block.folded;
-    this.width = this.block.width;
-    this.height = this.block.height;
+  }
+
+  getWidth() {
+    return this.block.width;
+  }
+
+  getHeight() {
+    return this.block.height;
   }
 
   /**
@@ -51,11 +56,11 @@ export class BlockView {
       [ m("div", {
         class: "content",
         style: {
-          width: this.width + "px",
-          height: this.height + "px",
+          width: this.getWidth() + "px",
+          height: this.getHeight() + "px",
         }
       }, children),
-      m("div", { class: "address", style: { width: this.width + "px" } }, this.block.address) ]
+      m("div", { class: "address", style: { width: this.getWidth() + "px" } }, this.block.address) ]
     );
   }
 
@@ -70,8 +75,8 @@ export class BlockView {
         src: texture.url,
         style: {
           visibility: texture.visible ? "visible" : "hidden",
-          width: this.width + "px",
-          height: this.height + "px",
+          width: this.getWidth() + "px",
+          height: this.getHeight() + "px",
           left: texture.x,
           top: texture.y,
         }
@@ -107,7 +112,7 @@ export class BlockView {
   }
 
   view(vnode) {
-    if (this.folded || !this.detailsInterface) {
+    if (this.block.folded || !this.detailsInterface) {
       return this.basicInterface(vnode, this.blockInterface(vnode));
     } else {
       return this.basicInterface(vnode, this.detailsInterface(vnode));
