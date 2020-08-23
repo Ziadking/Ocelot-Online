@@ -18,10 +18,8 @@ class BlockScreen extends FoldableBlock {
     this()
     init(id, x, y)
 
-    val network = new Network()
     screen = new Screen(tier)
     keyboard = new Keyboard()
-    network.connect(screen)
     screen.connect(keyboard)
   }
 

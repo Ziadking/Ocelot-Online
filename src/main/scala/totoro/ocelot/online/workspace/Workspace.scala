@@ -1,6 +1,7 @@
 package totoro.ocelot.online.workspace
 
 import java.nio.ByteOrder
+import java.nio.file.Paths
 
 import akka.util.ByteStringBuilder
 import totoro.ocelot.brain.entity.Cable
@@ -24,7 +25,7 @@ class Workspace(var id: Int, var name: String, var description: String, creator:
   val blocks: ListBuffer[Block] = ListBuffer.empty // TODO: replace with Map
   val wires: ListBuffer[Wire] = ListBuffer.empty
 
-  val brainspace: Brainspace = new Brainspace()
+  val brainspace: Brainspace = new Brainspace(Paths.get("save"))
 
   /**
     * Adds the block to workspace
