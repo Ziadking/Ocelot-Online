@@ -74,7 +74,7 @@ export class Wire {
     }
   }
 
-  update(nax, nay, nbx, nby, smooth = true) {
+  update(nax, nay, nbx, nby, smooth = false) {
     // calculate new spline parameters
     // the spline will go like this:
     //

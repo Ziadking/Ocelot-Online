@@ -20,6 +20,7 @@ var state = {
       value: undefined
     }
   },
+  menu: undefined, // ID of selected navigation menu item
   error: undefined // { text: "...", buttons: [ { text: "...", callback: f() } ] }
 };
 

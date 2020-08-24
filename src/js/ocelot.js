@@ -6,37 +6,39 @@ import { LoginPage } from "./ui/page/login.js";
 import { RegisterPage } from "./ui/page/register.js";
 import { IntroPage } from "./ui/page/intro.js";
 
-import { selectRightMenu } from "./ui/view/menu.js";
+import { selectMenuItem } from "./ui/view/menu.js";
 
 // init routing
-m.route(document.body, "/workspace/0", {
+var root = document.getElementById("container");
+
+m.route(root, "/workspace/0", {
   "/intro": {
     render: function(vnode) {
-      selectRightMenu("home");
+      selectMenuItem("home");
       return m(Layout, m(IntroPage))
     }
   },
   "/workspaces": {
     render: function() {
-      selectRightMenu("workspaces");
+      selectMenuItem("workspaces");
       return m(Layout, m(WorkspaceListPage))
     }
   },
   "/workspace/:id": {
     render: function(vnode) {
-      selectRightMenu("workspaces");
+      selectMenuItem("workspaces");
       return m(Layout, m(WorkspacePage, { id: vnode.attrs.id }))
     }
   },
   "/register": {
     render: function() {
-      selectRightMenu("register");
+      selectMenuItem("register");
       return m(Layout, m(RegisterPage))
     }
   },
   "/login": {
     render: function() {
-      selectRightMenu("login");
+      selectMenuItem("login");
       return m(Layout, m(LoginPage))
     }
   },

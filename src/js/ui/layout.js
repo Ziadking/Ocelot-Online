@@ -1,4 +1,4 @@
-import { BuildingMenu, NavigationMenu } from "./view/menu.js";
+import { NavigationMenu } from "./view/menu.js";
 import { init } from "../controller/window.js";
 
 import { state } from "../state.js";
@@ -9,18 +9,17 @@ var Layout = {
   },
   view: function(vnode) {
     let elements = [
-      m("div", { id: "container", class: "fullscreen" },
-        m("div", { id: "content" }, vnode.children)
-      ),
-      m(BuildingMenu),
+      m("div", { id: "content", class: "fullscreen" }, vnode.children),
       m(NavigationMenu),
       m("div", { id: "nameplate" }, [
         m("a", { id: "version", href: "https://gitlab.com/cc-ru/ocelot/ocelot-online/blob/master/CHANGELOG.md" }, [
           "EAP: ", version
         ]),
-        m("div", [
-          "people online: ", m("span", { id: "online" }, 0)
+        " / ",
+        m("span", [
+          "online: ", m("span", { id: "online" }, 0)
         ]),
+        " / ",
         m("a", { href: "https://webchat.esper.net/?join=cc.ru" }, "#cc.ru (c) 2020")
       ])
     ]

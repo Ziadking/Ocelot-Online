@@ -49,8 +49,8 @@ export class Workspace {
         blockModel.address = block.address;
       } else {
         blockModel = new Block(block.id, block.type, block.address, block.x, block.y);
-        blockModel.width = 128;
-        blockModel.height = 128;
+        blockModel.width = 96;
+        blockModel.height = 96;
         switch(block.type) {
           case BlockTypes.CASE:
             blockModel.textures.push({ x: 0, y: 0, url: Textures.CASE[block.tier], visible: true });

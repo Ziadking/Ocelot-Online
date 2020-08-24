@@ -1,10 +1,14 @@
 export class IntroPage {
   view(vnode) {
     return m("div", { id: "intro" }, [
-      m("img", { id: "intro-logo", class: "logo noselect", src: "images/logo.png", ondragstart: function() { return false; } }),
-      m("h3", "[ocelot.online]"),
+      m("div", { id: "intro-header" }, [
+        m("img", { class: "noselect", src: "images/logo.png", ondragstart: function() { return false; } }),
+        m("div", { id: "intro-title" }, "[OCELOT.ONLINE]"),
+        m("div", "advanced OpenComputers Emulator"),
+      ]),
+      m("div", { id: "intro-delimiter" }),
       m("div", { id: "intro-text" }, [
-        m("p", "OpenComputers emulator with 99% emulation accuracy."),
+      m("p", "OpenComputers emulator with 99% emulation accuracy."),
         m("p", [
           "A free ",
           m(m.route.Link, { href: "/workspace/0"}, "collaborative workspace"),
@@ -25,8 +29,8 @@ export class IntroPage {
         ]),
         m("p", "We wish you a pleasant experience,"),
         m("p", "Ocelot Team"),
-      ]),
-      m("img", { id: "signature", class: "noselect", src: "images/paw.png", ondragstart: function() { return false; } }),
+        m("img", { id: "signature", class: "noselect", src: "images/paw.png", ondragstart: function() { return false; } })
+      ])
     ]);
   }
 }

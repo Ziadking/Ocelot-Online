@@ -1,92 +1,40 @@
 import { state } from "../../state.js"
 
-export function selectRightMenu(id) {
-  if (!state.menu) state.menu = {};
-  state.menu.right = id
+export function selectMenuItem(id) {
+  state.menu = id;
 }
 
-export function selectLeftMenu(id) {
-  if (!state.menu) state.menu = {};
-  state.menu.left = id
-}
-
-class MenuIcon {
+class MenuItem {
   view(vnode) {
-    let filename = vnode.attrs.icon;
-    let selected = vnode.attrs.selected;
-    if (selected) {
-      let img = "images/icons/" + filename + ".png";
-      let img_w = "images/icons/" + filename + "-w.png";
-      return [
-        m("img", { class: "menu-item-icon menu-icon-default", src: img, ondragstart: function() { return false; } }),
-        m("img", { class: "menu-item-icon menu-icon-hover", src: img_w, ondragstart: function() { return false; } }),
-      ];
-    } else {
-      let img_o = "images/icons/" + filename + "-o.png";
-      let img_wo = "images/icons/" + filename + "-wo.png";
-      return [
-        m("img", { class: "menu-item-icon menu-icon-default", src: img_o, ondragstart: function() { return false; } }),
-        m("img", { class: "menu-item-icon menu-icon-hover", src: img_wo, ondragstart: function() { return false; } }),
-      ];
-    }
-  }
-}
+    let id = vnode.attrs.id;
+    let icon = vnode.attrs.icon;
+    let hint = vnode.attrs.hint;
 
-class RightMenuItem {
-  view(vnode) {
-    return m(m.route.Link, {
-      class: "menu-item menu-item-right noselect",
-      onclick: function () { state.menu.right = vnode.attrs.id; },
-      href: vnode.attrs.href,
-    }, [
-      m("div", { class: "menu-item-title" }, vnode.attrs.text),
-      m(MenuIcon, { icon: vnode.attrs.icon, selected: state.menu.right == vnode.attrs.id }),
-    ]);
+    return m("div", { class: "menu-item noselect" + (state.menu == id ? " menu-item-selected" : ""), ondragstart: function() { return false; } },
+      m(m.route.Link, { href: vnode.attrs.href },
+        m("img", { src: "images/icons/" + icon + ".png" })
+      )
+    );
   }
 }
 
 export class NavigationMenu {
   oninit() {
-    if (!state.menu) state.menu = {};
-    if (!state.menu.right) state.menu.right = "home";
+    if (!state.menu) state.menu = "home";
   }
   view() {
     let items = [
-      m(RightMenuItem, { id: "home", text: "HOME", icon: "ocelot", href: "/" }),
-      m(RightMenuItem, { id: "workspaces", text: "WORKSPACES", icon: "workspaces", href: "/workspaces" }),
-      m(RightMenuItem, { id: "help", text: "HELP", icon: "help", href: "/intro" }),
+      m(MenuItem, { id: "home", hint: "home", icon: "ocelot", href: "/" }),
+      m(MenuItem, { id: "workspaces", hint: "workspaces", icon: "workspaces", href: "/workspaces" }),
+      m(MenuItem, { id: "help", hint: "help", icon: "help", href: "/intro" }),
     ];
     if (state.loggedIn) {
-      items.push(m(RightMenuItem, { id: "profile", text: "PROFILE", icon: "profile", href: "/profile" }));
-      items.push(m(RightMenuItem, { id: "logout", text: "LOGOUT", icon: "logout", href: "/logout" }));
+      items.push(m(MenuItem, { id: "profile", hint: "profile", icon: "profile", href: "/profile" }));
+      items.push(m(MenuItem, { id: "logout", hint: "logout", icon: "logout", href: "/logout" }));
     } else {
-      items.push(m(RightMenuItem, { id: "register", text: "REGISTER", icon: "register", href: "/register" }));
-      items.push(m(RightMenuItem, { id: "login", text: "LOGIN", icon: "login", href: "/login" }));
+      items.push(m(MenuItem, { id: "register", hint: "register", icon: "register", href: "/register" }));
+      items.push(m(MenuItem, { id: "login", hint: "login", icon: "login", href: "/login" }));
     }
     return m("div", { class: "menu" }, items);
-  }
-}
-
-class LeftMenuItem {
-  view(vnode) {
-    return m("div", {
-      class: "menu-item menu-item-left noselect",
-      onclick: function() {
-        if (state.menu.left != vnode.attrs.id) state.menu.left = vnode.attrs.id;
-        else state.menu.left = undefined;
-      }
-    }, [
-      m(MenuIcon, { icon: vnode.attrs.icon, selected: state.menu.left == vnode.attrs.id }),
-      m("div", { class: "menu-item-title" }, vnode.attrs.text),
-    ]);
-  }
-}
-
-export class BuildingMenu {
-  view() {
-    return m("div", { class: "menu" }, [
-      m(LeftMenuItem, { id: "blocks", text: "BLOCKS", icon: "blocks" }),
-      m(LeftMenuItem, { id: "prefabs", text: "PREFABS", icon: "prefabs" }),
-    ]);
   }
 }
