@@ -4,12 +4,15 @@
   "description": "OpenComputers emulator in form of a web-application.",
   "main": "static/js/ocelot.js",
   "repository": "https://gitlab.com/cc-ru/ocelot/ocelot-online.git",
-  "author": "Totoro",
+  "author": "Ocelot Dev Team",
   "license": "MIT",
   "private": false,
   "dependencies": {
     "global": "^4.4.0",
     "rollup": "^2.26.5"
+  },
+  "scripts": {
+    "pack": "rollup -c"
   },
   "devDependencies": {
     "rollup-plugin-string": "^3.0.0",
