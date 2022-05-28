@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ocelot Desktop</title>
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <header>
+    <div class="heading-title">
+      <ul>
+        <li>[ home ]</li>
+        <li><a href="/faq.html">faq</a></li>
+        <li><a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop">gitlab</a></li>
+      </ul>
+      <img src="/images/ocelot.svg" style="vertical-align: middle; width: 256px; height: 256px;">
+      <h1>[ ocelot.desktop ]</h1>
+      <h2>An advanced OpenComputers emulator</h2>
+      <h3>
+        <a href="https://cc-ru.gitlab.io/ocelot/ocelot-desktop/ocelot.jar">[ Download the latest developer build ]</a>
+      </h3>
+      <p>Last updated on {{ last_update }} by {{ updated_by }} using <a href={{ commit_url }}>{{ commit }}</a></p>
+    </div>
+  </header>
+  <div class="content">
+    <div class="feature">
+      <h2>
+        Near-perfect emulation
+      </h2>
+      <hr>
+      <div class="feature-content">
+        <div class="feature-img">
+          <img src="/images/features/near_perfect_emulation.png" style="border-radius: 10px;">
+        </div>
+        <p>Built with ocelot-brain,
+          which is essentially the source code of OpenComputers stripped of everything
+          Minecraft-specific and packaged as a Scala library.
+          This makes Ocelot Desktop the most accurate emulator ever made.</p>
+      </div>
+    </div>
+
+
+    <div class="feature">
+      <h2>
+        Pretty graphical interface
+      </h2>
+      <hr>
+      <div class="feature-content">
+        <div class="feature-img">
+          <img src="/images/features/user_interface.gif" style="border-radius: 10px;">
+        </div>
+        <p>A slick interface allows you to customize the setup to your liking.
+          Add more computers, organize the connections between components, build complex
+          setups, and manage your screen real estate to avoid distractions.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <h2>
+        Persistable workspaces
+      </h2>
+      <hr>
+      <div class="feature-content">
+        <div class="feature-img">
+          <img src="/images/features/persistant_workspaces.png" style="border-radius: 10px;">
+        </div>
+        <p>It would be sad if, after all the hard work you put into adjusting the
+          workspace, you have to do that again.
+          I mean, OpenComputers can persist its machines just fine, right?
+          By basing the emulator on its code, we've essentially inherited the ability
+          to save workspaces on the disk and load them afterwards.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <h2>
+        Workspace design
+      </h2>
+      <hr>
+      <div class="feature-content">
+        <div class="feature-img">
+          <img src="/images/features/workspace_editor.png" style="border-radius: 10px;">
+        </div>
+        <p>You can build a local network of computers of any complexity and arrangement.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <h2>
+        Cool features
+      </h2>
+      <hr>
+      <div class="feature-content">
+        <div class="feature-img">
+          <img src="/images/features/cool_features.gif" style="border-radius: 10px;">
+        </div>
+        <p>A few smaller features. Like: system load indicator, resizeable screens, labeled windows</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <h2>
+        Programmable
+      </h2>
+      <hr>
+      <div class="feature-content">
+        <div class="feature-img">
+          <img src="/images/features/lua.png" style="border-radius: 10px;">
+        </div>
+        <p>Your programs will run on the same version of Lua as used by the mod and have
+          similar timings.
+          The performance and memory constraints present in OC are also emulated.</p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>Powered by the forest spirit. &copy 2022 The Ocelot Development Team.</p>
+  </footer>
+</body>
+
+</html>

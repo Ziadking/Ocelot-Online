@@ -1,5 +1,9 @@
 #Project files
 /.idea
+/.vscode
+/.metals
+.bloop/
+metals.sbt
 
 # Build files
 target/

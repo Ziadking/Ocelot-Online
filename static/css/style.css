@@ -1,0 +1,162 @@
+@font-face {
+    font-family: "unscii";
+    src: url("/fonts/unscii-16.woff");
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+}
+
+@keyframes cursor-blink {
+    0% {
+        opacity: 0;
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: url("/images/pcb.png");
+    font-family: "unscii";
+}
+
+h2 {
+    font-weight: normal;
+    margin: 0px;
+}
+
+h3 {
+    font-weight: normal;
+}
+
+
+hr {
+    color: white;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    display: inline;
+    color: white;
+}
+
+
+header {
+    padding: 1em;
+    /* min-height: 400px; */
+    position: relative;
+    background:
+        /* top, transparent black, faked with gradient */
+        linear-gradient(rgba(0, 0, 0, 0.9),
+            rgba(0, 0, 0, 0.5)),
+        /* bottom, image */
+        url("/images/header.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+footer {
+    padding: 1em;
+    position: relative;
+    background:
+        /* top, transparent black, faked with gradient */
+        linear-gradient(rgba(0, 0, 0, 0.1),
+            rgba(0, 0, 0, 0.3));
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: rgb(110, 110, 110);
+}
+
+
+a {
+    color: rgb(148, 54, 54);
+    text-decoration: none;
+    filter: drop-shadow(0, 0, 5, white);
+    -o-transition: 1s;
+    -ms-transition: 1s;
+    -moz-transition: 1s;
+    -webkit-transition: 1s;
+    transition: 1s;
+}
+
+a:hover {
+    color: white;
+    filter: drop-shadow(0, 0, 5, white);
+    -o-transition: 1s;
+    -ms-transition: 1s;
+    -moz-transition: 1s;
+    -webkit-transition: 1s;
+    transition: 1s;
+}
+
+.heading-title h2::after {
+    content: "";
+    width: 10px;
+    height: 20px;
+    background: white;
+    display: inline-block;
+    animation: cursor-blink 1s steps(2) infinite;
+}
+
+
+.heading-title {
+    color: White;
+    text-align: center;
+}
+
+@media (max-width: 800px) {
+    .content {
+        flex-direction: column;
+    }
+}
+
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.feature-img {
+    padding-right: 10px;
+}
+
+.feature-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.feature {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+    color: White;
+    width: 500px;
+    height: 20%;
+    padding: 20px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+kbd {
+    border-radius: 3px;
+    padding: 1px 2px 0;
+    border: 1px solid white;
+}
+
+.faq {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
+    color: White;
+    height: 20%;
+    padding: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 3em;
+    margin-right: 3em;
+    border-radius: 5px;
+}
+
+@media (max-width: 800px) {
+    .feature {
+        width: auto;
+    }
+}

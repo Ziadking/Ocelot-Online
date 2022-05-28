@@ -3,15 +3,15 @@ package totoro.ocelot.online
 import java.io.File
 import java.net.InetSocketAddress
 import java.time.LocalDate
-
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{HttpHeader, HttpResponse, StatusCode, StatusCodes}
+import akka.http.scaladsl.model.{ContentType, ContentTypes, HttpEntity, HttpHeader, HttpResponse, MediaTypes, StatusCode, StatusCodes}
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
 import org.apache.logging.log4j.{LogManager, Logger}
+import org.fusesource.scalate.{RenderContext, Template, TemplateEngine}
 import totoro.ocelot.brain.user.User
 
 import scala.concurrent.ExecutionContextExecutor
@@ -24,6 +24,7 @@ object Ocelot {
   private val Version = "0.3.11"
 
   var logger: Option[Logger] = None
+
   def log: Logger = logger.getOrElse(LogManager.getLogger(Name))
 
   def main(args: Array[String]): Unit = {
@@ -32,6 +33,8 @@ object Ocelot {
     implicit val materializer: ActorMaterializer = ActorMaterializer()
     // needed for the future flatMap/onComplete in the end
     implicit val executionContext: ExecutionContextExecutor = system.dispatcher
+    val templateSource = new File("template/index.mustache").getCanonicalPath
+    val template = new TemplateEngine()
 
     Settings.load(new File("ocelot.conf"))
 
@@ -57,6 +60,7 @@ object Ocelot {
       }).start()
       log.debug("Created new main thread.")
     }
+
     run()
 
     // create websockets handler
@@ -124,31 +128,46 @@ object Ocelot {
       .via(watchDisconnectsFlow)
 
     // define routes
-    def route(address : InetSocketAddress) =
+    def route(address: InetSocketAddress) =
       path("stream") {
         ignoreTrailingSlash {
-            optionalHeaderValueByName("X-Real-Ip") { realIp =>
-              val nickname = NameGen.name((address.toString + LocalDate.now.toString).hashCode)
-              val ip = realIp match {
-                case Some(ip) => ip
-                case None => "NGINX proxy not configured"
-              }
-              val maskedIp = address.toString
-              val banned = Settings.get.blacklist.exists(value => ip.contains(value) || maskedIp.contains(value))
-              log.info(s"User connected: $nickname ($maskedIp / ${address.getAddress.getCanonicalHostName} / $ip${ if (banned) " / banned" else "" })")
-              if (!banned) handleWebSocketMessages(wsHandler(User(nickname))) else complete(HttpResponse(StatusCodes.PaymentRequired))
+          optionalHeaderValueByName("X-Real-Ip") { realIp =>
+            val nickname = NameGen.name((address.toString + LocalDate.now.toString).hashCode)
+            val ip = realIp match {
+              case Some(ip) => ip
+              case None => "NGINX proxy not configured"
             }
+            val maskedIp = address.toString
+            val banned = Settings.get.blacklist.exists(value => ip.contains(value) || maskedIp.contains(value))
+            log.info(s"User connected: $nickname ($maskedIp / ${address.getAddress.getCanonicalHostName} / $ip${if (banned) " / banned" else ""})")
+            if (!banned) handleWebSocketMessages(wsHandler(User(nickname))) else complete(HttpResponse(StatusCodes.PaymentRequired))
+          }
         }
       } ~
-      path("config.js") {
-        get {
-          complete(s"var version = '$Version'; var host = '${Settings.get.clientHost}';")
-        }
-      } ~
-      pathEndOrSingleSlash {
-        getFromFile("static/index.html")
-      } ~
-      getFromDirectory("static")
+        path("config.js") {
+          get {
+            complete(s"var version = '$Version'; var host = '${Settings.get.clientHost}';")
+          }
+        } ~
+        ignoreTrailingSlash {
+          path("desktop") {
+            get {
+              val model = Map(
+                "last_update" -> "2022-01-12",
+                "updated_by" -> "Fingercomp",
+                "commit_url" -> "https://google.com",
+                "commit" -> "412382389-4rwe9fu8adsfsadfasa"
+              )
+
+              val entity = HttpEntity(ContentTypes.`text/html(UTF-8)`, template.layout(templateSource, model))
+              complete(entity);
+            }
+          }
+        } ~
+        pathEndOrSingleSlash {
+          getFromFile("static/index.html")
+        } ~
+        getFromDirectory("static")
 
 
     // run
