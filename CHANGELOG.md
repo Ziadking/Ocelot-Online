@@ -1,3 +1,6 @@
+## 0.4.0
+* Added: [Ocelot Desktop](https://gitlab.com/cc-ru/ocelot/ocelot-desktop) frontpage
+
 ## 0.3.11
 * Fix: allow real numbers in mouse wheel event delta
 

@@ -11,6 +11,7 @@ class Settings(val config: Config) {
   val serverHost: String = config.getString("server.host")
   val serverPort: Int = config.getInt("server.port")
   val clientHost: String = config.getString("client.host")
+  val gitlabToken: String = config.getString("server.gitlab_token")
   val blacklist: mutable.Buffer[String] = config.getStringList("server.blacklist").asScala
 }
 

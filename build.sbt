@@ -1,7 +1,7 @@
 name := "ocelot-online"
 
 // do not forget to change version in Ocelot.scala
-version := "0.3.11"
+version := "0.4.0"
 
 scalaVersion := "2.13.1"
 
@@ -15,7 +15,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http"   % "10.1.11",
   "com.typesafe.akka" %% "akka-stream" % "2.6.3",
   "com.typesafe" % "config" % "1.4.0",
-  "org.scalatra.scalate" %% "scalate-core" % "1.9.8"
+  "org.scalatra.scalate" %% "scalate-core" % "1.9.8",
+  "io.spray" %%  "spray-json" % "1.3.6"
 )
 
 assemblyJarName := s"ocelot-online-${version.value}.jar"

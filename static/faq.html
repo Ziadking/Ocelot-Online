@@ -14,7 +14,7 @@
         <ul>
             <img src="/images/ocelot.svg" style="vertical-align: middle; width: 32px; height: 32px;"> 
             <li>[ ocelot.desktop ]</li>
-            <li><a href="/dekstop">home</li>
+            <li><a href="/desktop">home</a></li>
             <li>[ faq ]</li>
             <li><a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop">gitlab</a></li>
         </ul>
@@ -24,7 +24,7 @@
         <hr>
         <p>Emulator GUI hotkeys always shown at the
             bottom of the window</p>
-        <img src="/images/faq/check-the-bottom.png">
+        <img class="faq-img" src="/images/faq/check-the-bottom.png">
     </div>
 
     <div class="faq">
@@ -41,6 +41,13 @@
         <p>Probably, you running under Windows™ operating system and run ocelot from search results bar in
             <code>explorer.exe</code> or directly from browser's download manager. To resolve this issue run ocelot
             directly within directory.</p>
+    </div>
+
+    <div class="faq">
+        <h2>I get a weird error saying something about an inconsistency detected by ld.so</h2>
+        <hr>
+        <img class="faq-img" src="images/faq/inconsistency.png" />
+        <p>That's a known problem with our dependency, LWJGL2, on Java 9 and newer. As a workaround, launch Ocelot Desktop on Java 8.</p>
     </div>
 
     <footer>

@@ -2,29 +2,32 @@ package totoro.ocelot.online
 
 import java.io.File
 import java.net.InetSocketAddress
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ContentType, ContentTypes, HttpEntity, HttpHeader, HttpResponse, MediaTypes, StatusCode, StatusCodes}
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity, HttpRequest, HttpResponse, StatusCodes, headers}
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
 import org.apache.logging.log4j.{LogManager, Logger}
-import org.fusesource.scalate.{RenderContext, Template, TemplateEngine}
+import org.fusesource.scalate.TemplateEngine
+import spray.json._
+import DefaultJsonProtocol._
 import totoro.ocelot.brain.user.User
-
-import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.io.StdIn
+import scala.language.postfixOps
 import scala.util.{Failure, Success}
+import java.time.format.DateTimeFormatter
 
 object Ocelot {
   private val Name = "ocelot.online"
   // do not forget to change version in build.sbt
-  private val Version = "0.3.11"
-
+  private val Version = "0.4.0"
+  private val OcelotProjId = 9941848
   var logger: Option[Logger] = None
-
   def log: Logger = logger.getOrElse(LogManager.getLogger(Name))
 
   def main(args: Array[String]): Unit = {
@@ -35,6 +38,8 @@ object Ocelot {
     implicit val executionContext: ExecutionContextExecutor = system.dispatcher
     val templateSource = new File("template/index.mustache").getCanonicalPath
     val template = new TemplateEngine()
+    val formatterOutput = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val formaterInput = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
     Settings.load(new File("ocelot.conf"))
 
@@ -49,6 +54,20 @@ object Ocelot {
     workspace.subscribe(mat)
 
     workspace.turnOn()
+
+    def renderTemplate(lastUpdate: String = "A long time ago...",
+                       updatedBy: String = "Totoro",
+                       commit: String = "the latest commit",
+                       commit_url: String = "https://gitlab.com/cc-ru/ocelot/ocelot-desktop"): HttpEntity.Strict = {
+      val model = Map(
+      "last_update" -> lastUpdate,
+      "updated_by" -> updatedBy,
+      "commit_url" -> commit_url,
+      "commit" -> commit
+      )
+
+      HttpEntity(ContentTypes.`text/html(UTF-8)`, template.layout(templateSource, model))
+    }
 
     def run(): Unit = {
       new Thread(() => {
@@ -152,15 +171,26 @@ object Ocelot {
         ignoreTrailingSlash {
           path("desktop") {
             get {
-              val model = Map(
-                "last_update" -> "2022-01-12",
-                "updated_by" -> "Fingercomp",
-                "commit_url" -> "https://google.com",
-                "commit" -> "412382389-4rwe9fu8adsfsadfasa"
-              )
-
-              val entity = HttpEntity(ContentTypes.`text/html(UTF-8)`, template.layout(templateSource, model))
-              complete(entity);
+              onComplete(
+              Http()
+                .singleRequest(HttpRequest(uri = s"https://gitlab.com/api/v4/projects/$OcelotProjId/jobs/")
+                .withHeaders(headers.RawHeader("PRIVATE-TOKEN", Settings.get.gitlabToken))).flatMap {
+                case HttpResponse(StatusCodes.OK, _, entity, _) => {
+                      Unmarshal(entity).to[String]
+                }
+                case _ => {
+                  Future.failed(new RuntimeException("Cannot parse json. Are you insane?"))
+                }
+              }) {
+                case Success(jsonText) => {
+                  val jsonAst = jsonText.parseJson
+                  val jsonValue = jsonAst.convertTo[List[GitlabJob]].head.commit
+                  val time = LocalDateTime.parse(jsonValue.authored_date, formaterInput)
+                  complete(renderTemplate(time.format(formatterOutput), jsonValue.author_name,
+                    jsonValue.short_id, jsonValue.web_url))
+                }
+                case _ => complete(renderTemplate())
+              }
             }
           }
         } ~
