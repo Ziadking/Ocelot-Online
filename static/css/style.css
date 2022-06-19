@@ -18,6 +18,10 @@ body {
     font-family: "unscii";
 }
 
+h1 {
+    text-shadow: 5px 5px 10px black;
+}
+
 h2 {
     font-weight: normal;
     margin: 0px;
@@ -41,19 +45,56 @@ li {
     color: white;
 }
 
+#background-video {
+    object-fit: cover;
+    min-height: 600px;
+    position: absolute;
+    width: 100%;
+    padding: 0;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.video-wrapper {
+    width: 100%;
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#header-title {
+    min-height: 400px;
+}
+
+#header-faq {
+    background:
+    /* top, transparent black, faked with gradient */
+    linear-gradient(rgba(0, 0, 0, 0.9),
+        rgba(0, 0, 0, 0.5)),
+    /* bottom, image */
+    url("/images/header.png");
+}
+
+table {
+    border: 3px solid white;
+    table-layout: fixed;
+    width: 100%;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid white;
+}
 
 header {
-    padding: 1em;
-    /* min-height: 400px; */
     position: relative;
-    background:
-        /* top, transparent black, faked with gradient */
-        linear-gradient(rgba(0, 0, 0, 0.9),
-            rgba(0, 0, 0, 0.5)),
-        /* bottom, image */
-        url("/images/header.png");
-    background-repeat: no-repeat;
-    background-size: cover;
+    overflow: hidden;
+    padding: 0;
 }
 
 
@@ -69,6 +110,10 @@ footer {
     color: rgb(110, 110, 110);
 }
 
+.codeblock {
+    background-color: rgb(54, 54, 54);
+    padding: 10px;
+}
 
 a {
     color: rgb(148, 54, 54);
@@ -81,9 +126,12 @@ a {
     transition: 1s;
 }
 
-a:hover {
+.download-executable-jar-for-free {
+    display: block;
+    background-color: rgb(148, 54, 54);
     color: white;
-    filter: drop-shadow(0, 0, 5, white);
+    padding: 10px;
+    text-decoration: none;
     -o-transition: 1s;
     -ms-transition: 1s;
     -moz-transition: 1s;
@@ -91,11 +139,23 @@ a:hover {
     transition: 1s;
 }
 
+.download-executable-jar-for-free:hover {
+    background-color: white; 
+    color: black;    
+    -moz-transition: 1s;
+    -webkit-transition: 1s;
+    transition: 1s;
+}
+
+a:hover {
+    color: white;     
+    -moz-transition: 1s;
+    -webkit-transition: 1s;
+    transition: 1s;
+}
+
 .heading-title h2::after {
-    content: "";
-    width: 10px;
-    height: 20px;
-    background: white;
+    content: "┃";
     display: inline-block;
     animation: cursor-blink 1s steps(2) infinite;
 }

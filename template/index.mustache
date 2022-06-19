@@ -7,23 +7,31 @@
   <link rel="stylesheet" href="/css/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="utf-8">
+  <script src="/js/lazyload.js"></script>
 </head>
 
 <body>
-  <header>
-    <div class="heading-title">
-      <ul>
-        <li>[ home ]</li>
-        <li><a href="/faq.html">faq</a></li>
-        <li><a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop">gitlab</a></li>
-      </ul>
-      <img src="/images/ocelot.svg" style="vertical-align: middle; width: 256px; height: 256px;">
-      <h1>[ ocelot.desktop ]</h1>
-      <h2>An advanced OpenComputers emulator</h2>
-      <h3>
-        <a href="https://cc-ru.gitlab.io/ocelot/ocelot-desktop/ocelot.jar">[ Download the latest developer build ]</a>
-      </h3>
-      <p>Last updated on {{ last_update }} by {{ updated_by }} <a href={{ commit_url }}>({{ commit }})</a></p>
+  <header id="header-title">
+    <div class="video-wrapper">
+      <video id="background-video" autoplay muted loop playsinline>
+        <source src="/images/header.webm" type="video/webm" class="lazy">
+      </video>
+      <div class="heading-title">
+        <ul>
+          <li>[ home ]</li>
+          <li><a href="/faq.html">faq</a></li>
+          <li><a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop">gitlab</a></li>
+        </ul>
+        <img src="/images/ocelot.svg" style="vertical-align: middle; width: 256px; height: 256px;">
+        <h1>[ ocelot.desktop ]</h1>
+        <h2>An advanced OpenComputers emulator</h2>
+        <h3>
+          <a class="download-executable-jar-for-free" href="https://cc-ru.gitlab.io/ocelot/ocelot-desktop/ocelot.jar">
+          ⬇ Download (development build)
+          </a>
+        </h3>
+        <p>Last updated on {{ last_update }} by {{ updated_by }} <a href={{ commit_url }}>({{ commit }})</a></p>
+      </div>
     </div>
   </header>
   <div class="content">
@@ -51,7 +59,7 @@
       <hr>
       <div class="feature-content">
         <div class="feature-img">
-          <img src="/images/features/user_interface.gif" style="border-radius: 10px;">
+          <video autoplay loop=true src="/images/features/user_interface.webm" style="border-radius: 10px;">
         </div>
         <p>A slick interface allows you to customize the setup to your liking.
           Add more computers, organize the connections between components, build complex
@@ -96,7 +104,7 @@
       <hr>
       <div class="feature-content">
         <div class="feature-img">
-          <img src="/images/features/cool_features.gif" style="border-radius: 10px;">
+          <video autoplay loop=true src="/images/features/cool_features.webm" style="border-radius: 10px;">
         </div>
         <p>A few smaller features. Like: system load indicator, resizeable screens, labeled windows</p>
       </div>
