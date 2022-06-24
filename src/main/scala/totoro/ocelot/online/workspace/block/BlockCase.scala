@@ -21,25 +21,25 @@ class BlockCase extends FoldableBlock {
 
     computer = new Case(tier)
 
-    computer.add(new CPU(Tier.Three))
-    computer.add(new GraphicsCard(Tier.Three))
-    computer.add(new Memory(Tier.Six))
-    computer.add(new Memory(Tier.Six))
+    computer.inventory(0) = new CPU(Tier.Three)
+    computer.inventory(1) = new GraphicsCard(Tier.Three)
+    computer.inventory(2) = new Memory(Tier.Six)
+    computer.inventory(3) = new Memory(Tier.Six)
 
     val hdd = new HDDManaged(Tier.Three)
     hdd.workspace = workspace
     hdd.node // TODO: refactor WorkspaceAware system
-    computer.add(hdd)
+    computer.inventory(4) = hdd
 
     val unmanagedHdd = new HDDUnmanaged(Tier.Three, "unmanaged")
     unmanagedHdd.setAddress("734e0f26-5819-45e5-9069-a91fa5116b5f")
-    computer.add(unmanagedHdd)
+    computer.inventory(5) = unmanagedHdd
 
-    computer.add(new InternetCard())
-    computer.add(new Redstone.Tier2())
+    computer.inventory(6) = new InternetCard()
+    computer.inventory(7) = new Redstone.Tier2()
 
-    computer.add(Loot.AdvLoaderEEPROM.create())
-    computer.add(Loot.OpenOsFloppy.create())
+    computer.inventory(8) = Loot.AdvLoaderEEPROM.create()
+    computer.inventory(9) = Loot.OpenOsFloppy.create()
   }
 
   override def entity: Entity = computer
