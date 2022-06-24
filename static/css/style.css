@@ -11,6 +11,57 @@
     }
 }
 
+@-webkit-keyframes animate-svg-stroke-1 {
+    0% {
+        stroke-dashoffset: 718.1165771484375px;
+        stroke-dasharray: 718.1165771484375px;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        stroke-dasharray: 718.1165771484375px;
+    }
+}
+
+@keyframes animate-svg-stroke-1 {
+    0% {
+        stroke-dashoffset: 718.1165771484375px;
+        stroke-dasharray: 718.1165771484375px;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        stroke-dasharray: 718.1165771484375px;
+    }
+}
+
+@-webkit-keyframes animate-svg-fill-1 {
+    0% {
+        fill: transparent;
+    }
+
+    100% {
+        fill: rgb(0, 0, 0);
+    }
+}
+
+@keyframes animate-svg-fill-1 {
+    0% {
+        fill: transparent;
+    }
+
+    100% {
+        fill: rgb(0, 0, 0);
+    }
+}
+
+.svg-elem-1 {
+    -webkit-animation: animate-svg-stroke-1 10s cubic-bezier(0.47, 0, 0.745, 0.715) 0s both,
+        animate-svg-fill-1 8s cubic-bezier(0.47, 0, 0.745, 0.715) 0.8s both;
+    animation: animate-svg-stroke-1 10s cubic-bezier(0.47, 0, 0.745, 0.715) 0s both,
+        animate-svg-fill-1 8s cubic-bezier(0.47, 0, 0.745, 0.715) 0.8s both;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -73,11 +124,11 @@ li {
 
 #header-faq {
     background:
-    /* top, transparent black, faked with gradient */
-    linear-gradient(rgba(0, 0, 0, 0.9),
-        rgba(0, 0, 0, 0.5)),
-    /* bottom, image */
-    url("/images/header.png");
+        /* top, transparent black, faked with gradient */
+        linear-gradient(rgba(0, 0, 0, 0.9),
+            rgba(0, 0, 0, 0.5)),
+        /* bottom, image */
+        url("/images/header.png");
 }
 
 table {
@@ -140,15 +191,15 @@ a {
 }
 
 .download-executable-jar-for-free:hover {
-    background-color: white; 
-    color: black;    
+    background-color: white;
+    color: black;
     -moz-transition: 1s;
     -webkit-transition: 1s;
     transition: 1s;
 }
 
 a:hover {
-    color: white;     
+    color: white;
     -moz-transition: 1s;
     -webkit-transition: 1s;
     transition: 1s;
