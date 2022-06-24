@@ -1,8 +1,12 @@
+## 0.4.1
+* Added a link to Ocelot Desktop page from the landing
+* Updated the dependencies & Ocelot Brain version
+
 ## 0.4.0
 * Added: [Ocelot Desktop](https://gitlab.com/cc-ru/ocelot/ocelot-desktop) frontpage
 
 ## 0.3.11
-* Fix: allow real numbers in mouse wheel event delta
+* Fix: allowed real numbers in mouse wheel event delta
 
 ## 0.3.10
 * Security fix: official patch for the "too long without yielding" issue
