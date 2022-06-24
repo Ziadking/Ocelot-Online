@@ -10,6 +10,8 @@ import totoro.ocelot.brain.util.{PackedColor, Tier}
 import totoro.ocelot.brain.workspace.{Workspace => BSpace}
 import totoro.ocelot.brain.{Ocelot => Brain}
 
+import java.nio.file.Paths
+
 class Workspace {
   private val defaultUser: User = User("noname")
   private var workspace: BSpace = _
@@ -22,26 +24,26 @@ class Workspace {
     Brain.initialize()
 
     // setup simple workspace with a computer
-    workspace = new BSpace()
+    workspace = new BSpace(Paths.get(Settings.get.savePath))
 
     computer = workspace.add(new Case(Tier.Four))
 
-    computer.add(new CPU(Tier.Three))
-    computer.add(new GraphicsCard(Tier.Three))
-    computer.add(new Memory(Tier.Six))
-    computer.add(new Memory(Tier.Six))
+    computer.inventory(0) = new CPU(Tier.Three)
+    computer.inventory(1) = new GraphicsCard(Tier.Three)
+    computer.inventory(2) = new Memory(Tier.Six)
+    computer.inventory(3) = new Memory(Tier.Six)
 
-    computer.add(new HDDManaged("b59b07db-846a-4f23-ba02-420c916f294d", Tier.Three, "hdd"))
+    computer.inventory(4) = new HDDManaged(Tier.Three, "b59b07db-846a-4f23-ba02-420c916f294d")
 
     val unmanagedHdd = new HDDUnmanaged(Tier.Three, "unmanaged")
     unmanagedHdd.setAddress("734e0f26-5819-45e5-9069-a91fa5116b5f")
-    computer.add(unmanagedHdd)
+    computer.inventory(5) = unmanagedHdd
 
-    computer.add(new InternetCard())
-    computer.add(new Redstone.Tier2())
+    computer.inventory(6) = new InternetCard()
+    computer.inventory(7) = new Redstone.Tier2()
 
-    computer.add(Loot.AdvLoaderEEPROM.create())
-    computer.add(Loot.OpenOsFloppy.create())
+    computer.inventory(8) = Loot.AdvLoaderEEPROM.create()
+    computer.inventory(9) = Loot.OpenOsFloppy.create()
 
     screen = workspace.add(new Screen(Tier.Two))
     computer.connect(screen)
@@ -190,5 +192,9 @@ class Workspace {
 
     // send
     producer offer TextMessage(state.result())
+  }
+
+  def shutdown(): Unit = {
+    Brain.shutdown()
   }
 }

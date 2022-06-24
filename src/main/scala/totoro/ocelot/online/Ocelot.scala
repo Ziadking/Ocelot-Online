@@ -214,5 +214,6 @@ object Ocelot {
       .onComplete(_ => system.terminate())
 
     workspace.turnOff()
+    workspace.shutdown()
   }
 }
