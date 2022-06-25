@@ -5,22 +5,92 @@
     -webkit-font-smoothing: none;
 }
 
+@font-face {
+    font-family: "Alegreya Sans";
+    src: url("/fonts/alegreya-sans.woff2");
+}
+
+@font-face {
+    font-family: "Homenaje";
+    src: url("/fonts/homenaje.woff");
+}
+
 @keyframes cursor-blink {
     0% {
         opacity: 0;
     }
 }
 
+@-webkit-keyframes animate-svg-stroke-1 {
+    0% {
+        stroke-dashoffset: 718.1165771484375px;
+        stroke-dasharray: 718.1165771484375px;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        stroke-dasharray: 718.1165771484375px;
+    }
+}
+
+@keyframes animate-svg-stroke-1 {
+    0% {
+        stroke-dashoffset: 718.1165771484375px;
+        stroke-dasharray: 718.1165771484375px;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        stroke-dasharray: 718.1165771484375px;
+    }
+}
+
+@-webkit-keyframes animate-svg-fill-1 {
+    0% {
+        fill: transparent;
+    }
+
+    100% {
+        fill: rgb(0, 0, 0);
+    }
+}
+
+@keyframes animate-svg-fill-1 {
+    0% {
+        fill: transparent;
+    }
+
+    100% {
+        fill: rgb(0, 0, 0);
+    }
+}
+
+.svg-elem-1 {
+    -webkit-animation: animate-svg-stroke-1 10s cubic-bezier(0.47, 0, 0.745, 0.715) 0s both,
+        animate-svg-fill-1 8s cubic-bezier(0.47, 0, 0.745, 0.715) 0.8s both;
+    animation: animate-svg-stroke-1 10s cubic-bezier(0.47, 0, 0.745, 0.715) 0s both,
+        animate-svg-fill-1 8s cubic-bezier(0.47, 0, 0.745, 0.715) 0.8s both;
+}
+
 body {
     margin: 0;
     padding: 0;
     background: url("/images/pcb.png");
-    font-family: "unscii";
+    font-family: 'Alegreya Sans', 'sans-serif';
+}
+
+p {
+    line-height: 1.35em;
+    font-size: 17px;
+}
+
+h1 {
+    font-family: 'unscii';
 }
 
 h2 {
-    font-weight: normal;
     margin: 0px;
+    font-family: 'Homenaje';
 }
 
 h3 {
@@ -34,6 +104,13 @@ hr {
 
 ul {
     list-style-type: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 800;
+    font-size: 17px;
+}
+
+ul>* {
+    margin: 0 5px;
 }
 
 li {
@@ -41,19 +118,63 @@ li {
     color: white;
 }
 
+#background-video {
+    object-fit: cover;
+    min-height: 600px;
+    position: absolute;
+    width: 100%;
+    padding: 0;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
 
-header {
-    padding: 1em;
-    /* min-height: 400px; */
+.video-wrapper {
+    width: 100%;
+    min-height: 400px;
     position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#header-title {
+    min-height: 400px;
+}
+
+#header-faq {
     background:
         /* top, transparent black, faked with gradient */
         linear-gradient(rgba(0, 0, 0, 0.9),
             rgba(0, 0, 0, 0.5)),
         /* bottom, image */
         url("/images/header.png");
-    background-repeat: no-repeat;
-    background-size: cover;
+}
+
+table {
+    table-layout: fixed;
+    width: 50%;
+    border-spacing: 10px 10px;
+}
+
+th, td {
+    background-color: rgba(46, 46, 46, 0.18);
+    padding: 10px;
+    border-radius: 2px;
+}
+
+.header {
+    background-color: #ffffff17;
+}
+
+header {
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0));
 }
 
 
@@ -69,6 +190,10 @@ footer {
     color: rgb(110, 110, 110);
 }
 
+.codeblock {
+    background-color: rgb(46, 46, 46);
+    padding: 10px;
+}
 
 a {
     color: rgb(148, 54, 54);
@@ -81,9 +206,12 @@ a {
     transition: 1s;
 }
 
-a:hover {
+.download-executable-jar-for-free {
+    display: block;
+    background-color: rgb(148, 54, 54);
     color: white;
-    filter: drop-shadow(0, 0, 5, white);
+    padding: 10px;
+    text-decoration: none;
     -o-transition: 1s;
     -ms-transition: 1s;
     -moz-transition: 1s;
@@ -91,13 +219,33 @@ a:hover {
     transition: 1s;
 }
 
+.download-executable-jar-for-free:hover {
+    background-color: white;
+    color: black;
+    -moz-transition: 1s;
+    -webkit-transition: 1s;
+    transition: 1s;
+}
+
+a:hover {
+    color: white;
+    -moz-transition: 1s;
+    -webkit-transition: 1s;
+    transition: 1s;
+}
+
 .heading-title h2::after {
-    content: "";
-    width: 10px;
-    height: 20px;
-    background: white;
+    content: "┃";
     display: inline-block;
     animation: cursor-blink 1s steps(2) infinite;
+}
+
+.heading-title h2 {
+    font-family: 'unscii';
+}
+
+.heading-title ul {
+    padding: 20px;
 }
 
 
@@ -116,6 +264,7 @@ a:hover {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-top: 5px;
 }
 
 .feature-img {
@@ -125,6 +274,11 @@ a:hover {
 .feature-content {
     display: flex;
     flex-direction: row;
+    font-family: 'Alegreya Sans', 'sans-serif';
+}
+
+.feature-content p {
+    margin: 0;
 }
 
 .feature {
@@ -132,15 +286,17 @@ a:hover {
     color: White;
     width: 500px;
     height: 20%;
-    padding: 20px;
+    padding: 25px;
     margin: 5px;
     border-radius: 5px;
+    font-family: 'Homenaje';
 }
 
 kbd {
     border-radius: 3px;
     padding: 1px 2px 0;
     border: 1px solid white;
+    font-family: 'Alegreya Sans', 'sans-serif';
 }
 
 .faq {

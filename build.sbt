@@ -1,9 +1,9 @@
 name := "ocelot-online"
 
 // do not forget to change version in Ocelot.scala
-version := "0.4.1"
+version := "0.5.0"
 
-scalaVersion := "2.13.8"
+scalaVersion := "2.13.1"
 
 lazy val root = project.in(file("."))
   .dependsOn(brain % "compile->compile")
@@ -12,9 +12,9 @@ lazy val root = project.in(file("."))
 lazy val brain = ProjectRef(file("lib/ocelot-brain"), "ocelot-brain")
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-http"   % "10.2.9",
-  "com.typesafe.akka" %% "akka-stream" % "2.6.19",
-  "com.typesafe" % "config" % "1.4.2",
+  "com.typesafe.akka" %% "akka-http"   % "10.1.11",
+  "com.typesafe.akka" %% "akka-stream" % "2.6.3",
+  "com.typesafe" % "config" % "1.4.0",
   "org.scalatra.scalate" %% "scalate-core" % "1.9.8",
   "io.spray" %%  "spray-json" % "1.3.6"
 )

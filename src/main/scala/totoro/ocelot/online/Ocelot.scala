@@ -10,13 +10,12 @@ import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.scaladsl.{BroadcastHub, Flow, Keep, Sink, Source}
-import akka.stream.OverflowStrategy
+import akka.stream.{ActorMaterializer, OverflowStrategy}
 import org.apache.logging.log4j.{LogManager, Logger}
 import org.fusesource.scalate.TemplateEngine
 import spray.json._
 import DefaultJsonProtocol._
 import totoro.ocelot.brain.user.User
-
 import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.io.StdIn
 import scala.language.postfixOps
@@ -26,7 +25,7 @@ import java.time.format.DateTimeFormatter
 object Ocelot {
   private val Name = "ocelot.online"
   // do not forget to change version in build.sbt
-  private val Version = "0.4.1"
+  private val Version = "0.5.0"
   private val OcelotProjId = 9941848
   var logger: Option[Logger] = None
   def log: Logger = logger.getOrElse(LogManager.getLogger(Name))
@@ -34,12 +33,13 @@ object Ocelot {
   def main(args: Array[String]): Unit = {
     // init
     implicit val system: ActorSystem = ActorSystem("ocelot-system")
+    implicit val materializer: ActorMaterializer = ActorMaterializer()
     // needed for the future flatMap/onComplete in the end
     implicit val executionContext: ExecutionContextExecutor = system.dispatcher
     val templateSource = new File("template/index.mustache").getCanonicalPath
     val template = new TemplateEngine()
     val formatterOutput = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val formatterInput = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    val formaterInput = DateTimeFormatter.ISO_OFFSET_DATE_TIME
 
     Settings.load(new File("ocelot.conf"))
 
@@ -175,17 +175,20 @@ object Ocelot {
               Http()
                 .singleRequest(HttpRequest(uri = s"https://gitlab.com/api/v4/projects/$OcelotProjId/jobs/")
                 .withHeaders(headers.RawHeader("PRIVATE-TOKEN", Settings.get.gitlabToken))).flatMap {
-                case HttpResponse(StatusCodes.OK, _, entity, _) =>
-                  Unmarshal(entity).to[String]
-                case _ =>
+                case HttpResponse(StatusCodes.OK, _, entity, _) => {
+                      Unmarshal(entity).to[String]
+                }
+                case _ => {
                   Future.failed(new RuntimeException("Cannot parse json. Are you insane?"))
+                }
               }) {
-                case Success(jsonText) =>
+                case Success(jsonText) => {
                   val jsonAst = jsonText.parseJson
                   val jsonValue = jsonAst.convertTo[List[GitlabJob]].head.commit
-                  val time = LocalDateTime.parse(jsonValue.authored_date, formatterInput)
+                  val time = LocalDateTime.parse(jsonValue.authored_date, formaterInput)
                   complete(renderTemplate(time.format(formatterOutput), jsonValue.author_name,
                     jsonValue.short_id, jsonValue.web_url))
+                }
                 case _ => complete(renderTemplate())
               }
             }
@@ -211,6 +214,5 @@ object Ocelot {
       .onComplete(_ => system.terminate())
 
     workspace.turnOff()
-    workspace.shutdown()
   }
 }
