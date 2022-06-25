@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Ocelot Desktop | FAQ</title>
     <link rel="shortcut icon" type="image/png" href="/favicon.png">
     <link rel="stylesheet" href="/css/style.css">
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
@@ -19,6 +17,7 @@
             <li><a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop">gitlab</a></li>
         </ul>
     </header>
+
     <div class="faq">
         <h2>FAQ - Frequently Asking Questions</h2>
         <p>If you have a question check out FAQ first</p>
@@ -33,55 +32,55 @@
             A fine question, indeed; perhaps, a list of features will persuade you.</p>
         <table>
             <tr>
-                <td>Feature</td>
-                <td>Ocelot</td>
-                <td>OCEmu</td>
-                <td>OCVM</td>
+                <td class="header">Feature</td>
+                <td class="header">Ocelot</td>
+                <td class="header">OCEmu</td>
+                <td class="header">OCVM</td>
             </tr>
             <tr>
-                <td>Customizable setups</td>
+                <td class="header">Customizable setups</td>
                 <td>✔</td>
                 <td>Partial</td>
                 <td>❌</td>
             </tr>
             <tr>
-                <td>Configuration graphical interface</td>
+                <td class="header">Configuration graphical interface</td>
                 <td>✔</td>
                 <td>❌</td>
                 <td>❌</td>
             </tr>
             <tr>
-                <td>Workspaces</td>
+                <td class="header">Workspaces</td>
                 <td>✔</td>
                 <td>❌</td>
                 <td>❌</td>
             </tr>
             <tr>
-                <td>Saving full state of emulated computers</td>
+                <td class="header">Saving full state of emulated computers</td>
                 <td>✔</td>
                 <td>Filesystem only</td>
                 <td>Filesystem only</td>
             </tr>
             <tr>
-                <td>Emulate memory constraints</td>
+                <td class="header">Emulate memory constraints</td>
                 <td>✔</td>
                 <td>✔</td>
                 <td>❌</td>
             </tr>
             <tr>
-                <td>Preserving original OC hardware timings (CPU, GPU)</td>
+                <td class="header">Preserving original OC hardware timings (CPU, GPU)</td>
                 <td>✔</td>
                 <td>❌</td>
                 <td>❌</td>
             </tr>
             <tr>
-                <td>Configurable emulation speed</td>
+                <td class="header">Configurable emulation speed</td>
                 <td>✔</td>
                 <td>❌</td>
                 <td>❌</td>
             </tr>
             <tr>
-                <td>Configurable CPU architectures</td>
+                <td class="header">Configurable CPU architectures</td>
                 <td>✔</td>
                 <td>✔</td>
                 <td>✔</td>
@@ -90,73 +89,73 @@
         <h3>Component support:</h3>
         <table>
             <tr>
-                <td>Component</td>
-                <td>Ocelot</td>
-                <td>OCEmu</td>
-                <td>OCVM</td>
+                <td class="header">Component</td>
+                <td class="header">Ocelot</td>
+                <td class="header">OCEmu</td>
+                <td class="header">OCVM</td>
             </tr>
             <tr>
-                <td>GPU (All 3 tiers)</td>
+                <td class="header">GPU (All 3 tiers)</td>
                 <td>✔</td>
                 <td>T3 only</td>
                 <td>T3 only</td>
             </tr>
             <tr>
-                <td>CPU (All 3 tiers)</td>
+                <td class="header">CPU (All 3 tiers)</td>
                 <td>✔</td>
                 <td>Partial</td>
                 <td>Partial</td>
             </tr>
             <tr>
-                <td>APU</td>
+                <td class="header">APU</td>
                 <td>✔</td>
                 <td>❌</td>
                 <td>❌</td>
             </tr>
             <tr>
-                <td>Network card</td>
+                <td class="header">Network card</td>
                 <td>✔</td>
                 <td>✔</td>
                 <td>✔</td>
             </tr>
             <tr>
-                <td>Wireless network card</td>
+                <td class="header">Wireless network card</td>
                 <td>✔</td>
                 <td>✔</td>
                 <td>✔</td>
             </tr>
             <tr>
-                <td>Redstone (All tiers)</td>
+                <td class="header">Redstone (All tiers)</td>
                 <td>✔</td>
                 <td>❌</td>
                 <td>❌</td>
             </tr>
             <tr>
-                <td>Data cards (All 3 tiers)</td>
+                <td class="header">Data cards (All 3 tiers)</td>
                 <td>✔</td>
                 <td>❌</td>
                 <td>T1 Only</td>
             </tr>
             <tr>
-                <td>Hard disks</td>
+                <td class="header">Hard disks</td>
                 <td>✔</td>
                 <td>✔</td>
                 <td>✔</td>
             </tr>
             <tr>
-                <td>Internet card</td>
+                <td class="header">Internet card</td>
                 <td>✔</td>
                 <td>✔</td>
                 <td>✔</td>
             </tr>
             <tr>
-                <td>Floppy disks</td>
+                <td class="header">Floppy disks</td>
                 <td>✔</td>
                 <td>✔</td>
                 <td>✔</td>
             </tr>
             <tr>
-                <td>Relay</td>
+                <td class="header">Relay</td>
                 <td>✔</td>
                 <td>❌</td>
                 <td>❌</td>
@@ -167,7 +166,8 @@
     <div class="faq">
         <h2>I found a bug! How I can report it?</h2>
         <hr>
-        <p>There was a <a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop/-/issues">GitLab issue tracker</a>. Also
+        <p>Yes! You can report bugs on the <a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop/-/issues">GitLab
+                issue tracker</a>. Also
             you can report directly to emulator developers at IRC #cc.ru@irc.esper.net</p>
     </div>
 
@@ -187,19 +187,10 @@
     <div class="faq">
         <h2>How to change screen scaling?</h2>
         <hr>
-        <p>Just drag drag the bottom-right corner of the window to resize screen scaling. Screen are resized by steps
+        <p>Just drag drag the bottom-right corner of the window to resize screen scale. Screen are resized by steps
             like: 1/1 (100%);
             1/2 (50%); 1/4 (25%); ... If you want to <strong>SCALE</strong> above 100% - you need to press
             <kbd>Shift</kbd> key while dragging
-        </p>
-    </div>
-
-    <div class="faq">
-        <h2>Computers won't start (beep...beep, red blinking diode)</h2>
-        <hr>
-        <p>Probably, you running under Windows™ operating system and run ocelot from search results bar in
-            <code>explorer.exe</code> or directly from browser's download manager. To resolve this issue run ocelot
-            directly within directory.
         </p>
     </div>
 
@@ -240,5 +231,4 @@
         <p>Powered by the forest spirit. &copy 2022 The Ocelot Development Team.</p>
     </footer>
 </body>
-
 </html>

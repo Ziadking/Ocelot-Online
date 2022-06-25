@@ -5,6 +5,16 @@
     -webkit-font-smoothing: none;
 }
 
+@font-face {
+    font-family: "Alegreya Sans";
+    src: url("/fonts/alegreya-sans.woff2");
+}
+
+@font-face {
+    font-family: "Homenaje";
+    src: url("/fonts/homenaje.woff");
+}
+
 @keyframes cursor-blink {
     0% {
         opacity: 0;
@@ -66,16 +76,21 @@ body {
     margin: 0;
     padding: 0;
     background: url("/images/pcb.png");
-    font-family: "unscii";
+    font-family: 'Alegreya Sans', 'sans-serif';
+}
+
+p {
+    line-height: 1.35em;
+    font-size: 17px;
 }
 
 h1 {
-    text-shadow: 5px 5px 10px black;
+    font-family: 'unscii';
 }
 
 h2 {
-    font-weight: normal;
     margin: 0px;
+    font-family: 'Homenaje';
 }
 
 h3 {
@@ -89,6 +104,13 @@ hr {
 
 ul {
     list-style-type: none;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 800;
+    font-size: 17px;
+}
+
+ul>* {
+    margin: 0 5px;
 }
 
 li {
@@ -132,20 +154,27 @@ li {
 }
 
 table {
-    border: 3px solid white;
     table-layout: fixed;
-    width: 100%;
+    width: 50%;
+    border-spacing: 10px 10px;
 }
 
 th, td {
+    background-color: rgba(46, 46, 46, 0.18);
     padding: 10px;
-    border: 1px solid white;
+    border-radius: 2px;
+}
+
+.header {
+    background-color: #ffffff17;
 }
 
 header {
     position: relative;
     overflow: hidden;
     padding: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0));
 }
 
 
@@ -162,7 +191,7 @@ footer {
 }
 
 .codeblock {
-    background-color: rgb(54, 54, 54);
+    background-color: rgb(46, 46, 46);
     padding: 10px;
 }
 
@@ -211,6 +240,14 @@ a:hover {
     animation: cursor-blink 1s steps(2) infinite;
 }
 
+.heading-title h2 {
+    font-family: 'unscii';
+}
+
+.heading-title ul {
+    padding: 20px;
+}
+
 
 .heading-title {
     color: White;
@@ -227,6 +264,7 @@ a:hover {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-top: 5px;
 }
 
 .feature-img {
@@ -236,6 +274,11 @@ a:hover {
 .feature-content {
     display: flex;
     flex-direction: row;
+    font-family: 'Alegreya Sans', 'sans-serif';
+}
+
+.feature-content p {
+    margin: 0;
 }
 
 .feature {
@@ -243,15 +286,17 @@ a:hover {
     color: White;
     width: 500px;
     height: 20%;
-    padding: 20px;
+    padding: 25px;
     margin: 5px;
     border-radius: 5px;
+    font-family: 'Homenaje';
 }
 
 kbd {
     border-radius: 3px;
     padding: 1px 2px 0;
     border: 1px solid white;
+    font-family: 'Alegreya Sans', 'sans-serif';
 }
 
 .faq {
