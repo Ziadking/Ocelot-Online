@@ -1,3 +1,9 @@
+## 0.5.0
+* [Ocelot Desktop](https://gitlab.com/cc-ru/ocelot/ocelot-desktop): Added video background
+* [Ocelot Desktop](https://gitlab.com/cc-ru/ocelot/ocelot-desktop): Added SVG logo animation
+* [Ocelot Desktop](https://gitlab.com/cc-ru/ocelot/ocelot-desktop): Changed fonts
+* [Ocelot Desktop](https://gitlab.com/cc-ru/ocelot/ocelot-desktop): Slightly changed FAQ page
+
 ## 0.4.1
 * Added a link to Ocelot Desktop page from the landing
 * Updated the dependencies & Ocelot Brain version
