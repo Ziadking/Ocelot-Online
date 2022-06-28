@@ -320,4 +320,24 @@ kbd {
     .feature {
         width: auto;
     }
+    
+    .feature-content {
+        flex-direction: column;
+    }
+
+    table {
+        width: 100%;
+        border-spacing: 0px 0px;
+    }
+    
+    th, td {
+        padding: 4px;
+        border-radius: 0px;
+    }
+
+    .header {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
