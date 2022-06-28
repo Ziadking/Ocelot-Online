@@ -1,266 +1,273 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ocelot Desktop | FAQ</title>
-    <link rel="shortcut icon" type="image/png" href="/favicon.png">
-    <link rel="stylesheet" href="/css/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ocelot Desktop | FAQ</title>
+  <link rel="shortcut icon" type="image/png" href="/favicon.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
-    <header id="header-faq">
-        <ul>
-            <img src="/images/ocelot.svg" style="vertical-align: middle; width: 32px; height: 32px;">
-            <li>[ ocelot.desktop ]</li>
-            <li><a href="/desktop">home</a></li>
-            <li>[ faq ]</li>
-            <li><a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop">gitlab</a></li>
-        </ul>
-    </header>
+<header id="header-faq">
+  <ul>
+    <img src="/images/ocelot.svg" style="vertical-align: middle; width: 32px; height: 32px;">
+    <li>[ ocelot.desktop ]</li>
+    <li><a href="/desktop">home</a></li>
+    <li>[ faq ]</li>
+    <li><a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop">gitlab</a></li>
+  </ul>
+</header>
 
-    <div class="faq">
-        <h2>FAQ — Frequently Asked Questions</h2>
-        <p>A list of a few common questions and problems.</p>
-    </div>
+<div class="faq">
+  <h2>FAQ — Frequently Asked Questions</h2>
+  <p>A list of a few common questions and problems.</p>
+</div>
 
-    <div class="faq">
-        <h2>Why Ocelot Desktop?</h2>
-        <hr>
-        <p>Indeed, there is a plenty of other emulators.
-            The tables below demonstrate how Ocelot Desktop fares against them.
-            (If you spot a mistake here, please tell us!)</p>
-        <table>
-            <tr>
-                <td class="header">Feature</td>
-                <td class="header">Ocelot</td>
-                <td class="header">OCEmu</td>
-                <td class="header">OCVM</td>
-            </tr>
-            <tr>
-                <td class="header">Customizable setups</td>
-                <td>✔</td>
-                <td>Partial</td>
-                <td>❌</td>
-            </tr>
-            <tr>
-                <td class="header">GUI</td>
-                <td>✔</td>
-                <td>✔</td>
-                <td>❌</td>
-            </tr>
-            <tr>
-                <td class="header">Workspaces</td>
-                <td>✔</td>
-                <td>❌</td>
-                <td>❌</td>
-            </tr>
-            <tr>
-                <td class="header">Persistence</td>
-                <td>✔</td>
-                <td>Filesystem only</td>
-                <td>Filesystem only</td>
-            </tr>
-            <tr>
-                <td class="header">Constrained memory</td>
-                <td>✔</td>
-                <td>✔</td>
-                <td>❌</td>
-            </tr>
-            <tr>
-                <td class="header">Original OC timings (CPU, GPU)</td>
-                <td>✔</td>
-                <td>❌</td>
-                <td>❌</td>
-            </tr>
-            <tr>
-                <td class="header">Changeable emulation speed</td>
-                <td>✔</td>
-                <td>❌</td>
-                <td>❌</td>
-            </tr>
-            <tr>
-                <td class="header">Configurable CPU architectures</td>
-                <td>✔</td>
-                <td>✔</td>
-                <td>✔</td>
-            </tr>
-            <tr>
-                <td class="header">Networking</td>
-                <td>✔</td>
-                <td>✔</td>
-                <td>✔</td>
-            </tr>
-            <tr>
-                <td class="header">Non-graphical configuration (for automation)</td>
-                <td>❌</td>
-                <td>✔</td>
-                <td>✔</td>
-            </tr>
-            <tr>
-                <td class="header">Custom machine.lua</td>
-                <td>❌</td>
-                <td>✔</td>
-                <td>✔</td>
-            </tr>
-            <tr>
-                <td class="header">Emulator Lua API</td>
-                <td>❌</td>
-                <td>✔</td>
-                <td>✔</td>
-            </tr>
-            <tr>
-                <td class="header">GPU buffers (OC 1.7.6)</td>
-                <td>After the mod is updated</td>
-                <td>✔</td>
-                <td>❌</td>
-            </tr>
-        </table>
-        <h3>Component support:</h3>
-        <table>
-            <tr>
-                <td class="header">Component</td>
-                <td class="header">Ocelot</td>
-                <td class="header">OCEmu</td>
-                <td class="header">OCVM</td>
-            </tr>
-            <tr>
-                <td class="header">GPU (All 3 tiers)</td>
-                <td>✔</td>
-                <td>T3 only</td>
-                <td>T3 only</td>
-            </tr>
-            <tr>
-                <td class="header">CPU (All 3 tiers)</td>
-                <td>✔</td>
-                <td>Partial</td>
-                <td>Partial</td>
-            </tr>
-            <tr>
-                <td class="header">APU</td>
-                <td>✔</td>
-                <td>❌</td>
-                <td>❌</td>
-            </tr>
-            <tr>
-                <td class="header">Network card</td>
-                <td>✔</td>
-                <td>✔</td>
-                <td>✔</td>
-            </tr>
-            <tr>
-                <td class="header">Wireless network card</td>
-                <td>✔</td>
-                <td>✔</td>
-                <td>✔</td>
-            </tr>
-            <tr>
-                <td class="header">Redstone (All tiers)</td>
-                <td>✔</td>
-                <td>❌</td>
-                <td>❌</td>
-            </tr>
-            <tr>
-                <td class="header">Data cards (All 3 tiers)</td>
-                <td>✔</td>
-                <td>❌</td>
-                <td>T1 Only</td>
-            </tr>
-            <tr>
-                <td class="header">Hard disks</td>
-                <td>✔</td>
-                <td>✔</td>
-                <td>✔</td>
-            </tr>
-            <tr>
-                <td class="header">Internet card</td>
-                <td>✔</td>
-                <td>✔</td>
-                <td>✔</td>
-            </tr>
-            <tr>
-                <td class="header">Floppy disks</td>
-                <td>✔</td>
-                <td>✔</td>
-                <td>✔</td>
-            </tr>
-            <tr>
-                <td class="header">Relay</td>
-                <td>✔</td>
-                <td>❌</td>
-                <td>❌</td>
-            </tr>
-            <tr>
-                <td class="header">Sound card (Computronics)</td>
-                <td>❌</td>
-                <td>✔</td>
-                <td>❌</td>
-            </tr>
-        </table>
-    </div>
+<div class="faq">
+  <h2>Why Ocelot Desktop?</h2>
+  <hr>
+  <p>Indeed, there is a plenty of other emulators.
+    The tables below demonstrate how Ocelot Desktop fares against them.
+    (If you spot a mistake here, please tell us!)</p>
+  <table>
+    <tr>
+      <td class="header">Feature</td>
+      <td class="header">Ocelot</td>
+      <td class="header">OCEmu</td>
+      <td class="header">OCVM</td>
+    </tr>
+    <tr>
+      <td class="header">Customizable setups</td>
+      <td>✔</td>
+      <td>Partial</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td class="header">GUI</td>
+      <td>✔</td>
+      <td>✔</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td class="header">Workspaces</td>
+      <td>✔</td>
+      <td>❌</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td class="header">Persistence</td>
+      <td>✔</td>
+      <td>Filesystem only</td>
+      <td>Filesystem only</td>
+    </tr>
+    <tr>
+      <td class="header">Constrained memory</td>
+      <td>✔</td>
+      <td>✔</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td class="header">Original OC timings (CPU, GPU)</td>
+      <td>✔</td>
+      <td>❌</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td class="header">Changeable emulation speed</td>
+      <td>✔</td>
+      <td>❌</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td class="header">Configurable CPU architectures</td>
+      <td>✔</td>
+      <td>✔</td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td class="header">Networking</td>
+      <td>✔</td>
+      <td>✔</td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td class="header">Non-graphical configuration (for automation)</td>
+      <td>❌</td>
+      <td>✔</td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td class="header">Custom machine.lua</td>
+      <td>❌</td>
+      <td>✔</td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td class="header">Emulator Lua API</td>
+      <td>❌</td>
+      <td>✔</td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td class="header">GPU buffers (OC 1.7.6)</td>
+      <td>After the mod is updated</td>
+      <td>✔</td>
+      <td>❌</td>
+    </tr>
+  </table>
+  <h3>Component support:</h3>
+  <table>
+    <tr>
+      <td class="header">Component</td>
+      <td class="header">Ocelot</td>
+      <td class="header">OCEmu</td>
+      <td class="header">OCVM</td>
+    </tr>
+    <tr>
+      <td class="header">GPU (All 3 tiers)</td>
+      <td>✔</td>
+      <td>T3 only</td>
+      <td>T3 only</td>
+    </tr>
+    <tr>
+      <td class="header">CPU (All 3 tiers)</td>
+      <td>✔</td>
+      <td>Partial</td>
+      <td>Partial</td>
+    </tr>
+    <tr>
+      <td class="header">APU</td>
+      <td>✔</td>
+      <td>❌</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td class="header">Network card</td>
+      <td>✔</td>
+      <td>✔</td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td class="header">Wireless network card</td>
+      <td>✔</td>
+      <td>✔</td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td class="header">Redstone (All tiers)</td>
+      <td>✔</td>
+      <td>❌</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td class="header">Data cards (All 3 tiers)</td>
+      <td>✔</td>
+      <td>❌</td>
+      <td>T1 Only</td>
+    </tr>
+    <tr>
+      <td class="header">Hard disks</td>
+      <td>✔</td>
+      <td>✔</td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td class="header">Internet card</td>
+      <td>✔</td>
+      <td>✔</td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td class="header">Floppy disks</td>
+      <td>✔</td>
+      <td>✔</td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td class="header">Relay</td>
+      <td>✔</td>
+      <td>❌</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td class="header">Sound card (Computronics)</td>
+      <td>❌</td>
+      <td>✔</td>
+      <td>❌</td>
+    </tr>
+  </table>
+</div>
 
-    <div class="faq">
-        <h2>I found a bug! How I can report it?</h2>
-        <hr>
-        <p>Please create an issue on <a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop/-/issues">our issue tracker</a>.
-            Or just tell us on IRC: #cc.ru at irc.esper.net.</p>
-    </div>
+<div class="faq">
+  <h2>I found a bug! How I can report it?</h2>
+  <hr>
+  <p>Please create an issue on <a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop/-/issues">our issue tracker</a>.
+    Or just tell us on IRC: #cc.ru at irc.esper.net.</p>
+</div>
 
-    <div class="faq">
-        <h2>What are the emulator's hotkeys?</h2>
-        <hr>
-        <p>The help bar at the bottom shows actions you can perform on the hovered element.</p>
-        <img class="faq-img" src="/images/faq/check-the-bottom.png">
-        <p>In addition, there are a few "hidden" hotkeys:</p>
-        <p><kbd>F1</kbd> Toggle a UI layout debug view</p>
-        <p><kbd>F2</kbd> Toggle a FPS counter</p>
-        <p><kbd>F3</kbd> Reload the workspace</p>
-        <p><kbd>F4</kbd> Show a profiler window</p>
-    </div>
+<div class="faq">
+  <h2>What are the emulator's hotkeys?</h2>
+  <hr>
+  <p>The help bar at the bottom shows actions you can perform on the hovered element.</p>
+  <img class="faq-img" src="/images/faq/check-the-bottom.png">
+  <p>In addition, there are a few "hidden" hotkeys:</p>
+  <p><kbd>F1</kbd> Toggle a UI layout debug view</p>
+  <p><kbd>F2</kbd> Toggle a FPS counter</p>
+  <p><kbd>F3</kbd> Reload the workspace</p>
+  <p><kbd>F4</kbd> Show a profiler window</p>
+</div>
 
-    <div class="faq">
-        <h2>How do I resize a screen window?</h2>
-        <hr>
-        <p>Just drag the bottom-right corner of the window.
-            It will be scaled in discrete steps: 1:1 (100%); 1:2 (50%); 1:4 (25%)...
-            To enlarge the window beyond 1:1, press <kbd>Shift</kbd> while dragging.
-        </p>
-    </div>
+<div class="faq">
+  <h2>How do I resize a screen window?</h2>
+  <hr>
+  <p>Just drag the bottom-right corner of the window.
+    It will be scaled in discrete steps: 1:1 (100%); 1:2 (50%); 1:4 (25%)...
+    To enlarge the window beyond 1:1, press <kbd>Shift</kbd> while dragging.
+  </p>
+</div>
 
-    <div class="faq">
-        <h2>I get a weird error saying something about an inconsistency detected by ld.so</h2>
-        <hr>
-        <div class="codeblock">
-            <code>
-            $ java -jar ocelot.jar<br>
-            12:52:23.759 [main] INFO  ocelot.desktop.util.Ticker - Setting tick interval to 50000.0 us (20.0 s^-1)<br>
-            12:52:23.798 [main] INFO  ocelot.desktop.OcelotDesktop$ - Starting up Ocelot Desktop<br>
-            12:52:23.800 [main] INFO  totoro.ocelot.brain.Ocelot$ - Brain initialization...<br>
-            12:52:23.800 [main] INFO  totoro.ocelot.brain.Ocelot$ - Version: 0.6.8<br>
-            12:52:23.800 [main] INFO  totoro.ocelot.brain.Ocelot$ - Loading configuration...<br>
-            12:52:23.991 [main] INFO  totoro.ocelot.brain.Ocelot$ - Registering available machine architectures...<br>
-            12:52:24.080 [main] INFO  totoro.ocelot.brain.Ocelot$ - Found a compatible native library: 'Ocelot-0.6.8-lua52-native.64.so'.<br>
-            12:52:24.120 [main] INFO  totoro.ocelot.brain.Ocelot$ - Found a compatible native library: 'Ocelot-0.6.8-lua53-native.64.so'.<br>
-            12:52:24.121 [main] INFO  totoro.ocelot.brain.Ocelot$ - Registering loot (floppies and EEPROMs with standard OpenComputers software)...<br>
-            12:52:24.125 [main] INFO  totoro.ocelot.brain.Ocelot$ - Registering entity constructors (for persistence purposes)...<br>
-            12:52:24.149 [main] INFO  totoro.ocelot.brain.Ocelot$ - Initializing unicode wcwidth.<br>
-            12:52:24.162 [main] INFO  totoro.ocelot.brain.Ocelot$ - Initializing font glyph widths.<br>
-            12:52:24.190 [main] WARN  totoro.ocelot.brain.Ocelot$ - Invalid glyph char code detected in font.hex. Expected 0<= charCode <10000, got: 1D300<br>
-            12:52:24.190 [main] WARN  totoro.ocelot.brain.Ocelot$ - 87 total invalid glyph char codes detected in font.hex<br>
-            12:52:24.190 [main] INFO  totoro.ocelot.brain.Ocelot$ - glyph width ready.<br>
-            12:52:24.196 [main] INFO  totoro.ocelot.brain.Ocelot$ - Initialization finished.<br>
-            12:52:24.209 [main] INFO  ocelot.desktop.Settings$ - Loaded Ocelot Desktop configuration from: /home/user/.config/ocelot/ocelot.conf<br>
-            12:52:24.210 [main] INFO  ocelot.desktop.ColorScheme$ - Loading color scheme<br>
-            12:52:24.224 [main] INFO  ocelot.desktop.ColorScheme$ - Loaded 66 colors<br>
-            12:52:24.280 [main] INFO  ocelot.desktop.util.Ticker - Setting tick interval to 50000.0 us (20.0 s^-1)<br>
-            12:52:24.281 [main] INFO  ocelot.desktop.util.Ticker - Setting tick interval to 16.666666 us (60000.004 s^-1)<br>
-            Inconsistency detected by ld.so: dl-lookup.c: 106: check_match: Assertion `version->filename == NULL || ! _dl_name_match_p (version->filename, map)' failed!<br>
-        </code>
-        </div>
-        <p>That's a known problem with our dependency, LWJGL2, on Java 9 and newer.
-            As a workaround, launch Ocelot Desktop on Java 8.</p>
-    </div>
-    <footer>
-        <p>Blessed by the forest spirit. &copy 2022 The Ocelot Development Team.</p>
-    </footer>
+<div class="faq">
+  <h2>I get a weird error saying something about an inconsistency detected by ld.so</h2>
+  <hr>
+  <div class="codeblock">
+    <code>
+      $ java -jar ocelot.jar<br>
+      12:52:23.759 [main] INFO ocelot.desktop.util.Ticker - Setting tick interval to 50000.0 us (20.0 s^-1)<br>
+      12:52:23.798 [main] INFO ocelot.desktop.OcelotDesktop$ - Starting up Ocelot Desktop<br>
+      12:52:23.800 [main] INFO totoro.ocelot.brain.Ocelot$ - Brain initialization...<br>
+      12:52:23.800 [main] INFO totoro.ocelot.brain.Ocelot$ - Version: 0.6.8<br>
+      12:52:23.800 [main] INFO totoro.ocelot.brain.Ocelot$ - Loading configuration...<br>
+      12:52:23.991 [main] INFO totoro.ocelot.brain.Ocelot$ - Registering available machine architectures...<br>
+      12:52:24.080 [main] INFO totoro.ocelot.brain.Ocelot$ - Found a compatible native library:
+      'Ocelot-0.6.8-lua52-native.64.so'.<br>
+      12:52:24.120 [main] INFO totoro.ocelot.brain.Ocelot$ - Found a compatible native library:
+      'Ocelot-0.6.8-lua53-native.64.so'.<br>
+      12:52:24.121 [main] INFO totoro.ocelot.brain.Ocelot$ - Registering loot (floppies and EEPROMs with standard
+      OpenComputers software)...<br>
+      12:52:24.125 [main] INFO totoro.ocelot.brain.Ocelot$ - Registering entity constructors (for persistence
+      purposes)...<br>
+      12:52:24.149 [main] INFO totoro.ocelot.brain.Ocelot$ - Initializing unicode wcwidth.<br>
+      12:52:24.162 [main] INFO totoro.ocelot.brain.Ocelot$ - Initializing font glyph widths.<br>
+      12:52:24.190 [main] WARN totoro.ocelot.brain.Ocelot$ - Invalid glyph char code detected in font.hex. Expected 0<=
+      charCode <10000, got: 1D300<br>
+      12:52:24.190 [main] WARN totoro.ocelot.brain.Ocelot$ - 87 total invalid glyph char codes detected in font.hex<br>
+      12:52:24.190 [main] INFO totoro.ocelot.brain.Ocelot$ - glyph width ready.<br>
+      12:52:24.196 [main] INFO totoro.ocelot.brain.Ocelot$ - Initialization finished.<br>
+      12:52:24.209 [main] INFO ocelot.desktop.Settings$ - Loaded Ocelot Desktop configuration from:
+      /home/user/.config/ocelot/ocelot.conf<br>
+      12:52:24.210 [main] INFO ocelot.desktop.ColorScheme$ - Loading color scheme<br>
+      12:52:24.224 [main] INFO ocelot.desktop.ColorScheme$ - Loaded 66 colors<br>
+      12:52:24.280 [main] INFO ocelot.desktop.util.Ticker - Setting tick interval to 50000.0 us (20.0 s^-1)<br>
+      12:52:24.281 [main] INFO ocelot.desktop.util.Ticker - Setting tick interval to 16.666666 us (60000.004 s^-1)<br>
+      Inconsistency detected by ld.so: dl-lookup.c: 106: check_match: Assertion `version->filename == NULL || !
+      _dl_name_match_p (version->filename, map)' failed!<br>
+    </code>
+  </div>
+  <p>That's a known problem with our dependency, LWJGL2, on Java 9 and newer.
+    As a workaround, launch Ocelot Desktop on Java 8.</p>
+</div>
+<footer>
+  <p>Blessed by the forest spirit. &copy 2022 The Ocelot Development Team.</p>
+</footer>
 </body>
 </html>
