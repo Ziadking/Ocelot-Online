@@ -19,17 +19,16 @@
     </header>
 
     <div class="faq">
-        <h2>FAQ - Frequently Asking Questions</h2>
-        <p>If you have a question check out FAQ first</p>
+        <h2>FAQ — Frequently Asked Questions</h2>
+        <p>A list of a few common questions and problems.</p>
     </div>
 
     <div class="faq">
         <h2>Why Ocelot Desktop?</h2>
         <hr>
-        <p>You might already be happy with your choice of an OC emulator; after all, there
-            is already a plenty of them.
-            So why would you want to reconsider your life choices now all of a sudden?
-            A fine question, indeed; perhaps, a list of features will persuade you.</p>
+        <p>Indeed, there is a plenty of other emulators.
+            The tables below demonstrate how Ocelot Desktop fares against them.
+            (If you spot a mistake here, please tell us!)</p>
         <table>
             <tr>
                 <td class="header">Feature</td>
@@ -44,9 +43,9 @@
                 <td>❌</td>
             </tr>
             <tr>
-                <td class="header">Configuration graphical interface</td>
+                <td class="header">GUI</td>
                 <td>✔</td>
-                <td>❌</td>
+                <td>✔</td>
                 <td>❌</td>
             </tr>
             <tr>
@@ -56,25 +55,25 @@
                 <td>❌</td>
             </tr>
             <tr>
-                <td class="header">Saving full state of emulated computers</td>
+                <td class="header">Persistence</td>
                 <td>✔</td>
                 <td>Filesystem only</td>
                 <td>Filesystem only</td>
             </tr>
             <tr>
-                <td class="header">Emulate memory constraints</td>
+                <td class="header">Constrained memory</td>
                 <td>✔</td>
                 <td>✔</td>
                 <td>❌</td>
             </tr>
             <tr>
-                <td class="header">Preserving original OC hardware timings (CPU, GPU)</td>
+                <td class="header">Original OC timings (CPU, GPU)</td>
                 <td>✔</td>
                 <td>❌</td>
                 <td>❌</td>
             </tr>
             <tr>
-                <td class="header">Configurable emulation speed</td>
+                <td class="header">Changeable emulation speed</td>
                 <td>✔</td>
                 <td>❌</td>
                 <td>❌</td>
@@ -84,6 +83,36 @@
                 <td>✔</td>
                 <td>✔</td>
                 <td>✔</td>
+            </tr>
+            <tr>
+                <td class="header">Networking</td>
+                <td>✔</td>
+                <td>✔</td>
+                <td>✔</td>
+            </tr>
+            <tr>
+                <td class="header">Non-graphical configuration (for automation)</td>
+                <td>❌</td>
+                <td>✔</td>
+                <td>✔</td>
+            </tr>
+            <tr>
+                <td class="header">Custom machine.lua</td>
+                <td>❌</td>
+                <td>✔</td>
+                <td>✔</td>
+            </tr>
+            <tr>
+                <td class="header">Emulator Lua API</td>
+                <td>❌</td>
+                <td>✔</td>
+                <td>✔</td>
+            </tr>
+            <tr>
+                <td class="header">GPU buffers (OC 1.7.6)</td>
+                <td>After the mod is updated</td>
+                <td>✔</td>
+                <td>❌</td>
             </tr>
         </table>
         <h3>Component support:</h3>
@@ -160,37 +189,40 @@
                 <td>❌</td>
                 <td>❌</td>
             </tr>
+            <tr>
+                <td class="header">Sound card (Computronics)</td>
+                <td>❌</td>
+                <td>✔</td>
+                <td>❌</td>
+            </tr>
         </table>
     </div>
 
     <div class="faq">
         <h2>I found a bug! How I can report it?</h2>
         <hr>
-        <p>Yes! You can report bugs on the <a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop/-/issues">GitLab
-                issue tracker</a>. Also
-            you can report directly to emulator developers at IRC #cc.ru@irc.esper.net</p>
+        <p>Please create an issue on <a href="https://gitlab.com/cc-ru/ocelot/ocelot-desktop/-/issues">our issue tracker</a>.
+            Or just tell us on IRC: #cc.ru at irc.esper.net.</p>
     </div>
 
     <div class="faq">
-        <h2>Where I can find the emulator hotkeys, usage instructions etc?</h2>
+        <h2>What are the emulator's hotkeys?</h2>
         <hr>
-        <p>Emulator GUI hotkeys always shown at the
-            bottom of the window</p>
+        <p>The help bar at the bottom shows actions you can perform on the hovered element.</p>
         <img class="faq-img" src="/images/faq/check-the-bottom.png">
-        <p>But there was a some hidden hotkeys:</p>
-        <p><kbd>F1</kbd> UI layout debbuger</p>
-        <p><kbd>F2</kbd> FPS Counter</p>
-        <p><kbd>F3</kbd> Reloads workspace</p>
-        <p><kbd>F4</kbd> Emulator perfomance profiler window</p>
+        <p>In addition, there are a few "hidden" hotkeys:</p>
+        <p><kbd>F1</kbd> Toggle a UI layout debug view</p>
+        <p><kbd>F2</kbd> Toggle a FPS counter</p>
+        <p><kbd>F3</kbd> Reload the workspace</p>
+        <p><kbd>F4</kbd> Show a profiler window</p>
     </div>
 
     <div class="faq">
-        <h2>How to change screen scaling?</h2>
+        <h2>How do I resize a screen window?</h2>
         <hr>
-        <p>Just drag drag the bottom-right corner of the window to resize screen scale. Screen are resized by steps
-            like: 1/1 (100%);
-            1/2 (50%); 1/4 (25%); ... If you want to <strong>SCALE</strong> above 100% - you need to press
-            <kbd>Shift</kbd> key while dragging
+        <p>Just drag the bottom-right corner of the window.
+            It will be scaled in discrete steps: 1:1 (100%); 1:2 (50%); 1:4 (25%)...
+            To enlarge the window beyond 1:1, press <kbd>Shift</kbd> while dragging.
         </p>
     </div>
 
@@ -224,11 +256,11 @@
             Inconsistency detected by ld.so: dl-lookup.c: 106: check_match: Assertion `version->filename == NULL || ! _dl_name_match_p (version->filename, map)' failed!<br>
         </code>
         </div>
-        <p>That's a known problem with our dependency, LWJGL2, on Java 9 and newer. As a workaround, launch Ocelot
-            Desktop on Java 8.</p>
+        <p>That's a known problem with our dependency, LWJGL2, on Java 9 and newer.
+            As a workaround, launch Ocelot Desktop on Java 8.</p>
     </div>
     <footer>
-        <p>Powered by the forest spirit. &copy 2022 The Ocelot Development Team.</p>
+        <p>Blessed by the forest spirit. &copy 2022 The Ocelot Development Team.</p>
     </footer>
 </body>
 </html>
