@@ -15,63 +15,6 @@
     src: url("/fonts/homenaje.woff");
 }
 
-@keyframes cursor-blink {
-    0% {
-        opacity: 0;
-    }
-}
-
-@-webkit-keyframes animate-svg-stroke-1 {
-    0% {
-        stroke-dashoffset: 718.1165771484375px;
-        stroke-dasharray: 718.1165771484375px;
-    }
-
-    100% {
-        stroke-dashoffset: 0;
-        stroke-dasharray: 718.1165771484375px;
-    }
-}
-
-@keyframes animate-svg-stroke-1 {
-    0% {
-        stroke-dashoffset: 718.1165771484375px;
-        stroke-dasharray: 718.1165771484375px;
-    }
-
-    100% {
-        stroke-dashoffset: 0;
-        stroke-dasharray: 718.1165771484375px;
-    }
-}
-
-@-webkit-keyframes animate-svg-fill-1 {
-    0% {
-        fill: transparent;
-    }
-
-    100% {
-        fill: rgb(0, 0, 0);
-    }
-}
-
-@keyframes animate-svg-fill-1 {
-    0% {
-        fill: transparent;
-    }
-
-    100% {
-        fill: rgb(0, 0, 0);
-    }
-}
-
-.svg-elem-1 {
-    -webkit-animation: animate-svg-stroke-1 10s cubic-bezier(0.47, 0, 0.745, 0.715) 0s both,
-        animate-svg-fill-1 8s cubic-bezier(0.47, 0, 0.745, 0.715) 0.8s both;
-    animation: animate-svg-stroke-1 10s cubic-bezier(0.47, 0, 0.745, 0.715) 0s both,
-        animate-svg-fill-1 8s cubic-bezier(0.47, 0, 0.745, 0.715) 0.8s both;
-}
-
 body {
     margin: 0;
     padding: 0;
@@ -97,11 +40,6 @@ h3 {
     font-weight: normal;
 }
 
-
-hr {
-    color: white;
-}
-
 ul {
     list-style-type: none;
     font-family: 'Courier New', Courier, monospace;
@@ -118,6 +56,49 @@ li {
     color: white;
 }
 
+table {
+    table-layout: fixed;
+    width: 50%;
+    border-spacing: 10px 10px;
+}
+
+th, td {
+    background-color: rgba(46, 46, 46, 0.18);
+    padding: 10px;
+    border-radius: 2px;
+}
+
+th {
+    background-color: #ffffff17;
+}
+
+header {
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.7),
+            rgba(0, 0, 0, 0));
+}
+
+footer {
+    padding: 1em;
+    position: relative;
+    background:
+        /* top, transparent black, faked with gradient */
+        linear-gradient(rgba(0, 0, 0, 0.1),
+            rgba(0, 0, 0, 0.3));
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: rgb(110, 110, 110);
+}
+
+kbd {
+    border-radius: 3px;
+    padding: 1px 2px 0;
+    border: 1px solid white;
+    font-family: 'Alegreya Sans', 'sans-serif';
+}
+
 #background-video {
     object-fit: cover;
     min-height: 600px;
@@ -128,17 +109,6 @@ li {
     left: 0;
     z-index: -1;
 }
-
-.video-wrapper {
-    width: 100%;
-    min-height: 400px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 
 #header-title {
     min-height: 400px;
@@ -153,41 +123,14 @@ li {
         url("/images/header.png");
 }
 
-table {
-    table-layout: fixed;
-    width: 50%;
-    border-spacing: 10px 10px;
-}
-
-th, td {
-    background-color: rgba(46, 46, 46, 0.18);
-    padding: 10px;
-    border-radius: 2px;
-}
-
-.header {
-    background-color: #ffffff17;
-}
-
-header {
+.video-wrapper {
+    width: 100%;
+    min-height: 400px;
     position: relative;
     overflow: hidden;
-    padding: 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.7),
-            rgba(0, 0, 0, 0));
-}
-
-
-footer {
-    padding: 1em;
-    position: relative;
-    background:
-        /* top, transparent black, faked with gradient */
-        linear-gradient(rgba(0, 0, 0, 0.1),
-            rgba(0, 0, 0, 0.3));
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: rgb(110, 110, 110);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .codeblock {
@@ -267,6 +210,12 @@ a:hover {
     margin-top: 5px;
 }
 
+.lined-heading {
+    border-bottom: 2px solid white;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
 .feature-img {
     padding-right: 10px;
 }
@@ -292,13 +241,6 @@ a:hover {
     font-family: 'Homenaje';
 }
 
-kbd {
-    border-radius: 3px;
-    padding: 1px 2px 0;
-    border: 1px solid white;
-    font-family: 'Alegreya Sans', 'sans-serif';
-}
-
 .faq {
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
     color: White;
@@ -320,7 +262,7 @@ kbd {
     .feature {
         width: auto;
     }
-    
+
     .feature-content {
         flex-direction: column;
     }
@@ -329,7 +271,7 @@ kbd {
         width: 100%;
         border-spacing: 0px 0px;
     }
-    
+
     th, td {
         padding: 4px;
         border-radius: 0px;
@@ -339,5 +281,9 @@ kbd {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .faq {
+        margin: 0;
     }
 }
