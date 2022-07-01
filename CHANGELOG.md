@@ -1,3 +1,7 @@
+## 0.5.1
+* [Ocelot Desktop](https://gitlab.com/cc-ru/ocelot/ocelot-desktop): Refined site contents
+* [Ocelot Desktop](https://gitlab.com/cc-ru/ocelot/ocelot-desktop): Layout optimizations on the FAQ page for mobile devices
+
 ## 0.5.0
 * [Ocelot Desktop](https://gitlab.com/cc-ru/ocelot/ocelot-desktop): Added video background
 * [Ocelot Desktop](https://gitlab.com/cc-ru/ocelot/ocelot-desktop): Added SVG logo animation
