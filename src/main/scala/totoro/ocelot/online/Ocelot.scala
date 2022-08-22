@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter
 object Ocelot {
   private val Name = "ocelot.online"
   // do not forget to change version in build.sbt
-  private val Version = "0.5.1"
+  private val Version = "0.5.2"
   private val OcelotProjId = 9941848
   var logger: Option[Logger] = None
   def log: Logger = logger.getOrElse(LogManager.getLogger(Name))
