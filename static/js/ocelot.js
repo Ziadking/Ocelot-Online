@@ -227,7 +227,7 @@ function subscribeOnSocketEvents() {
         break;
       case 'crash':
         console.error("Crash: " + parts[1]);
-        alert("Crash: " + parts[1] + "!");
+        alert("Crash: " + parts[1] + "! The BIOS has been reset.");
         break;
       case 'set':
         set(parseInt(parts[1]), parseInt(parts[2]), parts[4], parts[3] == "true");

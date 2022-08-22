@@ -62,6 +62,7 @@ class Workspace {
       producer offer TextMessage(s"beep-pattern\n${event.pattern}")
     })
     EventBus.listenTo(classOf[MachineCrashEvent], { case event: MachineCrashEvent =>
+      computer.inventory(8) = Loot.AdvLoaderEEPROM.create()
       producer offer TextMessage(s"crash\n${event.message}")
     })
     EventBus.listenTo(classOf[TextBufferSetEvent], { case event: TextBufferSetEvent =>
